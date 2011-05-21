@@ -29,7 +29,14 @@
   define('FS2perm_statref', 'stat_ref'); //Referrerstatistik
   define('FS2perm_artikeladd', 'articles_add'); //Artikel hinzufügen
   define('FS2perm_artikeledit', 'articles_edit'); //Artikel bearbeiten
-  //define('FS2perm_templateedit', '???'); //Template
+  define('FS2perm_templateedit', array('tpl_articles',
+                                       'tpl_dl',
+                                       'tpl_news',
+                                       'tpl_poll',
+                                       'tpl_press',
+                                       'tpl_screens',
+                                       'tpl_shop',
+                                       'tpl_user')); //Templates (alle)
   define('FS2perm_allphpinfo', 'gen_phpinfo'); //PHP-Info anzeigen(?)
   define('FS2perm_allconfig', 'gen_config'); //allgemeine Konfiguration
   define('FS2perm_allanouncement', 'gen_announcement'); //Ankündigung
