@@ -1,0 +1,5 @@
+/* minimalistic stylesheet */
+
+a:link { color:#ff8000; }
+a:visited { color:#ff4000; }
+body { background-color:#000000; color:#ffffff; }

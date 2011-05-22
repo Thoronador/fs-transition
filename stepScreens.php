@@ -3,6 +3,8 @@
 <html>
 <head>
   <title>&Uuml;bertragung der Daten zwischen FS1 und FS2 - Screenshots</title>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8">
+  <link rel="stylesheet" type="text/css" href="css/t.css">
 </head>
 <body>
 <div>Beginne &Uuml;bertragung der Screenshots. Dies kann einige Momente dauern.<br>
