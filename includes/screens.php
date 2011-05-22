@@ -281,7 +281,7 @@ function screen_configTransition($old_link, $new_link)
       // row was actually affected/changed. Can also happen, if there is no row.
       // However, we know from previous COUNT() query, that there is at least
       // one data row in the table, so everything is alright here.
-      echo '<p>Screen configuration of old and new table are already the same.</p>';
+      echo '<p>Screen configurations of old and new table are already the same.</p>';
     }
   }//if
   else
