@@ -2,15 +2,11 @@
    "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-  <title>&Uuml;bertragung der Daten zwischen FS1 und FS2</title>
+  <title>&Uuml;bertragung der Daten zwischen FS1 und FS2 - Screenshots</title>
 </head>
 <body>
-<div>Beginne Daten&uuml;bertragung. Dies kann einige Momente dauern.<br>
+<div>Beginne &Uuml;bertragung der Screenshots. Dies kann einige Momente dauern.<br>
 <?php
-
-  $prev = error_reporting( E_ALL );
-  echo 'Report level was '.$prev.'.<br>';
-
   include_once 'includes/config_constants.inc.php';
   include_once 'includes/connect.inc.php';
 
@@ -35,36 +31,34 @@
     else
     {
       echo 'Link to new DB established!<br>';
-      //do the real transition stuff here
-      // ---- polls go first
-      require_once 'includes/poll.php';
-      echo "Trying to copy poll data...<br>\n";
-      if (pollTransition($old_link, $new_link))
+      //do the screen transition stuff here
+      require_once 'includes/screens.php';
+      echo "Trying to copy screenshot data. This will take some time...<br>\n";
+      if (screenTransition($old_link, $new_link, '../../www/', '../../www2/'))
       {
-        echo "Polls were copied successfully!<br>\n";
-        // ---- poll answers
-        if (poll_answersTransition($old_link, $new_link))
+        echo "Screenshots were copied successfully!<br>\n";
+        // ---- screenshot categories
+        if (screen_catTransition($old_link, $new_link))
         {
-          echo "Poll answers were copied successfully!<br>\n";
-          // ---- shop articles
-          require_once 'includes/shop.php';
-          if (shopTransition($old_link, $new_link, '../../www/', '../../www2/'))
+          echo "Screenshot categories were copied successfully!<br>\n";
+          // ---- screenshot configuration
+          if (screen_configTransition($old_link, $new_link))
           {
-            echo "Shop data was copied successfully!<br>\n";
+            echo "Screenshot configuration was copied successfully!<br>\n";
           }
           else
           {
-            echo "Shop transition failed!<br>\n";
+            echo "Screenshot configuration failed!<br>\n";
           }
         }
         else
         {
-          echo "Poll answers failed!<br>\n";
+          echo "Screenshot categories failed!<br>\n";
         }
       }
       else
       {
-        echo "Polls failed!<br>\n";
+        echo "Screenshots failed!<br>\n";
       }
     }//else
   }//else

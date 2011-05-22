@@ -21,7 +21,7 @@ function pollTransition($old_link, $new_link)
   echo '<p>Got '.mysql_num_rows($result)." entries from poll table.</p>\n";
   //get current auto-increment value
   $query_res = mysql_query("SHOW TABLE STATUS LIKE '".OldDBTablePrefix."poll'", $old_link);
-  if ($result===false)
+  if ($query_res===false)
   {
     echo '<p>Could not execute status query on old poll table.<br>';
     echo mysql_errno($old_link).': '.mysql_error($old_link)."</p>\n";
@@ -29,7 +29,7 @@ function pollTransition($old_link, $new_link)
   }
   if (!($row=mysql_fetch_assoc($query_res)))
   {
-    echo '<p>Could not fetch row from status query of old table.<br>';
+    echo '<p>Could not fetch row from status query of old poll table.<br>';
     echo mysql_errno($old_link).': '.mysql_error($old_link)."</p>\n";
     return false;
   }
@@ -132,7 +132,7 @@ function poll_answersTransition($old_link, $new_link)
   echo '<p>Got '.mysql_num_rows($result)." entries from poll_answers table.</p>\n";
   //get current auto-increment value
   $query_res = mysql_query("SHOW TABLE STATUS LIKE '".OldDBTablePrefix."poll_answers'", $old_link);
-  if ($result===false)
+  if ($query_res===false)
   {
     echo '<p>Could not execute status query on old poll_answers table.<br>';
     echo mysql_errno($old_link).': '.mysql_error($old_link)."</p>\n";

@@ -21,7 +21,7 @@ function shopTransition($old_link, $new_link, $old_basedir, $new_basedir)
   echo '<p>Got '.mysql_num_rows($result)." entries from shop table.</p>\n";
   //get current auto-increment value
   $query_res = mysql_query("SHOW TABLE STATUS LIKE '".OldDBTablePrefix."shop'", $old_link);
-  if ($result===false)
+  if ($query_res===false)
   {
     echo '<p>Could not execute status query on old shop table.<br>';
     echo mysql_errno($old_link).': '.mysql_error($old_link)."</p>\n";
