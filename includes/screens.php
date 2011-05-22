@@ -260,7 +260,8 @@ function screen_configTransition($old_link, $new_link)
   {
     $query_res = mysql_query('UPDATE '.NewDBTablePrefix.'screen_config '
                   ."SET screen_x='".$row['screen_x']."' , screen_y='".$row['screen_y']
-                  ."' , screen_thumb_x='".$row['thumb_x']."' , screen_thumb_y='".$row['thumb_y']."'");
+                  ."' , screen_thumb_x='".$row['thumb_x']."' , screen_thumb_y='"
+                  .$row['thumb_y']."', screen_order='id', screen_sort='asc'");
     if (!$query_res)
     {
       echo '<p>Could not update values in new screen configuration table.<br>';
