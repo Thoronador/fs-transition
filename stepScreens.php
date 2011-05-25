@@ -36,7 +36,7 @@
       //do the screen transition stuff here
       require_once 'includes/screens.php';
       echo "Trying to copy screenshot data. This will take some time...<br>\n";
-      if (screenTransition($old_link, $new_link, '../../www/', '../../www2/'))
+      if (screenTransition($old_link, $new_link, OldFSRoot, NewFSRoot))
       {
         echo "Screenshots were copied successfully!<br>\n";
         // ---- screenshot categories
@@ -47,6 +47,8 @@
           if (screen_configTransition($old_link, $new_link))
           {
             echo "Screenshot configuration was copied successfully!<br>\n";
+            //We can proceed to the next step now, add link to go on.
+            echo '<a href="stepUser.php"><strong>Next: user data</strong></a>';
           }
           else
           {

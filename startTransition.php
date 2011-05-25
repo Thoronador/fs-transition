@@ -50,7 +50,7 @@
           echo "Poll answers were copied successfully!<br>\n";
           // ---- shop articles
           require_once 'includes/shop.php';
-          if (shopTransition($old_link, $new_link, '../../www/', '../../www2/'))
+          if (shopTransition($old_link, $new_link, OldFSRoot, NewFSRoot))
           {
             echo "Shop data was copied successfully!<br>\n";
             //We can proceed to the next step now, add link to go on.

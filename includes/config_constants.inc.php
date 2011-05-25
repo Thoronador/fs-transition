@@ -13,7 +13,11 @@
   define('OldDBName', 'db_name');
   //Prefix für Tabellennamen in der alten Version des FS (d.h. FS1)
   define('OldDBTablePrefix', 'fs_');
-
+  /*relativer Pfad des Wurzelverzeichnises des alten FS (also jener Ordner, der
+    die Unterordner admin, data, images, inc, usw. enthält) zum Ort der Datei
+    startTransition.php. Der Schrägstrich am Ende MUSS enthalten sein. */
+  define('OldFSRoot', '../../www/');
+  
   //Name des MySQL-Nutzers für die Daten des neuen FS (d.h. FS2)
   define('NewDBUser', 'user');
   //Passwort des MySQL-Nutzers für die Daten des neuen FS (d.h. FS2)
@@ -22,4 +26,8 @@
   define('NewDBName', 'db_name2');
   //Prefix für Tabellennamen in der neuen Version des FS (d.h. FS2)
   define('NewDBTablePrefix', 'fs2_');
+  /*relativer Pfad des Wurzelverzeichnises des neuen FS (also jener Ordner, der
+    die Unterordner admin, applets, data, images, usw. enthält) zum Ort der
+    Datei startTransition.php. Der Schrägstrich am Ende MUSS enthalten sein. */
+  define('NewFSRoot', '../../www2/');
 ?>
