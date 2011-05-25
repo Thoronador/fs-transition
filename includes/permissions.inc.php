@@ -1,44 +1,59 @@
 <?php
-  //constants for translating permissions of FS1 to FS2
-  define('FS2perm_newsadd', 'news_add'); //News hinzufügen
-  define('FS2perm_newsedit', 'news_edit'); //News bearbeiten
-  define('FS2perm_newscat', 'news_cat'); //News Kategorien
-  //define('FS2perm_newsnewcat', '???'); //News Kategorien hinzufügen
-  define('FS2perm_newsconfig', 'news_config'); //Newskonfiguration
-  define('FS2perm_dladd', 'dl_add'); //Downloads hinzufügen
-  define('FS2perm_dledit', 'dl_edit'); //Downloads bearbeiten
-  define('FS2perm_dlcat', 'dl_cat'); //Downloadkategorien
-  define('FS2perm_dlnewcat', 'dl_newcat'); //Downloadkategorien hinzufügen
-  define('FS2perm_polladd',  'poll_add'); //Umfragen hinzufügen
-  define('FS2perm_polledit',  'poll_edit'); //Umfragenarchiv
-  //define('FS2perm_potmadd',  '???'); //POTM-Bild hinzufügen
-  //define('FS2perm_potmedit',  '???'); //POTM-Übersicht
-  define('FS2perm_screenadd', 'screen_add'); //Screenshots hinzufügen
-  define('FS2perm_screenedit', 'screen_edit'); //Screenshots bearbeiten
-  define('FS2perm_screencat', 'gallery_cat'); //Screenshotkategorien
-  define('FS2perm_screennewcat', 'gallery_newcat'); //Screenshotkategorien hinzufügen
-  define('FS2perm_screenconfig', 'gallery_config'); //Screenshotkonfiguration
-  define('FS2perm_shopadd', 'shop_add'); //Shopartikel hinzufügen
-  define('FS2perm_shopedit', 'shop_edit'); //Shopübersicht
-  define('FS2perm_statedit', 'stat_edit'); //Statistik bearbeiten
-  define('FS2perm_useradd', 'user_add'); //Benutzer hinzufügen
-  define('FS2perm_useredit', 'user_edit'); //Benutzer bearbeiten
-  define('FS2perm_userrights', 'user_rights'); //Benutzerrechte
-  //define('FS2perm_map', '???'); //Community Map
-  define('FS2perm_statview', 'stat_view'); //Statistik anzeigen
-  define('FS2perm_statref', 'stat_ref'); //Referrerstatistik
-  define('FS2perm_artikeladd', 'articles_add'); //Artikel hinzufügen
-  define('FS2perm_artikeledit', 'articles_edit'); //Artikel bearbeiten
-  define('FS2perm_templateedit', array('tpl_articles',
-                                       'tpl_dl',
-                                       'tpl_news',
-                                       'tpl_poll',
-                                       'tpl_press',
-                                       'tpl_screens',
-                                       'tpl_shop',
-                                       'tpl_user')); //Templates (alle)
-  define('FS2perm_allphpinfo', 'gen_phpinfo'); //PHP-Info anzeigen(?)
-  define('FS2perm_allconfig', 'gen_config'); //allgemeine Konfiguration
-  define('FS2perm_allanouncement', 'gen_announcement'); //Ankündigung
-  define('FS2perm_statspace', 'stat_space'); //Speicherplatz Statistik
+  /*"constants" for translating permissions of FS1 to FS2
+    Unfortunately, constants created via define() only allow scalar types and
+    no arrays, so I did this as a variable array instead. That way we can handle
+    permission transition a bit easier.
+  */
+  $FS2_permissions = array(
+      'perm_newsadd' => 'news_add', //News hinzufügen
+      'perm_newsedit' => 'news_edit', //News bearbeiten
+      'perm_newscat' => 'news_cat', //News Kategorien
+      //'perm_newsnewcat' => '???', //News Kategorien hinzufügen
+      'perm_newsconfig' => 'news_config', //Newskonfiguration
+      'perm_dladd' => 'dl_add', //Downloads hinzufügen
+      'perm_dledit' => 'dl_edit', //Downloads bearbeiten
+      'perm_dlcat' => 'dl_cat', //Downloadkategorien
+      'perm_dlnewcat' => 'dl_newcat', //Downloadkategorien hinzufügen
+      'perm_polladd' => 'poll_add', //Umfragen hinzufügen
+      'perm_polledit' => 'poll_edit', //Umfragenarchiv
+      //'perm_potmadd' => '???', //POTM-Bild hinzufügen
+      //'perm_potmedit' => '???', //POTM-Übersicht
+      'perm_screenadd' => 'screen_add', //Screenshots hinzufügen
+      'perm_screenedit' => 'screen_edit', //Screenshots bearbeiten
+      'perm_screencat' => 'gallery_cat', //Screenshotkategorien
+      'perm_screennewcat' => 'gallery_newcat', //Screenshotkategorien hinzufügen
+      'perm_screenconfig' => 'gallery_config', //Screenshotkonfiguration
+      'perm_shopadd' => 'shop_add', //Shopartikel hinzufügen
+      'perm_shopedit' => 'shop_edit', //Shopübersicht
+      'perm_statedit' => 'stat_edit', //Statistik bearbeiten
+      'perm_useradd' => 'user_add', //Benutzer hinzufügen
+      'perm_useredit' => 'user_edit', //Benutzer bearbeiten
+      'perm_userrights' => 'user_rights', //Benutzerrechte
+      //'perm_map' => '???', //Community Map
+      'perm_statview' => 'stat_view', //Statistik anzeigen
+      'perm_statref' => 'stat_ref', //Referrerstatistik
+      'perm_artikeladd' => 'articles_add', //Artikel hinzufügen
+      'perm_artikeledit' => 'articles_edit', //Artikel bearbeiten
+      'perm_templateedit' => array('tpl_affiliates', //Template für Partnerseiten
+                                   'tpl_articles',   //Artikeltemplates
+                                   'tpl_dl',         //Download(template)s
+                                   'tpl_editor',     //Editor
+                                   'tpl_fscodes',    //FS-Code
+                                   'tpl_general',    //Allgemein
+                                   'tpl_news',       //News
+                                   'tpl_player',     //Flash-Player
+                                   'tpl_poll',       //Umfragen
+                                   'tpl_press',      //Presseberichte
+                                   'tpl_previewimg', //Vorschaubild
+                                   'tpl_screens',    //Screenshots
+                                   'tpl_search',     //Suche
+                                   'tpl_shop',       //Shop
+                                   'tpl_user',       //Benutzer
+                                   'tpl_wp'          //Wallpaper
+                                   ), //Templates (alle)
+      'perm_allphpinfo' => 'gen_phpinfo', //PHP-Info anzeigen(?)
+      'perm_allconfig' => 'gen_config', //allgemeine Konfiguration
+      'perm_allanouncement' => 'gen_announcement', //Ankündigung
+      'perm_statspace' => 'stat_space', //Speicherplatz Statistik
+  ); //end of array()
 ?>
