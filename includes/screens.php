@@ -236,7 +236,7 @@ function screen_configTransition($old_link, $new_link)
     return false;
   }
   //check that there is one entry in the new configuration table
-  $query_res = mysql_query('SELECT COUNT(id) AS count FROM '.NewDBTablePrefix.'screen_config');
+  $query_res = mysql_query('SELECT COUNT(id) AS count FROM '.NewDBTablePrefix.'screen_config', $new_link);
   if (!$query_res)
   {
     echo '<p>Could not execute SELECT query on new screen_config table.<br>';
@@ -261,7 +261,8 @@ function screen_configTransition($old_link, $new_link)
     $query_res = mysql_query('UPDATE '.NewDBTablePrefix.'screen_config '
                   ."SET screen_x='".$row['screen_x']."' , screen_y='".$row['screen_y']
                   ."' , screen_thumb_x='".$row['thumb_x']."' , screen_thumb_y='"
-                  .$row['thumb_y']."', screen_order='id', screen_sort='asc'");
+                  .$row['thumb_y']."', screen_order='id', screen_sort='asc'",
+                  $new_link);
     if (!$query_res)
     {
       echo '<p>Could not update values in new screen configuration table.<br>';
