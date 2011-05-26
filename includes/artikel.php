@@ -21,13 +21,13 @@ function artikelTransition($old_link, $new_link) //yes, it's spelled the wrong w
   $artikel_entries = mysql_num_rows($result);
   if ($artikel_entries!=1)
   {
-    echo '<p>Got '.$aartikel_entries." entries from artikel table.</p>\n";
+    echo '<p>Got '.$artikel_entries." entries from artikel table.</p>\n";
   }
   else
   {
     echo '<p>Got one entry from artikel table.</p>'."\n";
   }
-  
+
   //go on with new DB
   if (!selectNewDB($new_link))
   {
@@ -36,6 +36,9 @@ function artikelTransition($old_link, $new_link) //yes, it's spelled the wrong w
     return false;
   }
   //delete possible content that is in new DB
+  /* We delete all articles except the one which is about the FS code, because
+     it is linked in the menu and is helpful anyway.
+  */
   $query_res = mysql_query("DELETE FROM ".NewDBTablePrefix."articles WHERE article_url<>'fscode'", $new_link);
   if (!$query_res)
   {
@@ -59,7 +62,7 @@ function artikelTransition($old_link, $new_link) //yes, it's spelled the wrong w
     echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
     return false;
   }//if
-  
+
   //put stuff into new DB's table
   echo '<span>Processing...</span>';
   while ($row = mysql_fetch_assoc($result))
