@@ -2,7 +2,7 @@
    "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-  <title>&Uuml;bertragung der Daten zwischen FS1 und FS2 - nk&uuml;ndigungen und Artikel</title>
+  <title>&Uuml;bertragung der Daten zwischen FS1 und FS2 - Ank&uuml;ndigungen und Artikel</title>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8">
   <link rel="stylesheet" type="text/css" href="css/t.css">
 </head>
@@ -44,6 +44,8 @@
         if (artikelTransition($old_link, $new_link))
         {
           echo "Articles were copied successfully!<br>\n";
+          //We can proceed to the next step now, add link to go on.
+            echo '<p><a href="stepNews.php"><strong>Next: news data</strong></a></p>';
         }
         else
         {
