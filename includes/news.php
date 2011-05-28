@@ -358,6 +358,20 @@ function news_commentsTransition($old_link, $new_link)
   return true;
 }//function news_commentsTransition
 
+function codeSettingTransition($old_val)
+{
+  /* HTML-/FS-Code settings:
+  
+     code setting    | FS1 (old) | FS2 (new)
+     ----------------+-----------+-----------
+     off             |     1     |     1
+     news only       |     2     |     2
+     comments only   |    N/A    |     3
+     news + comments |     3     |     4
+  */
+  if ($old_val==3) return 4;
+  return $old_val;
+}//function codeSettingTransition
 
 function news_configTransition($old_link, $new_link)
 {
@@ -422,6 +436,25 @@ function news_configTransition($old_link, $new_link)
   echo '<span>Processing news configuration...</span>';
   if ($row = mysql_fetch_assoc($result))
   {
+    //check, if fs_code and html_code are valid
+    if (($row['fs_code']!=1) && ($row['fs_code']!=2) && ($row['fs_code']!=3))
+    {
+      echo '<p>Got invalid fs_code value from old configuration table.<br>';
+      echo 'Value was &quot;'.htmlentities($row['fs_code']).'&quot;, but only '
+          .'integer values from 1 to 3 are allowed here.</p>'."\n";
+      return false;
+    }
+    if (($row['html_code']!=1) && ($row['html_code']!=2) && ($row['html_code']!=3))
+    {
+      echo '<p>Got invalid fs_code value from old configuration table.<br>';
+      echo 'Value was &quot;'.htmlentities($row['html_code']).'&quot;, but only '
+          .'integer values from 1 to 3 are allowed here.</p>'."\n";
+      return false;
+    }
+    //adjust codes
+    $row['html_code'] = codeSettingTransition($row['html_code']);
+    $row['fs_code'] = codeSettingTransition($row['fs_code']);
+    //now execute the update query on the new configuration table
     $query_res = mysql_query('UPDATE '.NewDBTablePrefix.'news_config '
                   ."SET num_news='".$row['num_news']."', num_head='".$row['num_head']
                   ."', html_code='".$row['html_code']."', fs_code='"
