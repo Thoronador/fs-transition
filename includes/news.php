@@ -34,7 +34,7 @@ function news_catTransition($old_link, $new_link, $old_basedir, $new_basedir)
     return false;
   }
   $auto_inc_value = $row['Auto_increment'];
-  
+
   //go on with new DB
   if (!selectNewDB($new_link))
   {
@@ -50,7 +50,7 @@ function news_catTransition($old_link, $new_link, $old_basedir, $new_basedir)
     echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
     return false;
   }//if
-  
+
   //put stuff into new DB's table
   echo '<span>Processing...</span>';
   while ($row = mysql_fetch_assoc($result))
@@ -75,7 +75,7 @@ function news_catTransition($old_link, $new_link, $old_basedir, $new_basedir)
     echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
     return false;
   }//if
-  
+
   //now copy the news category images
   // ---- check old directory
   if (!is_dir($old_basedir.'images/newscat/'))
@@ -172,7 +172,7 @@ function newsTransition($old_link, $new_link)
     echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
     return false;
   }//if
-  
+
   //put stuff into new DB's table
   echo '<span>Processing...</span>';
   while ($row = mysql_fetch_assoc($result))
@@ -235,7 +235,7 @@ function news_linksTransition($old_link, $new_link)
     return false;
   }
   $auto_inc_value = $row['Auto_increment'];
-  
+
   //go on with new DB
   if (!selectNewDB($new_link))
   {
@@ -312,7 +312,7 @@ function news_commentsTransition($old_link, $new_link)
     return false;
   }
   $auto_inc_value = $row['Auto_increment'];
-  
+
    //go on with new DB
   if (!selectNewDB($new_link))
   {
@@ -390,7 +390,7 @@ function news_configTransition($old_link, $new_link)
     echo '<p>Got '.$entries.' entries from news configuration table, but only'
         .' the first one will be used.</p>'."\n";
   }
-  
+
   //go on with new DB
   if (!selectNewDB($new_link))
   {
@@ -417,7 +417,7 @@ function news_configTransition($old_link, $new_link)
     echo '<p>There is no configuration in the new news_config table!</p>';
     return false;
   }
-  
+
   //update configuration in new DB's table
   echo '<span>Processing news configuration...</span>';
   if ($row = mysql_fetch_assoc($result))
@@ -425,7 +425,7 @@ function news_configTransition($old_link, $new_link)
     $query_res = mysql_query('UPDATE '.NewDBTablePrefix.'news_config '
                   ."SET num_news='".$row['num_news']."', num_head='".$row['num_head']
                   ."', html_code='".$row['html_code']."', fs_code='"
-                  .$row['fs_code']."'", $new_link);
+                  .$row['fs_code']."', com_sort='ASC'", $new_link);
     if (!$query_res)
     {
       echo '<p>Could not update values in new news configuration table.<br>';
