@@ -2,7 +2,7 @@
    "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-  <title>&Uuml;bertragung der Daten zwischen FS1 und FS2</title>
+  <title>&Uuml;bertragung der Daten zwischen FS1 und FS2 - Umfragen und Shop</title>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8">
   <link rel="stylesheet" type="text/css" href="css/t.css">
 </head>
