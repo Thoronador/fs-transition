@@ -1,4 +1,21 @@
 <?php
+/*
+    This file is part of the Frogsystem Transition Tool. 
+    Copyright (C) 2011  Thoronador
+
+    The Frogsystem Transition Tool is free software: you can redistribute it
+    and/or modify it under the terms of the GNU General Public License as
+    published by the Free Software Foundation, either version 3 of the License,
+    or (at your option) any later version.
+
+    The Frogsystem Transition Tool is distributed in the hope that it will be
+    useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 require_once 'connect.inc.php';
 
@@ -43,7 +60,7 @@ function anouncementTransition($old_link, $new_link) //yes, it's spelled the wro
     echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
     return false;
   }//if
-  
+
   //put stuff into new DB's table
   echo '<span>Processing...</span>';
   if ($row = mysql_fetch_assoc($result))
