@@ -1,6 +1,6 @@
 <?php
 /*
-    This file is part of the Frogsystem Transition Tool. 
+    This file is part of the Frogsystem Transition Tool.
     Copyright (C) 2011  Thoronador
 
     The Frogsystem Transition Tool is free software: you can redistribute it
@@ -228,7 +228,7 @@ function news_linksTransition($old_link, $new_link)
     echo mysql_errno($old_link).': '.mysql_error($old_link)."</p>\n";
     return false;
   }
-  //get all stuff from old DB's news table
+  //get all stuff from old DB's news_links table
   $result = mysql_query("SELECT * FROM ".OldDBTablePrefix."news_links", $old_link);
   if ($result===false)
   {
@@ -305,7 +305,7 @@ function news_commentsTransition($old_link, $new_link)
     echo mysql_errno($old_link).': '.mysql_error($old_link)."</p>\n";
     return false;
   }
-  //get all stuff from old DB's news table
+  //get all stuff from old DB's news_comments table
   $result = mysql_query("SELECT * FROM ".OldDBTablePrefix."news_comments", $old_link);
   if ($result===false)
   {
@@ -330,7 +330,7 @@ function news_commentsTransition($old_link, $new_link)
   }
   $auto_inc_value = $row['Auto_increment'];
 
-   //go on with new DB
+  //go on with new DB
   if (!selectNewDB($new_link))
   {
     echo '<p>Could not select new database.<br>';
@@ -398,7 +398,7 @@ function news_configTransition($old_link, $new_link)
     echo mysql_errno($old_link).': '.mysql_error($old_link)."</p>\n";
     return false;
   }
-  //get all stuff from old DB's news table
+  //get all stuff from old DB's news_config table
   $result = mysql_query("SELECT * FROM ".OldDBTablePrefix."news_config", $old_link);
   if ($result===false)
   {

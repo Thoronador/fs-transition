@@ -44,6 +44,8 @@
           if (dl_mirrorsTransition($old_link, $new_link))
           {
             echo "Download mirrors were copied successfully!<br>\n";
+            //We can proceed to the next step now, add link to go on.
+            echo '<p><a href="stepVisitStats.php"><strong>N&auml;chster Schritt: Benutzerstatistik</strong></a></p>';
           }
           else
           {
