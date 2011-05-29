@@ -45,7 +45,7 @@
         {
           echo "Articles were copied successfully!<br>\n";
           //We can proceed to the next step now, add link to go on.
-            echo '<p><a href="stepNews.php"><strong>Next: news data</strong></a></p>';
+          echo '<p><a href="stepNews.php"><strong>Next: news data</strong></a></p>';
         }
         else
         {

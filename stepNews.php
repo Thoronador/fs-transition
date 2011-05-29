@@ -56,6 +56,8 @@
               if (news_configTransition($old_link, $new_link))
               {
                 echo "News configuration was copied successfully!<br>\n";
+                //We can proceed to the next step now, add link to go on.
+                echo '<p><a href="stepDownloads.php"><strong>Next: downloads</strong></a></p>';
               }//if
               else
               {
