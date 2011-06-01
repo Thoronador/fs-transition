@@ -40,6 +40,8 @@
         if (counterTransition($old_link, $new_link))
         {
           echo "General counter was copied successfully!<br>\n";
+          //We can proceed to the next step now, add link to go on.
+          echo '<p><a href="stepConfig.php"><strong>Next: global configuration</strong></a></p>';
         }
         else
         {

@@ -50,7 +50,7 @@ function global_configTransition($old_link, $new_link)
     echo '<p>Got '.$entries.' entries from global configuration table, but only'
         .' the first one will be used.</p>'."\n";
   }
-  
+
   //go on with new DB
   if (!selectNewDB($new_link))
   {
@@ -77,11 +77,23 @@ function global_configTransition($old_link, $new_link)
     echo '<p>There is no configuration in the new global_config table!</p>';
     return false;
   }
-  
+
   //update configuration in new DB's table
   echo '<span>Processing global configuration...</span>';
   if ($row = mysql_fetch_assoc($result))
   {
+    //check for length of virtualhost
+    if (strlen($row['virtualhost'])<10)
+    {
+      echo '<p>The virtual host setting in the old global_config table seems '
+          .'to be too short to hold a proper URL!</p>';
+      return false;
+    }
+    //check for trailing slash in virtualhost setting
+    if (substr($row['virtualhost'], -1)!='/')
+    {
+      $row['virtualhost'] .= '/';
+    }
     //now execute the update query on the new configuration table
     $query_res = mysql_query('UPDATE '.NewDBTablePrefix.'global_config '
                   ."SET virtualhost='".$row['virtualhost']."', admin_mail='"
