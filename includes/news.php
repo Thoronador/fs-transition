@@ -430,7 +430,7 @@ function news_configTransition($old_link, $new_link)
     return false;
   }
   //check that there is one entry in the new configuration table
-  $query_res = mysql_query('SELECT COUNT(id) AS count FROM '.NewDBTablePrefix.'news_config');
+  $query_res = mysql_query('SELECT COUNT(id) AS count FROM '.NewDBTablePrefix.'news_config', $new_link);
   if (!$query_res)
   {
     echo '<p>Could not execute SELECT query on new news_config table.<br>';
