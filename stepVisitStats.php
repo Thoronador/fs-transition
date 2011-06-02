@@ -41,7 +41,10 @@
         {
           echo "General counter was copied successfully!<br>\n";
           //We can proceed to the next step now, add link to go on.
-          echo '<p><a href="stepConfig.php"><strong>Next: global configuration</strong></a></p>';
+          echo '<p><a href="stepRefStats.php"><strong>N&auml;chster Schritt: Refererstatistik</strong></a><br>'
+              .'<strong>Achtung!</strong> Dieser Schritt kann sehr lange dauern. Ggf. ist es notwendig, '
+              .'diesen Schritt zu &uuml;berspringen und beim nachfolgenden Schritt fortzufahren.<br><br></p>';
+          echo '<p><a href="stepConfig.php"><strong>&Uuml;bern&auml;chster Schritt: globale Konfiguration</strong></a></p>';
         }
         else
         {
