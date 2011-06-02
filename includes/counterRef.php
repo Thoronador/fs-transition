@@ -52,7 +52,16 @@ function counter_refTransition($old_link, $new_link)
     echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
     return false;
   }//if
-  
+
+  //disable keys temporatily to speed up inserts
+  $query_res = mysql_query('ALTER TABLE '.NewDBTablePrefix.'counter_ref DISABLE KEYS', $new_link);
+  if (!$query_res)
+  {
+    echo '<p>Could not disable keys in new counter_ref table.<br>';
+    echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
+    return false;
+  }//if
+
   //put stuff into new DB's table
   echo '<span>Processing...</span>';
   $has_to_do = true;
@@ -82,6 +91,16 @@ function counter_refTransition($old_link, $new_link)
       }//if
     }//if
   }//while (outer)
+  
+  //re-enable keys
+  $query_res = mysql_query('ALTER TABLE '.NewDBTablePrefix.'counter_ref ENABLE KEYS', $new_link);
+  if (!$query_res)
+  {
+    echo '<p>Could not re-enable keys in new counter_ref table.<br>';
+    echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
+    return false;
+  }//if
+  
   echo '<span>Done.</span>'."\n";
   return true;
 }//function counter_refTransition
