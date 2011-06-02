@@ -16,7 +16,7 @@
   $old_link = connectOldDB();
   if (!$old_link)
   {
-    echo '<p>Could not establish connection to FS1 database.<br>'
+    echo '<p class="error">Could not establish connection to FS1 database.<br>'
          .mysql_errno().': '.mysql_error()."</p>\n";
   }
   else
@@ -25,7 +25,7 @@
     $new_link = connectNewDB();
     if (!$new_link)
     {
-      echo '<p>Could not establish connection to FS2 database.<br>'
+      echo '<p class="error">Could not establish connection to FS2 database.<br>'
            .mysql_errno().': '.mysql_error()."</p>\n";
     }
     else
@@ -39,7 +39,7 @@
       }
       else
       {
-         echo "Configuration of new FS could not be updated!<br>\n";
+         echo "<span class=\"error\">Configuration of new FS could not be updated!</span><br>\n";
       }
     }//else
   }//else

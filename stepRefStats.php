@@ -16,7 +16,7 @@
   $old_link = connectOldDB();
   if (!$old_link)
   {
-    echo '<p>Die Verbindung zur Datenbank des FS1 konnte nicht hergestellt werden.<br>'
+    echo '<p class="error">Die Verbindung zur Datenbank des FS1 konnte nicht hergestellt werden.<br>'
          .mysql_errno().': '.mysql_error()."</p>\n";
   }
   else
@@ -25,7 +25,7 @@
     $new_link = connectNewDB();
     if (!$new_link)
     {
-      echo '<p>Die Verbindung zur Datenbank des FS2 konnte nicht hergestellt werden.<br>'
+      echo '<p class="error">Die Verbindung zur Datenbank des FS2 konnte nicht hergestellt werden.<br>'
            .mysql_errno().': '.mysql_error()."</p>\n";
     }
     else
@@ -41,7 +41,7 @@
       }
       else
       {
-        echo "Refererdaten konnten <i>nicht</i> in das neue FS &uuml;bernommen werden!<br>\n";
+        echo "<span class=\"error\">Refererdaten konnten <i>nicht</i> in das neue FS &uuml;bernommen werden!</span><br>\n";
       }
     }//else
   }//else

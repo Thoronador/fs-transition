@@ -35,7 +35,7 @@
   $old_link = connectOldDB();
   if (!$old_link)
   {
-    echo '<p>Die Verbindung zum MySQL-Server mit den Daten des FS1 konnte nicht'
+    echo '<p class="error">Die Verbindung zum MySQL-Server mit den Daten des FS1 konnte nicht'
         .' hergestellt werden!<br>Folgender Fehler trat beim Verbindungsversuch'
         .' auf:<br>'.mysql_errno().': '.htmlentities(mysql_error())."</p>\n";
   }
@@ -46,7 +46,7 @@
     $new_link = connectNewDB();
     if (!$new_link)
     {
-      echo '<p>Die Verbindung zum MySQL-Server mit den Daten des FS1 konnte '
+      echo '<p class="error">Die Verbindung zum MySQL-Server mit den Daten des FS1 konnte '
           .'nicht hergestellt werden!<br>Folgender Fehler trat beim '
           .'Verbindungsversuch auf:<br>'.mysql_errno().': '
           .htmlentities(mysql_error())."</p>\n";
@@ -60,7 +60,7 @@
       $old_db = selectOldDB($old_link);
       if (!$old_db)
       {
-        echo '<p>Die Datenbank des FS1 konnte nicht ausgew&auml;hlt werden!<br>'
+        echo '<p class="error">Die Datenbank des FS1 konnte nicht ausgew&auml;hlt werden!<br>'
             .'Folgender Fehler trat beim Versuch auf:<br>'.mysql_errno().': '
             .htmlentities(mysql_error())."</p>\n";
       }
@@ -71,7 +71,7 @@
         $new_db = selectNewDB($new_link);
         if (!$old_db)
         {
-          echo '<p>Die Datenbank des FS2 konnte nicht ausgew&auml;hlt werden!'
+          echo '<p class="error">Die Datenbank des FS2 konnte nicht ausgew&auml;hlt werden!'
               .'<br>Folgender Fehler trat beim Versuch auf:<br>'.mysql_errno()
               .': '.htmlentities(mysql_error())."</p>\n";
         }
@@ -83,7 +83,7 @@
          $ret = checkOldTables($old_link);
          if ($ret!==true)
          {
-           echo '<p>Die Tabellen des FS1 konnten nicht gefunden werden!'
+           echo '<p class="error">Die Tabellen des FS1 konnten nicht gefunden werden!'
                .'<br>Folgender Fehler trat beim Versuch auf:<br>'."</p>\n".$ret;
          }
          else

@@ -12,27 +12,24 @@
   include_once 'includes/config_constants.inc.php';
   include_once 'includes/connect.inc.php';
 
-  echo 'Connections coming...<br>';
   //set up connection to old DB
   $old_link = connectOldDB();
   if (!$old_link)
   {
-    echo '<p>Could not establish connection to FS1 database.<br>'
+    echo '<p class="error">Could not establish connection to FS1 database.<br>'
          .mysql_errno().': '.mysql_error()."</p>\n";
   }
   else
   {
-    echo 'Link to old DB established!<br>';
     //set up connection to new DB
     $new_link = connectNewDB();
     if (!$new_link)
     {
-      echo '<p>Could not establish connection to FS2 database.<br>'
+      echo '<p class="error">Could not establish connection to FS2 database.<br>'
            .mysql_errno().': '.mysql_error()."</p>\n";
     }
     else
     {
-      echo 'Link to new DB established!<br>';
       //do the screen transition stuff here
       require_once 'includes/screens.php';
       echo "Trying to copy screenshot data. This will take some time...<br>\n";
@@ -52,17 +49,17 @@
           }
           else
           {
-            echo "Screenshot configuration failed!<br>\n";
+            echo "<span class=\"error\">Screenshot configuration failed!</span><br>\n";
           }
         }
         else
         {
-          echo "Screenshot categories failed!<br>\n";
+          echo "<span class=\"error\">Screenshot categories failed!</span><br>\n";
         }
       }
       else
       {
-        echo "Screenshots failed!<br>\n";
+        echo "<span class=\"error\">Screenshots failed!</span><br>\n";
       }
     }//else
   }//else

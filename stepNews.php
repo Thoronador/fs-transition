@@ -12,27 +12,24 @@
   include_once 'includes/config_constants.inc.php';
   include_once 'includes/connect.inc.php';
 
-  echo 'Connections coming...<br>';
   //set up connection to old DB
   $old_link = connectOldDB();
   if (!$old_link)
   {
-    echo '<p>Could not establish connection to FS1 database.<br>'
+    echo '<p class="error">Could not establish connection to FS1 database.<br>'
          .mysql_errno().': '.mysql_error()."</p>\n";
   }
   else
   {
-    echo 'Link to old DB established!<br>';
     //set up connection to new DB
     $new_link = connectNewDB();
     if (!$new_link)
     {
-      echo '<p>Could not establish connection to FS2 database.<br>'
+      echo '<p class="error">Could not establish connection to FS2 database.<br>'
            .mysql_errno().': '.mysql_error()."</p>\n";
     }
     else
     {
-      echo 'Link to new DB established!<br>';
       //do the news transition stuff here
       require_once 'includes/news.php';
       // ---- news categories first
@@ -61,27 +58,27 @@
               }//if
               else
               {
-                echo "News configuration could not be copied to new FS!<br>\n";
+                echo "<span class=\"error\">News configuration could not be copied to new FS!</span><br>\n";
               }
             }//if
             else
             {
-              echo "News comments could not be copied to new FS!<br>\n";
+              echo "<span class=\"error\">News comments could not be copied to new FS!</span><br>\n";
             }//else
           }//if
           else
           {
-            echo "News links could not be copied to new FS!<br>\n";
+            echo "<span class=\"error\">News links could not be copied to new FS!</span><br>\n";
           }//else
         }//if
         else
         {
-          echo "News could not be copied to new FS!<br>\n";
+          echo "<span class=\"error\">News could not be copied to new FS!</span><br>\n";
         }//else
       }//if
       else
       {
-        echo "News category data could not be copied to new FS!<br>\n";
+        echo "<span class=\"error\">News category data could not be copied to new FS!</span><br>\n";
       }
     }//else
   }//else

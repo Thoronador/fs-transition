@@ -9,34 +9,27 @@
 <body>
 <div>Beginne Daten&uuml;bertragung. Dies kann einige Momente dauern.<br>
 <?php
-
-  $prev = error_reporting( E_ALL );
-  echo 'Report level was '.$prev.'.<br>';
-
   include_once 'includes/config_constants.inc.php';
   include_once 'includes/connect.inc.php';
 
-  echo 'Connections coming...<br>';
   //set up connection to old DB
   $old_link = connectOldDB();
   if (!$old_link)
   {
-    echo '<p>Could not establish connection to FS1 database.<br>'
+    echo '<p class="error">Could not establish connection to FS1 database.<br>'
          .mysql_errno().': '.mysql_error()."</p>\n";
   }
   else
   {
-    echo 'Link to old DB established!<br>';
     //set up connection to new DB
     $new_link = connectNewDB();
     if (!$new_link)
     {
-      echo '<p>Could not establish connection to FS2 database.<br>'
+      echo '<p class="error">Could not establish connection to FS2 database.<br>'
            .mysql_errno().': '.mysql_error()."</p>\n";
     }
     else
     {
-      echo 'Link to new DB established!<br>';
       //do the real transition stuff here
       // ---- polls go first
       require_once 'includes/poll.php';
@@ -58,17 +51,17 @@
           }
           else
           {
-            echo "Shop transition failed!<br>\n";
+            echo "<span class=\"error\">Shop transition failed!</span><br>\n";
           }
         }
         else
         {
-          echo "Poll answers failed!<br>\n";
+          echo "<span class=\"error\">Poll answers failed!</span><br>\n";
         }
       }
       else
       {
-        echo "Polls failed!<br>\n";
+        echo "<span class=\"error\">Polls failed!</span><br>\n";
       }
     }//else
   }//else
