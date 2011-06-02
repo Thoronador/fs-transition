@@ -55,19 +55,33 @@ function counter_refTransition($old_link, $new_link)
   
   //put stuff into new DB's table
   echo '<span>Processing...</span>';
-  while ($row = mysql_fetch_assoc($result))
+  $has_to_do = true;
+  while ($has_to_do)
   {
-    $query_res = mysql_query('INSERT INTO '.NewDBTablePrefix.'counter_ref '
-                  .'(ref_url, ref_count, ref_first, ref_last) '
-                  ."VALUES ('".mysql_real_escape_string($row['ref_url'])."', '"
-                  .$row['ref_count']."', '".$row['ref_date']."', 0)", $new_link);
-    if (!$query_res)
+    $query_string = 'INSERT INTO '.NewDBTablePrefix.'counter_ref '
+                   .'(ref_url, ref_count, ref_first, ref_last) VALUES ';
+    $row_count = 0;
+    while (($row = mysql_fetch_assoc($result)) && ($row_count<25))
     {
-      echo '<p>Could not insert values into new counter_ref table.<br>';
-      echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
-      return false;
+      $row_count = $row_count + 1;
+      $query_string .= "('".mysql_real_escape_string($row['ref_url'], $new_link)
+                      ."', '".$row['ref_count']."', '".$row['ref_date']."', 0),";
+    }//while
+    $has_to_do = ($row!==false);
+    if ($row_count>0)
+    {
+      //cut of the ',' character at the end to prevent SQL syntax error
+      $query_string = substr($query_string, 0, -1);
+      //execute query to add new rows
+      $query_res = mysql_query($query_string, $new_link);
+      if (!$query_res)
+      {
+        echo '<p>Could not insert values into new counter_ref table.<br>';
+        echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
+        return false;
+      }//if
     }//if
-  }//while
+  }//while (outer)
   echo '<span>Done.</span>'."\n";
   return true;
 }//function counter_refTransition
