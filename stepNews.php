@@ -16,7 +16,7 @@
   $old_link = connectOldDB();
   if (!$old_link)
   {
-    echo '<p class="error">Could not establish connection to FS1 database.<br>'
+    echo '<p class="error">Die Verbindung zur Datenbank des FS1 konnte nicht hergestellt werden.<br>'
          .mysql_errno().': '.mysql_error()."</p>\n";
   }
   else
@@ -25,7 +25,7 @@
     $new_link = connectNewDB();
     if (!$new_link)
     {
-      echo '<p class="error">Could not establish connection to FS2 database.<br>'
+      echo '<p class="error">Die Verbindung zur Datenbank des FS2 konnte nicht hergestellt werden.<br>'
            .mysql_errno().': '.mysql_error()."</p>\n";
     }
     else
@@ -33,52 +33,52 @@
       //do the news transition stuff here
       require_once 'includes/news.php';
       // ---- news categories first
-      echo "Trying to copy news category data. This will take some time...<br>\n";
+      //echo "Trying to copy news category data. This will take some time...<br>\n";
       if (news_catTransition($old_link, $new_link, OldFSRoot, NewFSRoot))
       {
-        echo "News category data was copied successfully!<br>\n";
+        echo "Newskategorien wurden erfolgreich &uuml;bertragen!<br>\n";
         // ---- news themselves
         if (newsTransition($old_link, $new_link))
         {
-          echo "News were copied successfully!<br>\n";
+          echo "Newsmeldungen wurden erfolgreich &uuml;bertragen!<br>\n";
           // ---- news links are next
           if (news_linksTransition($old_link, $new_link))
           {
-            echo "News links were copied successfully!<br>\n";
+            echo "Newslinks wurden erfolgreich &uuml;bertragen!!<br>\n";
             // ---- news comments are next
             if (news_commentsTransition($old_link, $new_link))
             {
-              echo "News comments were copied successfully!<br>\n";
+              echo "Newskommentare wurden erfolgreich &uuml;bertragen!<br>\n";
               // ---- the news configuration
               if (news_configTransition($old_link, $new_link))
               {
-                echo "News configuration was copied successfully!<br>\n";
+                echo "Newskonfiguration wurden aktualisiert!<br>\n";
                 //We can proceed to the next step now, add link to go on.
-                echo '<p><a href="stepDownloads.php"><strong>Next: downloads</strong></a></p>';
+                echo '<p><a href="stepDownloads.php"><strong>N&aul;chster Schritt: Downloads</strong></a></p>';
               }//if
               else
               {
-                echo "<span class=\"error\">News configuration could not be copied to new FS!</span><br>\n";
+                echo "<span class=\"error\">Newskonfiguration konnte nicht ins neue FS &uuml;bertragen werden!</span><br>\n";
               }
             }//if
             else
             {
-              echo "<span class=\"error\">News comments could not be copied to new FS!</span><br>\n";
+              echo "<span class=\"error\">Newskommentare konnten nicht ins neue FS &uuml;bertragen werden!</span><br>\n";
             }//else
           }//if
           else
           {
-            echo "<span class=\"error\">News links could not be copied to new FS!</span><br>\n";
+            echo "<span class=\"error\">Newslinks konnten nicht ins neue FS &uuml;bertragen werden!</span><br>\n";
           }//else
         }//if
         else
         {
-          echo "<span class=\"error\">News could not be copied to new FS!</span><br>\n";
+          echo "<span class=\"error\">News konnten nicht ins neue FS &uuml;bertragen werden!</span><br>\n";
         }//else
       }//if
       else
       {
-        echo "<span class=\"error\">News category data could not be copied to new FS!</span><br>\n";
+        echo "<span class=\"error\">Newskategorien konnten nicht ins neue FS &uuml;bertragen werden!</span><br>\n";
       }
     }//else
   }//else

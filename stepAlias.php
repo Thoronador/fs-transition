@@ -8,7 +8,7 @@
 </head>
 <body>
 <div>Die Aliasweiterleitungen werden genutzt, um bestimmte Sachen, welche im
-alten System eine andere URL hatten als im neuen System, auch weiterhin
+alten System eine andere URL haben als im neuen System, auch weiterhin
 &uuml;ber die alten Links zug&auml;nglich zu halten.<br>
 <?php
   include_once 'includes/config_constants.inc.php';

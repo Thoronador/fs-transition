@@ -16,7 +16,7 @@
   $old_link = connectOldDB();
   if (!$old_link)
   {
-    echo '<p class="error">Could not establish connection to FS1 database.<br>'
+    echo '<p class="error">Die Verbindung zur Datenbank des FS1 konnte nicht hergestellt werden.<br>'
          .mysql_errno().': '.mysql_error()."</p>\n";
   }
   else
@@ -25,41 +25,41 @@
     $new_link = connectNewDB();
     if (!$new_link)
     {
-      echo '<p class="error">Could not establish connection to FS2 database.<br>'
+      echo '<p class="error">Die Verbindung zur Datenbank des FS2 konnte nicht hergestellt werden.<br>'
            .mysql_errno().': '.mysql_error()."</p>\n";
     }
     else
     {
       //do the screen transition stuff here
       require_once 'includes/screens.php';
-      echo "Trying to copy screenshot data. This will take some time...<br>\n";
+      //echo "Trying to copy screenshot data. This will take some time...<br>\n";
       if (screenTransition($old_link, $new_link, OldFSRoot, NewFSRoot))
       {
-        echo "Screenshots were copied successfully!<br>\n";
+        echo "Screenshots wurden erfolgreich &uuml;bertragen!<br>\n";
         // ---- screenshot categories
         if (screen_catTransition($old_link, $new_link))
         {
-          echo "Screenshot categories were copied successfully!<br>\n";
+          echo "Screenshotkategorien wurden erfolgreich &uuml;bertragen!<br>\n";
           // ---- screenshot configuration
           if (screen_configTransition($old_link, $new_link))
           {
-            echo "Screenshot configuration was copied successfully!<br>\n";
+            echo "Screenshotkonfiguration wurde erfolgreich &uuml;bertragen!<br>\n";
             //We can proceed to the next step now, add link to go on.
-            echo '<a href="stepUser.php"><strong>Next: user data</strong></a>';
+            echo '<a href="stepUser.php"><strong>N&auml;chster Schritt: Nutzerdaten</strong></a>';
           }
           else
           {
-            echo "<span class=\"error\">Screenshot configuration failed!</span><br>\n";
+            echo "<span class=\"error\">Screenshotkonfiguration konnte nicht angepasst werden!</span><br>\n";
           }
         }
         else
         {
-          echo "<span class=\"error\">Screenshot categories failed!</span><br>\n";
+          echo "<span class=\"error\">Screenshotkategorien konnten nicht &uuml;bertragen werden!</span><br>\n";
         }
       }
       else
       {
-        echo "<span class=\"error\">Screenshots failed!</span><br>\n";
+        echo "<span class=\"error\">Screenshots konnten nicht &uuml;bertragen werden!</span><br>\n";
       }
     }//else
   }//else

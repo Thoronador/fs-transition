@@ -16,7 +16,7 @@
   $old_link = connectOldDB();
   if (!$old_link)
   {
-    echo '<p class="error">Could not establish connection to FS1 database.<br>'
+    echo '<p class="error">Die Verbindung zur Datenbank des FS1 konnte nicht hergestellt werden.<br>'
          .mysql_errno().': '.mysql_error()."</p>\n";
   }
   else
@@ -25,7 +25,7 @@
     $new_link = connectNewDB();
     if (!$new_link)
     {
-      echo '<p class="error">Could not establish connection to FS2 database.<br>'
+      echo '<p class="error">Die Verbindung zur Datenbank des FS2 konnte nicht hergestellt werden.<br>'
            .mysql_errno().': '.mysql_error()."</p>\n";
     }
     else
@@ -33,35 +33,35 @@
       //do the real transition stuff here
       // ---- polls go first
       require_once 'includes/poll.php';
-      echo "Trying to copy poll data...<br>\n";
+      //echo "Trying to copy poll data...<br>\n";
       if (pollTransition($old_link, $new_link))
       {
-        echo "Polls were copied successfully!<br>\n";
+        echo "Umfragen wurden erfolgreich kopiert!<br>\n";
         // ---- poll answers
         if (poll_answersTransition($old_link, $new_link))
         {
-          echo "Poll answers were copied successfully!<br>\n";
+          echo "Umfrageantworten erfolgreich kopiert!<br>\n";
           // ---- shop articles
           require_once 'includes/shop.php';
           if (shopTransition($old_link, $new_link, OldFSRoot, NewFSRoot))
           {
-            echo "Shop data was copied successfully!<br>\n";
+            echo "Shopdaten wurden erfolgreich kopiert!<br>\n";
             //We can proceed to the next step now, add link to go on.
-            echo '<a href="stepScreens.php"><strong>Next: screenshots</strong></a>';
+            echo '<a href="stepScreens.php"><strong>N&auml;chster Schritt: Screenshots</strong></a>';
           }
           else
           {
-            echo "<span class=\"error\">Shop transition failed!</span><br>\n";
+            echo "<span class=\"error\">Shop konnte nicht kopiert werden!</span><br>\n";
           }
         }
         else
         {
-          echo "<span class=\"error\">Poll answers failed!</span><br>\n";
+          echo "<span class=\"error\">Umfrageantworten konnten nicht kopiert werden!</span><br>\n";
         }
       }
       else
       {
-        echo "<span class=\"error\">Polls failed!</span><br>\n";
+        echo "<span class=\"error\">Umfragen konnten nicht kopiert werden!</span><br>\n";
       }
     }//else
   }//else

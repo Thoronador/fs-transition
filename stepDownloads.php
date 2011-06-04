@@ -16,7 +16,7 @@
   $old_link = connectOldDB();
   if (!$old_link)
   {
-    echo '<p class="error">Could not establish connection to FS1 database.<br>'
+    echo '<p class="error">Die Verbindung zur Datenbank des FS1 konnte nicht hergestellt werden.<br>'
          .mysql_errno().': '.mysql_error()."</p>\n";
   }
   else
@@ -25,41 +25,41 @@
     $new_link = connectNewDB();
     if (!$new_link)
     {
-      echo '<p class="error">Could not establish connection to FS2 database.<br>'
+      echo '<p class="error">Die Verbindung zur Datenbank des FS2 konnte nicht hergestellt werden.<br>'
            .mysql_errno().': '.mysql_error()."</p>\n";
     }
     else
     {
       //do the download transition stuff here
       require_once 'includes/downloads.php';
-      echo "Trying to copy download data. This will take some time...<br>\n";
+      //echo "Trying to copy download data. This will take some time...<br>\n";
       if (dl_catTransition($old_link, $new_link))
       {
-        echo "Download categories were copied successfully!<br>\n";
+        echo "Downloadkategorien wurden erfolgreich kopiert!<br>\n";
         // ---- downloads themselves
         if (dlTransition($old_link, $new_link))
         {
-          echo "Downloads were copied successfully!<br>\n";
+          echo "Downloads wurden erfolgreich kopiert!<br>\n";
           // ---- copy mirror downloads
           if (dl_mirrorsTransition($old_link, $new_link))
           {
-            echo "Download mirrors were copied successfully!<br>\n";
+            echo "Downloadmirrors wurden erfolgreich kopiert!<br>\n";
             //We can proceed to the next step now, add link to go on.
             echo '<p><a href="stepVisitStats.php"><strong>N&auml;chster Schritt: Benutzerstatistik</strong></a></p>';
           }
           else
           {
-            echo "Download mirrors could not be copied to new FS!<br>\n";
+            echo "Downloadmirrors konnten nicht ins neue FS &uuml;bernommen werden!<br>\n";
           }
         }
         else
         {
-          echo "Downloads could not be copied to new FS!<br>\n";
+          echo "Downloads konnten nicht ins neue FS &uuml;bernommen werden!<br>\n";
         }
       }
       else
       {
-        echo "Download categories could not be copied to new FS!<br>\n";
+        echo "Downloadkategorien konnten nicht ins neue FS &uuml;bernommen werden!<br>\n";
       }
     }//else
   }//else

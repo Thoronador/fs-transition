@@ -16,7 +16,7 @@
   $old_link = connectOldDB();
   if (!$old_link)
   {
-    echo '<p class="error">Could not establish connection to FS1 database.<br>'
+    echo '<p class="error">Die Verbindung zur Datenbank des FS1 konnte nicht hergestellt werden.<br>'
          .mysql_errno().': '.mysql_error()."</p>\n";
   }
   else
@@ -25,21 +25,21 @@
     $new_link = connectNewDB();
     if (!$new_link)
     {
-      echo '<p class="error">Could not establish connection to FS2 database.<br>'
+      echo '<p class="error">Die Verbindung zur Datenbank des FS2 konnte nicht hergestellt werden.<br>'
            .mysql_errno().': '.mysql_error()."</p>\n";
     }
     else
     {
       //do the counter transition stuff here
       require_once 'includes/counterVisitors.php';
-      echo "Trying to copy the daily visitor data. This will take some time...<br>\n";
+      //echo "Trying to copy the daily visitor data. This will take some time...<br>\n";
       if (counter_statTransition($old_link, $new_link))
       {
-        echo "Visitor data was copied successfully!<br>\n";
+        echo "Besucherstatistik wurde erfolgreich &uuml;bertragen!<br>\n";
         // ---- general counter
         if (counterTransition($old_link, $new_link))
         {
-          echo "General counter was copied successfully!<br>\n";
+          echo "Allgemeine Statistik wurde erfolgreich &uuml;bertragen!<br>\n";
           //We can proceed to the next step now, add link to go on.
           echo '<p><a href="stepRefStats.php"><strong>N&auml;chster Schritt: Refererstatistik</strong></a><br>'
               .'<strong>Achtung!</strong> Dieser Schritt kann sehr lange dauern. Ggf. ist es notwendig, '
@@ -48,12 +48,12 @@
         }
         else
         {
-          echo "General counter could not be copied to new FS!<br>\n";
+          echo "Allgemeine Statistik konnte nicht &uuml;bertragen werden!<br>\n";
         }
       }
       else
       {
-        echo "Visitor data could not be copied to new FS!<br>\n";
+        echo "Besucherstatistik konnte nicht &uuml;bertragen werden!<br>\n";
       }
     }//else
   }//else
