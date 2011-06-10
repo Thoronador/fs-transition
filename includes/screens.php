@@ -1,6 +1,6 @@
 <?php
 /*
-    This file is part of the Frogsystem Transition Tool. 
+    This file is part of the Frogsystem Transition Tool.
     Copyright (C) 2011  Thoronador
 
     The Frogsystem Transition Tool is free software: you can redistribute it
@@ -28,7 +28,7 @@ function screenTransition($old_link, $new_link, $old_basedir, $new_basedir)
     return false;
   }
   //get all stuff from old DB's screen table
-  $result = mysql_query("SELECT * FROM ".OldDBTablePrefix."screen", $old_link);
+  $result = mysql_query('SELECT * FROM `'.OldDBTablePrefix.'screen`', $old_link);
   if ($result===false)
   {
     echo '<p>Could not execute query on old screen table.<br>';
@@ -60,7 +60,7 @@ function screenTransition($old_link, $new_link, $old_basedir, $new_basedir)
     return false;
   }
   //delete possible content that is in new screen table
-  $query_res = mysql_query("DELETE FROM ".NewDBTablePrefix."screen WHERE 1", $new_link);
+  $query_res = mysql_query('DELETE FROM `'.NewDBTablePrefix.'screen` WHERE 1', $new_link);
   if (!$query_res)
   {
     echo '<p>Could not delete existing values in new screen table.<br>';
@@ -73,7 +73,7 @@ function screenTransition($old_link, $new_link, $old_basedir, $new_basedir)
   $screenarray = array();
   while ($row = mysql_fetch_assoc($result))
   {
-    $query_res = mysql_query('INSERT INTO '.NewDBTablePrefix.'screen '
+    $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'screen` '
                   .'(screen_id, cat_id, screen_name) '
                   ."VALUES ('".$row['screen_id']."', '".$row['cat_id']."', '"
                   .$row['screen_name']."')", $new_link);
@@ -88,7 +88,7 @@ function screenTransition($old_link, $new_link, $old_basedir, $new_basedir)
   }//while
   echo '<span>Done.</span>'."\n";
   //set auto increment value
-  $query_res = mysql_query("ALTER TABLE ".NewDBTablePrefix."screen AUTO_INCREMENT=".$auto_inc_value, $new_link);
+  $query_res = mysql_query('ALTER TABLE `'.NewDBTablePrefix.'screen` AUTO_INCREMENT='.$auto_inc_value, $new_link);
   if (!$query_res)
   {
     echo '<p>Could not set new auto-increment value on new screen table.<br>';
@@ -145,7 +145,7 @@ function screen_catTransition($old_link, $new_link)
     return false;
   }
   //get all stuff from old DB's screen_cat table
-  $result = mysql_query("SELECT * FROM ".OldDBTablePrefix."screen_cat", $old_link);
+  $result = mysql_query('SELECT * FROM `'.OldDBTablePrefix.'screen_cat`', $old_link);
   if ($result===false)
   {
     echo '<p>Could not execute query on old screen category table.<br>';
@@ -177,7 +177,7 @@ function screen_catTransition($old_link, $new_link)
     return false;
   }
   //delete possible content that is in new screen_cat table
-  $query_res = mysql_query("DELETE FROM ".NewDBTablePrefix."screen_cat WHERE 1", $new_link);
+  $query_res = mysql_query('DELETE FROM `'.NewDBTablePrefix.'screen_cat` WHERE 1', $new_link);
   if (!$query_res)
   {
     echo '<p>Could not delete existing values in new screen category table.<br>';
@@ -189,7 +189,7 @@ function screen_catTransition($old_link, $new_link)
   echo '<span>Processing...</span>';
   while ($row = mysql_fetch_assoc($result))
   {
-    $query_res = mysql_query('INSERT INTO '.NewDBTablePrefix.'screen_cat '
+    $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'screen_cat` '
                   .'(cat_id, cat_name, cat_type, cat_visibility, cat_date, randompic) '
                   ."VALUES ('".$row['cat_id']."', '".$row['cat_name']."', 0, 1, '"
                   .$row['cat_date']."', 0)", $new_link);
@@ -202,7 +202,7 @@ function screen_catTransition($old_link, $new_link)
   }//while
   echo '<span>Done.</span>'."\n";
   //set auto increment value
-  $query_res = mysql_query('ALTER TABLE '.NewDBTablePrefix.'screen_cat AUTO_INCREMENT='.$auto_inc_value, $new_link);
+  $query_res = mysql_query('ALTER TABLE `'.NewDBTablePrefix.'screen_cat` AUTO_INCREMENT='.$auto_inc_value, $new_link);
   if (!$query_res)
   {
     echo '<p>Could not set new auto-increment value on new screen category table.<br>';
@@ -222,7 +222,7 @@ function screen_configTransition($old_link, $new_link)
     return false;
   }
   //get all stuff from old DB's screen_config table
-  $result = mysql_query("SELECT * FROM ".OldDBTablePrefix."screen_config", $old_link);
+  $result = mysql_query('SELECT * FROM `'.OldDBTablePrefix.'screen_config`', $old_link);
   if ($result===false)
   {
     echo '<p>Could not execute query on old screen config table.<br>';
@@ -253,7 +253,7 @@ function screen_configTransition($old_link, $new_link)
     return false;
   }
   //check that there is one entry in the new configuration table
-  $query_res = mysql_query('SELECT COUNT(id) AS count FROM '.NewDBTablePrefix.'screen_config', $new_link);
+  $query_res = mysql_query('SELECT COUNT(id) AS count FROM `'.NewDBTablePrefix.'screen_config`', $new_link);
   if (!$query_res)
   {
     echo '<p>Could not execute SELECT query on new screen_config table.<br>';
@@ -275,7 +275,7 @@ function screen_configTransition($old_link, $new_link)
   echo '<span>Processing screenshot configuration...</span>';
   if ($row = mysql_fetch_assoc($result))
   {
-    $query_res = mysql_query('UPDATE '.NewDBTablePrefix.'screen_config '
+    $query_res = mysql_query('UPDATE `'.NewDBTablePrefix.'screen_config` '
                   ."SET screen_x='".$row['screen_x']."' , screen_y='".$row['screen_y']
                   ."' , screen_thumb_x='".$row['thumb_x']."' , screen_thumb_y='"
                   .$row['thumb_y']."', screen_order='id', screen_sort='asc'",

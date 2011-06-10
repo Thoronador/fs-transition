@@ -1,6 +1,6 @@
 <?php
 /*
-    This file is part of the Frogsystem Transition Tool. 
+    This file is part of the Frogsystem Transition Tool.
     Copyright (C) 2011  Thoronador
 
     The Frogsystem Transition Tool is free software: you can redistribute it
@@ -28,7 +28,7 @@ function pollTransition($old_link, $new_link)
     return false;
   }
   //get all stuff from old DB's poll table
-  $result = mysql_query("SELECT * FROM ".OldDBTablePrefix."poll", $old_link);
+  $result = mysql_query('SELECT * FROM `'.OldDBTablePrefix.'poll`', $old_link);
   if ($result===false)
   {
     echo '<p>Could not execute query on old poll table.<br>';
@@ -60,7 +60,7 @@ function pollTransition($old_link, $new_link)
     return false;
   }
   //delete possible content that is in new DB
-  $query_res = mysql_query("DELETE FROM ".NewDBTablePrefix."poll WHERE 1", $new_link);
+  $query_res = mysql_query('DELETE FROM `'.NewDBTablePrefix.'poll` WHERE 1', $new_link);
   if (!$query_res)
   {
     echo '<p>Could not delete existing values in new poll table.<br>';
@@ -71,7 +71,7 @@ function pollTransition($old_link, $new_link)
   echo '<span>Processing...</span>';
   while ($row = mysql_fetch_assoc($result))
   {
-    $query_res = mysql_query("INSERT INTO ".NewDBTablePrefix."poll "
+    $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'poll` '
                   .'(poll_id, poll_quest, poll_start, poll_end, poll_type, poll_participants) '
                   ."VALUES ('".$row['poll_id']."', '".$row['poll_quest']."', '"
                   .$row['poll_start']."', '".$row['poll_end']."', '"
@@ -85,7 +85,7 @@ function pollTransition($old_link, $new_link)
   }//while
   echo '<span>Done.</span>'."\n";
   //set auto increment value
-  $query_res = mysql_query("ALTER TABLE ".NewDBTablePrefix."poll AUTO_INCREMENT=".$auto_inc_value, $new_link);
+  $query_res = mysql_query('ALTER TABLE `'.NewDBTablePrefix.'poll` AUTO_INCREMENT='.$auto_inc_value, $new_link);
   if (!$query_res)
   {
     echo '<p>Could not set new auto-increment value on poll table.<br>';
@@ -99,7 +99,8 @@ function pollTransition($old_link, $new_link)
     echo mysql_errno($old_link).': '.mysql_error($old_link)."</p>\n";
     return false;
   }
-  $result = mysql_query("SELECT poll_id, SUM(answer_count) AS participants FROM ".OldDBTablePrefix."poll_answers GROUP BY poll_id", $old_link);
+  $result = mysql_query('SELECT poll_id, SUM(answer_count) AS participants FROM `'
+                        .OldDBTablePrefix.'poll_answers` GROUP BY poll_id', $old_link);
   if ($result==false)
   {
     echo '<p>Could not execute query for participants calculation on old poll_answers table.<br>';
@@ -117,7 +118,7 @@ function pollTransition($old_link, $new_link)
   while ($row = mysql_fetch_assoc($result))
   {
     //set participant count
-    $query_res = mysql_query("UPDATE ".NewDBTablePrefix."poll SET poll_participants='"
+    $query_res = mysql_query('UPDATE `'.NewDBTablePrefix."poll` SET poll_participants='"
                   .$row['participants']."' WHERE poll_id='".$row['poll_id']."'");
     if (!$query_res)
     {
@@ -139,7 +140,7 @@ function poll_answersTransition($old_link, $new_link)
     return false;
   }
   //get all anwer stuff from old DB's poll table
-  $result = mysql_query("SELECT * FROM ".OldDBTablePrefix."poll_answers WHERE 1", $old_link);
+  $result = mysql_query('SELECT * FROM `'.OldDBTablePrefix.'poll_answers` WHERE 1', $old_link);
   if ($result===false)
   {
     echo '<p>Could not execute query on old poll_answers table.<br>';
@@ -171,7 +172,7 @@ function poll_answersTransition($old_link, $new_link)
     return false;
   }
   //delete possible content that is in new DB
-  $query_res = mysql_query("DELETE FROM ".NewDBTablePrefix."poll_answers WHERE 1", $new_link);
+  $query_res = mysql_query('DELETE FROM `'.NewDBTablePrefix.'poll_answers` WHERE 1', $new_link);
   if (!$query_res)
   {
     echo '<p>Could not delete existing values in new poll_answers table.<br>';
@@ -182,7 +183,7 @@ function poll_answersTransition($old_link, $new_link)
   echo '<span>Processing...</span>';
   while ($row = mysql_fetch_assoc($result))
   {
-    $query_res = mysql_query("INSERT INTO ".NewDBTablePrefix."poll_answers "
+    $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'poll_answers` '
                   .'(poll_id, answer_id, answer, answer_count) '
                   ."VALUES ('".$row['poll_id']."', '".$row['answer_id']."', '"
                   .$row['answer']."', '".$row['answer_count']."')", $new_link);
@@ -195,7 +196,7 @@ function poll_answersTransition($old_link, $new_link)
   }//while
   echo '<span>Done.</span>'."\n";
   //set auto-increment value
-  $query_res = mysql_query("ALTER TABLE ".NewDBTablePrefix."poll_answers AUTO_INCREMENT=".$auto_inc_value, $new_link);
+  $query_res = mysql_query('ALTER TABLE `'.NewDBTablePrefix.'poll_answers` AUTO_INCREMENT='.$auto_inc_value, $new_link);
   if (!$query_res)
   {
     echo '<p>Could not set new auto-increment value on poll_answers table.<br>';

@@ -1,6 +1,6 @@
 <?php
 /*
-    This file is part of the Frogsystem Transition Tool. 
+    This file is part of the Frogsystem Transition Tool.
     Copyright (C) 2011  Thoronador
 
     The Frogsystem Transition Tool is free software: you can redistribute it
@@ -29,7 +29,7 @@ function userTransition($old_link, $new_link, $old_basedir, $new_basedir)
     return false;
   }
   //get all stuff from old DB's user table
-  $result = mysql_query("SELECT * FROM ".OldDBTablePrefix."user", $old_link);
+  $result = mysql_query('SELECT * FROM `'.OldDBTablePrefix.'user`', $old_link);
   if ($result===false)
   {
     echo '<p>Could not execute query on old user table.<br>';
@@ -61,7 +61,7 @@ function userTransition($old_link, $new_link, $old_basedir, $new_basedir)
     return false;
   }
   //delete possible content that is in new DB
-  $query_res = mysql_query("DELETE FROM ".NewDBTablePrefix."user WHERE 1", $new_link);
+  $query_res = mysql_query('DELETE FROM `'.NewDBTablePrefix.'user` WHERE 1', $new_link);
   if (!$query_res)
   {
     echo '<p>Could not delete existing values in new user table.<br>';
@@ -73,7 +73,7 @@ function userTransition($old_link, $new_link, $old_basedir, $new_basedir)
   echo '<span>Processing...</span>';
   while ($row = mysql_fetch_assoc($result))
   {
-    $query_res = mysql_query("INSERT INTO ".NewDBTablePrefix."user "
+    $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'user` '
                   .'(user_id, user_name, user_password, user_salt, user_mail, '
                   .'user_is_staff, user_group, user_is_admin, user_reg_date, '
                   .'user_show_mail, user_homepage, user_icq, user_aim, '
@@ -91,7 +91,7 @@ function userTransition($old_link, $new_link, $old_basedir, $new_basedir)
   }//while
   echo '<span>Done.</span>'."\n";
   //set auto increment value
-  $query_res = mysql_query("ALTER TABLE ".NewDBTablePrefix."user AUTO_INCREMENT=".$auto_inc_value, $new_link);
+  $query_res = mysql_query('ALTER TABLE `'.NewDBTablePrefix.'user` AUTO_INCREMENT='.$auto_inc_value, $new_link);
   if (!$query_res)
   {
     echo '<p>Could not set new auto-increment value on user table.<br>';
@@ -163,7 +163,7 @@ function permissionsTransition($old_link, $new_link)
     return false;
   }
   //get all stuff from old DB's user table
-  $result = mysql_query("SELECT * FROM ".OldDBTablePrefix."permissions", $old_link);
+  $result = mysql_query('SELECT * FROM `'.OldDBTablePrefix.'permissions`', $old_link);
   if ($result===false)
   {
     echo '<p>Could not execute query on old permissions table.<br>';
@@ -180,7 +180,7 @@ function permissionsTransition($old_link, $new_link)
     return false;
   }
   //delete possible content that is in new DB
-  $query_res = mysql_query("DELETE FROM ".NewDBTablePrefix."user_permissions WHERE 1", $new_link);
+  $query_res = mysql_query('DELETE FROM `'.NewDBTablePrefix.'user_permissions` WHERE 1', $new_link);
   if (!$query_res)
   {
     echo '<p>Could not delete existing values in new user permission table.<br>';
@@ -192,7 +192,7 @@ function permissionsTransition($old_link, $new_link)
   echo '<span>Processing...</span>';
   while ($row = mysql_fetch_assoc($result))
   {
-    $query_string = 'INSERT INTO '.NewDBTablePrefix.'user_permissions '
+    $query_string = 'INSERT INTO `'.NewDBTablePrefix.'user_permissions` '
                    .'(perm_id, x_id, perm_for_group) VALUE ';
     $need_query = false;
 
@@ -230,7 +230,7 @@ function permissionsTransition($old_link, $new_link)
         return false;
       }//if
       //now make the user member of the site's staff
-      $query_res = mysql_query('UPDATE '.NewDBTablePrefix.'user '
+      $query_res = mysql_query('UPDATE `'.NewDBTablePrefix.'user` '
                     ."SET user_is_staff='1' WHERE user_id='".$row['user_id']
                     ."' LIMIT 1", $new_link);
       if (!$query_res)
@@ -242,7 +242,6 @@ function permissionsTransition($old_link, $new_link)
     }//if query needed
     else
     {
-      //DEBUG:
       echo '<p>Hint: No permission update neccessary for userid '.$row['user_id'].'.</p>';
     }
   }//while

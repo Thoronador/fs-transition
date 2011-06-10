@@ -28,7 +28,7 @@ function news_catTransition($old_link, $new_link, $old_basedir, $new_basedir)
     return false;
   }
   //get all stuff from old DB's news_cat table
-  $result = mysql_query("SELECT * FROM ".OldDBTablePrefix."news_cat", $old_link);
+  $result = mysql_query('SELECT * FROM `'.OldDBTablePrefix.'news_cat`', $old_link);
   if ($result===false)
   {
     echo '<p>Could not execute query on old news_cat table.<br>';
@@ -60,7 +60,7 @@ function news_catTransition($old_link, $new_link, $old_basedir, $new_basedir)
     return false;
   }
   //delete possible content that is in new DB
-  $query_res = mysql_query("DELETE FROM ".NewDBTablePrefix."news_cat WHERE 1", $new_link);
+  $query_res = mysql_query('DELETE FROM `'.NewDBTablePrefix.'news_cat` WHERE 1', $new_link);
   if (!$query_res)
   {
     echo '<p>Could not delete existing values in new news_cat table.<br>';
@@ -72,7 +72,7 @@ function news_catTransition($old_link, $new_link, $old_basedir, $new_basedir)
   echo '<span>Processing...</span>';
   while ($row = mysql_fetch_assoc($result))
   {
-    $query_res = mysql_query("INSERT INTO ".NewDBTablePrefix."news_cat "
+    $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'news_cat` '
                   .'(cat_id, cat_name, cat_description, cat_date, cat_user) '
                   ."VALUES ('".$row['cat_id']."', '".$row['cat_name']."', '', "
                   .'UNIX_TIMESTAMP(), 1)', $new_link);
@@ -85,7 +85,7 @@ function news_catTransition($old_link, $new_link, $old_basedir, $new_basedir)
   }//while
   echo '<span>Done.</span>'."\n";
   //set auto increment value
-  $query_res = mysql_query("ALTER TABLE ".NewDBTablePrefix."news_cat AUTO_INCREMENT=".$auto_inc_value, $new_link);
+  $query_res = mysql_query('ALTER TABLE `'.NewDBTablePrefix.'news_cat` AUTO_INCREMENT='.$auto_inc_value, $new_link);
   if (!$query_res)
   {
     echo '<p>Could not set new auto-increment value on news_cat table.<br>';
@@ -150,7 +150,7 @@ function newsTransition($old_link, $new_link)
     return false;
   }
   //get all stuff from old DB's news table
-  $result = mysql_query("SELECT * FROM ".OldDBTablePrefix."news", $old_link);
+  $result = mysql_query('SELECT * FROM `'.OldDBTablePrefix.'news`', $old_link);
   if ($result===false)
   {
     echo '<p>Could not execute query on old news table.<br>';
@@ -182,7 +182,7 @@ function newsTransition($old_link, $new_link)
     return false;
   }
   //delete possible content that is in new DB
-  $query_res = mysql_query("DELETE FROM ".NewDBTablePrefix."news WHERE 1", $new_link);
+  $query_res = mysql_query('DELETE FROM `'.NewDBTablePrefix.'news` WHERE 1', $new_link);
   if (!$query_res)
   {
     echo '<p>Could not delete existing values in new news table.<br>';
@@ -194,7 +194,7 @@ function newsTransition($old_link, $new_link)
   echo '<span>Processing...</span>';
   while ($row = mysql_fetch_assoc($result))
   {
-    $query_res = mysql_query("INSERT INTO ".NewDBTablePrefix."news "
+    $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'news` '
                   .'(news_id, cat_id, user_id, news_date, news_title, news_text, '
                   .' news_active, news_search_update) '
                   ."VALUES ('".$row['news_id']."', '".$row['cat_id']."', '"
@@ -209,7 +209,7 @@ function newsTransition($old_link, $new_link)
   }//while
   echo '<span>Done.</span>'."\n";
   //set auto increment value
-  $query_res = mysql_query("ALTER TABLE ".NewDBTablePrefix."news AUTO_INCREMENT=".$auto_inc_value, $new_link);
+  $query_res = mysql_query('ALTER TABLE `'.NewDBTablePrefix.'news` AUTO_INCREMENT='.$auto_inc_value, $new_link);
   if (!$query_res)
   {
     echo '<p>Could not set new auto-increment value on news table.<br>';
@@ -229,7 +229,7 @@ function news_linksTransition($old_link, $new_link)
     return false;
   }
   //get all stuff from old DB's news_links table
-  $result = mysql_query("SELECT * FROM ".OldDBTablePrefix."news_links", $old_link);
+  $result = mysql_query('SELECT * FROM `'.OldDBTablePrefix.'news_links`', $old_link);
   if ($result===false)
   {
     echo '<p>Could not execute query on old news_links table.<br>';
@@ -261,7 +261,7 @@ function news_linksTransition($old_link, $new_link)
     return false;
   }
   //delete possible content that is in new DB
-  $query_res = mysql_query("DELETE FROM ".NewDBTablePrefix."news_links WHERE 1", $new_link);
+  $query_res = mysql_query('DELETE FROM `'.NewDBTablePrefix.'news_links` WHERE 1', $new_link);
   if (!$query_res)
   {
     echo '<p>Could not delete existing values in new news_links table.<br>';
@@ -272,7 +272,7 @@ function news_linksTransition($old_link, $new_link)
   echo '<span>Processing...</span>';
   while ($row = mysql_fetch_assoc($result))
   {
-    $query_res = mysql_query("INSERT INTO ".NewDBTablePrefix."news_links "
+    $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'news_links `'
                   .'(news_id, link_id, link_name, link_url, link_target) '
                   ."VALUES ('".$row['news_id']."', '".$row['link_id']."', '"
                   .$row['link_name']."', '".$row['link_url']."', '"
@@ -286,7 +286,7 @@ function news_linksTransition($old_link, $new_link)
   }//while
   echo '<span>Done.</span>'."\n";
   //set auto increment value
-  $query_res = mysql_query("ALTER TABLE ".NewDBTablePrefix."news_links AUTO_INCREMENT=".$auto_inc_value, $new_link);
+  $query_res = mysql_query('ALTER TABLE `'.NewDBTablePrefix.'news_links` AUTO_INCREMENT='.$auto_inc_value, $new_link);
   if (!$query_res)
   {
     echo '<p>Could not set new auto-increment value on news_links table.<br>';
@@ -306,7 +306,7 @@ function news_commentsTransition($old_link, $new_link)
     return false;
   }
   //get all stuff from old DB's news_comments table
-  $result = mysql_query("SELECT * FROM ".OldDBTablePrefix."news_comments", $old_link);
+  $result = mysql_query('SELECT * FROM `'.OldDBTablePrefix.'news_comments', $old_link);
   if ($result===false)
   {
     echo '<p>Could not execute query on old news_comments table.<br>';
@@ -338,7 +338,7 @@ function news_commentsTransition($old_link, $new_link)
     return false;
   }
   //delete possible content that is in new DB
-  $query_res = mysql_query("DELETE FROM ".NewDBTablePrefix."news_comments WHERE 1", $new_link);
+  $query_res = mysql_query('DELETE FROM `'.NewDBTablePrefix.'news_comments` WHERE 1', $new_link);
   if (!$query_res)
   {
     echo '<p>Could not delete existing values in new news_comments table.<br>';
@@ -349,7 +349,7 @@ function news_commentsTransition($old_link, $new_link)
   echo '<span>Processing...</span>';
   while ($row = mysql_fetch_assoc($result))
   {
-    $query_res = mysql_query("INSERT INTO ".NewDBTablePrefix."news_comments "
+    $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'news_comments` '
                   .'(comment_id, news_id, comment_poster, comment_poster_id, '
                   .'comment_poster_ip, comment_date, comment_title, comment_text) '
                   ."VALUES ('".$row['comment_id']."', '".$row['news_id']."', '"
@@ -365,7 +365,7 @@ function news_commentsTransition($old_link, $new_link)
   }//while
   echo '<span>Done.</span>'."\n";
   //set auto increment value
-  $query_res = mysql_query("ALTER TABLE ".NewDBTablePrefix."news_comments AUTO_INCREMENT=".$auto_inc_value, $new_link);
+  $query_res = mysql_query('ALTER TABLE `'.NewDBTablePrefix.'news_comments` AUTO_INCREMENT='.$auto_inc_value, $new_link);
   if (!$query_res)
   {
     echo '<p>Could not set new auto-increment value on news_comments table.<br>';
@@ -399,7 +399,7 @@ function news_configTransition($old_link, $new_link)
     return false;
   }
   //get all stuff from old DB's news_config table
-  $result = mysql_query("SELECT * FROM ".OldDBTablePrefix."news_config", $old_link);
+  $result = mysql_query('SELECT * FROM `'.OldDBTablePrefix.'news_config`', $old_link);
   if ($result===false)
   {
     echo '<p>Could not execute query on old news_config table.<br>';
@@ -430,7 +430,7 @@ function news_configTransition($old_link, $new_link)
     return false;
   }
   //check that there is one entry in the new configuration table
-  $query_res = mysql_query('SELECT COUNT(id) AS count FROM '.NewDBTablePrefix.'news_config', $new_link);
+  $query_res = mysql_query('SELECT COUNT(id) AS count FROM `'.NewDBTablePrefix.'news_config`', $new_link);
   if (!$query_res)
   {
     echo '<p>Could not execute SELECT query on new news_config table.<br>';
@@ -472,7 +472,7 @@ function news_configTransition($old_link, $new_link)
     $row['html_code'] = codeSettingTransition($row['html_code']);
     $row['fs_code'] = codeSettingTransition($row['fs_code']);
     //now execute the update query on the new configuration table
-    $query_res = mysql_query('UPDATE '.NewDBTablePrefix.'news_config '
+    $query_res = mysql_query('UPDATE `'.NewDBTablePrefix.'news_config` '
                   ."SET num_news='".$row['num_news']."', num_head='".$row['num_head']
                   ."', html_code='".$row['html_code']."', fs_code='"
                   .$row['fs_code']."', com_sort='ASC'", $new_link);

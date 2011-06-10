@@ -1,6 +1,6 @@
 <?php
 /*
-    This file is part of the Frogsystem Transition Tool. 
+    This file is part of the Frogsystem Transition Tool.
     Copyright (C) 2011  Thoronador
 
     The Frogsystem Transition Tool is free software: you can redistribute it
@@ -28,7 +28,7 @@ function shopTransition($old_link, $new_link, $old_basedir, $new_basedir)
     return false;
   }
   //get all stuff from old DB's shop table
-  $result = mysql_query("SELECT * FROM ".OldDBTablePrefix."shop", $old_link);
+  $result = mysql_query('SELECT * FROM `'.OldDBTablePrefix.'shop`', $old_link);
   if ($result===false)
   {
     echo '<p>Could not execute query on old shop table.<br>';
@@ -60,7 +60,7 @@ function shopTransition($old_link, $new_link, $old_basedir, $new_basedir)
     return false;
   }
   //delete possible content that is in new DB
-  $query_res = mysql_query("DELETE FROM ".NewDBTablePrefix."shop WHERE 1", $new_link);
+  $query_res = mysql_query('DELETE FROM `'.NewDBTablePrefix.'shop` WHERE 1', $new_link);
   if (!$query_res)
   {
     echo '<p>Could not delete existing values in new shop table.<br>';
@@ -73,7 +73,7 @@ function shopTransition($old_link, $new_link, $old_basedir, $new_basedir)
   $artikelarray = array();
   while ($row = mysql_fetch_assoc($result))
   {
-    $query_res = mysql_query("INSERT INTO ".NewDBTablePrefix."shop "
+    $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'shop` '
                   .'(artikel_id, artikel_name, artikel_url, artikel_text, artikel_preis, artikel_hot) '
                   ."VALUES ('".$row['artikel_id']."', '".$row['artikel_name']."', '"
                   .$row['artikel_url']."', '".$row['artikel_text']."', '"
@@ -89,7 +89,7 @@ function shopTransition($old_link, $new_link, $old_basedir, $new_basedir)
   }//while
   echo '<span>Done.</span>'."\n";
   //set auto increment value
-  $query_res = mysql_query("ALTER TABLE ".NewDBTablePrefix."shop AUTO_INCREMENT=".$auto_inc_value, $new_link);
+  $query_res = mysql_query('ALTER TABLE `'.NewDBTablePrefix.'shop` AUTO_INCREMENT='.$auto_inc_value, $new_link);
   if (!$query_res)
   {
     echo '<p>Could not set new auto-increment value on shop table.<br>';

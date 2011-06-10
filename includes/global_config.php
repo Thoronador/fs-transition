@@ -28,7 +28,7 @@ function global_configTransition($old_link, $new_link)
     return false;
   }
   //get all stuff from old DB's global_config table
-  $result = mysql_query('SELECT * FROM '.OldDBTablePrefix.'global_config', $old_link);
+  $result = mysql_query('SELECT * FROM `'.OldDBTablePrefix.'global_config`', $old_link);
   if ($result===false)
   {
     echo '<p>Could not execute query on old global_config table.<br>';
@@ -59,7 +59,7 @@ function global_configTransition($old_link, $new_link)
     return false;
   }
   //check that there is one entry in the new configuration table
-  $query_res = mysql_query('SELECT COUNT(id) AS count FROM '.NewDBTablePrefix.'global_config', $new_link);
+  $query_res = mysql_query('SELECT COUNT(id) AS count FROM `'.NewDBTablePrefix.'global_config`', $new_link);
   if (!$query_res)
   {
     echo '<p>Could not execute SELECT query on new global_config table.<br>';
@@ -95,7 +95,7 @@ function global_configTransition($old_link, $new_link)
       $row['virtualhost'] .= '/';
     }
     //now execute the update query on the new configuration table
-    $query_res = mysql_query('UPDATE '.NewDBTablePrefix.'global_config '
+    $query_res = mysql_query('UPDATE `'.NewDBTablePrefix.'global_config` '
                   ."SET virtualhost='".$row['virtualhost']."', admin_mail='"
                   .$row['admin_mail']."'", $new_link);
     if (!$query_res)
