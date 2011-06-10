@@ -1,6 +1,6 @@
 <?php
 /*
-    This file is part of the Frogsystem Transition Tool. 
+    This file is part of the Frogsystem Transition Tool.
     Copyright (C) 2011  Thoronador
 
     The Frogsystem Transition Tool is free software: you can redistribute it
@@ -28,7 +28,7 @@ function anouncementTransition($old_link, $new_link) //yes, it's spelled the wro
     return false;
   }
   //get all stuff from old DB's user table
-  $result = mysql_query("SELECT * FROM ".OldDBTablePrefix."anouncement", $old_link);
+  $result = mysql_query('SELECT * FROM `'.OldDBTablePrefix.'anouncement`', $old_link);
   if ($result===false)
   {
     echo '<p>Could not execute query on old anounement table.<br>';
@@ -53,7 +53,7 @@ function anouncementTransition($old_link, $new_link) //yes, it's spelled the wro
     return false;
   }
   //delete possible content that is in new DB
-  $query_res = mysql_query("DELETE FROM ".NewDBTablePrefix."announcement WHERE 1", $new_link);
+  $query_res = mysql_query('DELETE FROM `'.NewDBTablePrefix.'announcement` WHERE 1', $new_link);
   if (!$query_res)
   {
     echo '<p>Could not delete existing values in new announcement table.<br>';
@@ -65,7 +65,7 @@ function anouncementTransition($old_link, $new_link) //yes, it's spelled the wro
   echo '<span>Processing...</span>';
   if ($row = mysql_fetch_assoc($result))
   {
-    $query_res = mysql_query("INSERT INTO ".NewDBTablePrefix."announcement "
+    $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'announcement` '
                   .'(id, announcement_text, show_announcement, '
                   .'activate_announcement, ann_html, ann_fscode, ann_para) '
                   ."VALUES (1, '".$row['text']."', 1, 1, 1, 1, 1)", $new_link);
@@ -79,7 +79,7 @@ function anouncementTransition($old_link, $new_link) //yes, it's spelled the wro
   else
   {
     //no announcement in old table, so create at least standard data row
-    $query_res = mysql_query("INSERT INTO ".NewDBTablePrefix."announcement "
+    $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'announcement` '
                   .'(id, announcement_text, show_announcement, '
                   .'activate_announcement, ann_html, ann_fscode, ann_para) '
                   ."VALUES (1, '', 2, 0, 1, 1, 1)", $new_link);

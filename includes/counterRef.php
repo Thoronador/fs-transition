@@ -28,7 +28,7 @@ function counter_refTransition($old_link, $new_link)
     return false;
   }
   //get all stuff from old DB's counter_stat table
-  $result = mysql_query('SELECT * FROM '.OldDBTablePrefix.'counter_ref ', $old_link);
+  $result = mysql_query('SELECT * FROM `'.OldDBTablePrefix.'counter_ref`', $old_link);
   if ($result===false)
   {
     echo '<p>Could not execute query on old counter_ref table.<br>';
@@ -45,7 +45,7 @@ function counter_refTransition($old_link, $new_link)
     return false;
   }
   //delete possible content that is in new DB
-  $query_res = mysql_query("DELETE FROM ".NewDBTablePrefix."counter_ref WHERE 1", $new_link);
+  $query_res = mysql_query('DELETE FROM `'.NewDBTablePrefix.'counter_ref` WHERE 1', $new_link);
   if (!$query_res)
   {
     echo '<p>Could not delete existing values in new counter_ref table.<br>';
@@ -54,7 +54,7 @@ function counter_refTransition($old_link, $new_link)
   }//if
 
   //disable keys temporatily to speed up inserts
-  $query_res = mysql_query('ALTER TABLE '.NewDBTablePrefix.'counter_ref DISABLE KEYS', $new_link);
+  $query_res = mysql_query('ALTER TABLE `'.NewDBTablePrefix.'counter_ref` DISABLE KEYS', $new_link);
   if (!$query_res)
   {
     echo '<p>Could not disable keys in new counter_ref table.<br>';
@@ -67,7 +67,7 @@ function counter_refTransition($old_link, $new_link)
   $has_to_do = true;
   while ($has_to_do)
   {
-    $query_string = 'INSERT INTO '.NewDBTablePrefix.'counter_ref '
+    $query_string = 'INSERT INTO `'.NewDBTablePrefix.'counter_ref` '
                    .'(ref_url, ref_count, ref_first, ref_last) VALUES ';
     $row_count = 0;
     while (($row = mysql_fetch_assoc($result)) && ($row_count<25))
@@ -91,16 +91,16 @@ function counter_refTransition($old_link, $new_link)
       }//if
     }//if
   }//while (outer)
-  
+
   //re-enable keys
-  $query_res = mysql_query('ALTER TABLE '.NewDBTablePrefix.'counter_ref ENABLE KEYS', $new_link);
+  $query_res = mysql_query('ALTER TABLE `'.NewDBTablePrefix.'counter_ref` ENABLE KEYS', $new_link);
   if (!$query_res)
   {
     echo '<p>Could not re-enable keys in new counter_ref table.<br>';
     echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
     return false;
   }//if
-  
+
   echo '<span>Done.</span>'."\n";
   return true;
 }//function counter_refTransition

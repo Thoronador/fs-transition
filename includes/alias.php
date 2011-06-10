@@ -38,7 +38,7 @@ function createAliasForOldURLs($new_link)
   //check for presence of aliases
   foreach($aliases as $from => $to)
   {
-    $query_res = mysql_query('SELECT * FROM '.NewDBTablePrefix."aliases WHERE alias_go='"
+    $query_res = mysql_query('SELECT * FROM `'.NewDBTablePrefix."aliases` WHERE alias_go='"
                              .$from."' AND alias_forward_to='".$to."' AND alias_active=1",
                              $new_link);
     if (!$query_res)
@@ -51,7 +51,7 @@ function createAliasForOldURLs($new_link)
     if (mysql_num_rows($query_res)<1)
     {
       //there's no such alias, add it
-      $query_res = mysql_query('INSERT INTO '.NewDBTablePrefix.'aliases '
+      $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'aliases` '
                               .'(alias_go, alias_forward_to, alias_active) '
                               ."VALUES ('".$from."', '".$to."', '1')", $new_link);
       if (!$query_res)

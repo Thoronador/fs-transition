@@ -30,7 +30,7 @@ function counter_statTransition($old_link, $new_link)
   //get all stuff from old DB's counter_stat table
   // ---- GROUP BY is neccessary to supress multiple occurences of the same day
   //      within the data, because the index in the old table is not unique
-  $result = mysql_query('SELECT * FROM '.OldDBTablePrefix.'counter_stat '
+  $result = mysql_query('SELECT * FROM `'.OldDBTablePrefix.'counter_stat` '
            .'GROUP BY s_year, s_month, s_day' , $old_link);
   if ($result===false)
   {
@@ -48,7 +48,7 @@ function counter_statTransition($old_link, $new_link)
     return false;
   }
   //delete possible content that is in new DB
-  $query_res = mysql_query("DELETE FROM ".NewDBTablePrefix."counter_stat WHERE 1", $new_link);
+  $query_res = mysql_query('DELETE FROM `'.NewDBTablePrefix.'counter_stat` WHERE 1', $new_link);
   if (!$query_res)
   {
     echo '<p>Could not delete existing values in new counter_stat table.<br>';
@@ -60,7 +60,7 @@ function counter_statTransition($old_link, $new_link)
   echo '<span>Processing...</span>';
   while ($row = mysql_fetch_assoc($result))
   {
-    $query_res = mysql_query('INSERT INTO '.NewDBTablePrefix.'counter_stat '
+    $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'counter_stat` '
                   .'(s_year, s_month, s_day, s_visits, s_hits) '
                   ."VALUES ('".$row['s_year']."', '".$row['s_month']."', '"
                   .$row['s_day']."', '".$row['s_visits']."', '".$row['s_hits']."')", $new_link);
@@ -85,7 +85,7 @@ function counterTransition($old_link, $new_link)
     return false;
   }
   //get all stuff from old DB's counter table
-  $result = mysql_query('SELECT * FROM '.OldDBTablePrefix.'counter', $old_link);
+  $result = mysql_query('SELECT * FROM `'.OldDBTablePrefix.'counter`', $old_link);
   if ($result===false)
   {
     echo '<p>Could not execute query on old counter table.<br>';
@@ -116,7 +116,7 @@ function counterTransition($old_link, $new_link)
     return false;
   }
   //check that there is one entry in the counter table
-  $query_res = mysql_query('SELECT COUNT(id) AS count FROM '.NewDBTablePrefix.'counter');
+  $query_res = mysql_query('SELECT COUNT(id) AS count FROM `'.NewDBTablePrefix.'counter`');
   if (!$query_res)
   {
     echo '<p>Could not execute SELECT query on new counter table.<br>';
@@ -140,7 +140,7 @@ function counterTransition($old_link, $new_link)
   if ($row = mysql_fetch_assoc($result))
   {
     //execute the update query on the new configuration table
-    $query_res = mysql_query('UPDATE '.NewDBTablePrefix.'counter '
+    $query_res = mysql_query('UPDATE `'.NewDBTablePrefix.'counter` '
                   ."SET visits='".$row['visits']."', hits='".$row['hits']
                   ."', user='".$row['user']."', artikel='".$row['artikel']
                   ."', news='".$row['news']."', comments='".$row['comments']
