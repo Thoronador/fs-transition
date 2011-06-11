@@ -22,9 +22,9 @@ require_once 'connect.inc.php'; //required for selectOldDB() and selectNewDB()
 /* transfers announcement data from the old Frogsystem to the new Frogsystem by
    copying the data from the old anouncement [sic!] table to the new announcement
    table.
-   
+
    table structures (old and new):
-   
+
    fs_anouncement       fs2_announcement
      text     TEXT        id                    SMALLINT(4)
                           announcement_text     TEXT
@@ -40,14 +40,14 @@ require_once 'connect.inc.php'; //required for selectOldDB() and selectNewDB()
    we want the announcement to be shown, active, and allow HTML code, FS code
    and paragraph processing).
    During that process ALL existing announcements within the new announcement
-   table will be delteted!
+   table will be deleted!
 
    parameters:
        old_link - the MySQL link identifier (resource type) for the connection
                   to the old database
        new_link - the MySQL link identifier (resource type) for the connection
                   to the new database
-   
+
    return value:
        true in case of success; false if failure
 */

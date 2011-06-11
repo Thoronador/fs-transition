@@ -23,9 +23,9 @@ require_once 'connect.inc.php'; //required for selectOldDB() and selectNewDB()
 /* function artikelTransition()
    transfers articles from the old Frogsystem to the new Frogsystem by copying
    the data from the old artikel table to the new article table.
-   
+
    table structures (old and new):
-   
+
    fs_artikel                       fs2_article
      artikel_url    VARCHAR(100)      article_id            MEDIUMINT(8), auto_increment
      artikel_title  VARCHAR(100)      article_url           VARCHAR(100)
@@ -45,7 +45,7 @@ require_once 'connect.inc.php'; //required for selectOldDB() and selectNewDB()
    increment process. However, the auto-increment value of the table will be
    reset before the article data is inserted. The following fields will be
    copied directly from the old table into the new table without any changes:
-   
+
    artikel_url    -> article_url
    artikel_title  -> article_title
    artikel_date   -> article_date
@@ -53,7 +53,7 @@ require_once 'connect.inc.php'; //required for selectOldDB() and selectNewDB()
    artikel_text   -> article_text
    artikel_index  -> article_search_update (probably not the best solution)
    article_fscode -> article_fscode, article_para
-   
+
    These values should already be properly escaped where neccessary, so they
    will not be escaped again.
    artikel_user is a string type (varchar) in the old table and will be copied
@@ -66,14 +66,14 @@ require_once 'connect.inc.php'; //required for selectOldDB() and selectNewDB()
    is the ID of the only predefined article category in the new FS.
 
    During that process ALL previously existing articles within the new article
-   table, except the one about FS code (?go=fscode) will be delteted!
+   table, except the one about FS code (?go=fscode) will be deleted!
 
    parameters:
        old_link - the MySQL link identifier (resource type) for the connection
                   to the old database
        new_link - the MySQL link identifier (resource type) for the connection
                   to the new database
-   
+
    return value:
        true in case of success; false if failure
 */
