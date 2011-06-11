@@ -33,7 +33,6 @@
       //do the news transition stuff here
       require_once 'includes/news.php';
       // ---- news categories first
-      //echo "Trying to copy news category data. This will take some time...<br>\n";
       if (news_catTransition($old_link, $new_link, OldFSRoot, NewFSRoot))
       {
         echo "Newskategorien wurden erfolgreich &uuml;bertragen!<br>\n";

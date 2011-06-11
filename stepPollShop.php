@@ -33,7 +33,6 @@
       //do the real transition stuff here
       // ---- polls go first
       require_once 'includes/poll.php';
-      //echo "Trying to copy poll data...<br>\n";
       if (pollTransition($old_link, $new_link))
       {
         echo "Umfragen wurden erfolgreich kopiert!<br>\n";

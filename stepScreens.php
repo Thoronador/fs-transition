@@ -32,7 +32,6 @@
     {
       //do the screen transition stuff here
       require_once 'includes/screens.php';
-      //echo "Trying to copy screenshot data. This will take some time...<br>\n";
       if (screenTransition($old_link, $new_link, OldFSRoot, NewFSRoot))
       {
         echo "Screenshots wurden erfolgreich &uuml;bertragen!<br>\n";

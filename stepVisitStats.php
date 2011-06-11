@@ -32,7 +32,6 @@
     {
       //do the counter transition stuff here
       require_once 'includes/counterVisitors.php';
-      //echo "Trying to copy the daily visitor data. This will take some time...<br>\n";
       if (counter_statTransition($old_link, $new_link))
       {
         echo "Besucherstatistik wurde erfolgreich &uuml;bertragen!<br>\n";

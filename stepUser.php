@@ -32,7 +32,6 @@
     {
       //do the user transition stuff here
       require_once 'includes/user.php';
-      //echo "Trying to copy user data. This will take some time...<br>\n";
       if (userTransition($old_link, $new_link, OldFSRoot, NewFSRoot))
       {
         echo "Nutzerdaten wurden erfolgreich &uuml;bertragen!<br>\n";

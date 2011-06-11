@@ -32,7 +32,6 @@
     {
       //do the download transition stuff here
       require_once 'includes/downloads.php';
-      //echo "Trying to copy download data. This will take some time...<br>\n";
       if (dl_catTransition($old_link, $new_link))
       {
         echo "Downloadkategorien wurden erfolgreich kopiert!<br>\n";

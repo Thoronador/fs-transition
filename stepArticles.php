@@ -32,7 +32,6 @@
     {
       //do the announcement transition stuff here
       require_once 'includes/anouncement.php';
-      //echo "Trying to copy announcement data. This will take some time...<br>\n";
       if (anouncementTransition($old_link, $new_link))
       {
         echo "Ank&uuml;ndigungsdaten wurden erfolgreich kopiert!<br>\n";

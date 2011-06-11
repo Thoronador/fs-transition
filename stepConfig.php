@@ -32,7 +32,6 @@
     {
       //do the configuration transition stuff here
       require_once 'includes/global_config.php';
-      //echo "Trying to copy global configuration...<br>\n";
       if (global_configTransition($old_link, $new_link))
       {
         echo "Aktualisierung der Konfiguration war erfolgreich!<br>\n";
