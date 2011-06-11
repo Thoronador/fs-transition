@@ -24,7 +24,13 @@ require_once 'includes/config_constants.inc.php';
    failure.
 
    parameters:
-       link - the MySQL connection
+       link - the MySQL link identifier (resource type) for the connection to
+              the old database
+              
+   return value:
+       Returns true, if all required tables were found. If at least one table is
+       missing, the function returns a string containing an error message in
+       HTML code.
 */
 
 function checkOldTables($link)
@@ -71,7 +77,13 @@ function checkOldTables($link)
    failure.
 
    parameters:
-       link - the MySQL connection
+       link - the MySQL link identifier (resource type) for the connection to
+              the new database
+
+   return value:
+       Returns true, if all required tables were found. If at least one table is
+       missing, the function returns a string containing an error message in
+       HTML code.
 */
 
 function checkNewTables($link)

@@ -17,14 +17,26 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once 'connect.inc.php';
+require_once 'connect.inc.php'; //required for selectNewDB()
+
+/* creates some aliases that help to keep URLs from the old Frogsystem intact
+   under the new Frogsystem
+   
+   parameters:
+       new_link - the MySQL link identifier (resource type) for the connection
+                  to the new database
+   
+   return value:
+       true in case of success; false if failure
+*/
 
 function createAliasForOldURLs($new_link)
 {
   //select new DB
   if (!selectNewDB($new_link))
   {
-    echo '<p class="error">Could not select new database.<br>';
+    echo '<p class="error">Die Datenbank des FS2 konnte nicht ausgew&auml;hlt '
+        .'werden!<br>Folgender Fehler trat beim Versuch auf:<br>';
     echo mysql_errno($new_link).': '.htmlentities(mysql_error($new_link))."</p>\n";
     return false;
   }
@@ -43,7 +55,7 @@ function createAliasForOldURLs($new_link)
                              $new_link);
     if (!$query_res)
     {
-      echo '<p class="error">Could not query existing values in aliases table.<br>';
+      echo '<p class="error">Die bestehenden, aktiven Aliase konnten nicht abgefragt werden.<br>';
       echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
       return false;
     }//if

@@ -46,7 +46,7 @@
     $new_link = connectNewDB();
     if (!$new_link)
     {
-      echo '<p class="error">Die Verbindung zum MySQL-Server mit den Daten des FS1 konnte '
+      echo '<p class="error">Die Verbindung zum MySQL-Server mit den Daten des FS2 konnte '
           .'nicht hergestellt werden!<br>Folgender Fehler trat beim '
           .'Verbindungsversuch auf:<br>'.mysql_errno().': '
           .htmlentities(mysql_error())."</p>\n";

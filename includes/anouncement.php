@@ -17,38 +17,73 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once 'connect.inc.php';
+require_once 'connect.inc.php'; //required for selectOldDB() and selectNewDB()
+
+/* transfers announcement data from the old Frogsystem to the new Frogsystem by
+   copying the data from the old anouncement [sic!] table to the new announcement
+   table.
+   
+   table structures (old and new):
+   
+   fs_anouncement       fs2_announcement
+     text     TEXT        id                    SMALLINT(4)
+                          announcement_text     TEXT
+                          show_announcement     TINYINT(1)
+                          activate_announcement TINYINT(1)
+                          ann_html              TINYINT(1)
+                          ann_fscode            TINYINT(1)
+                          ann_para              TINYINT(1)
+
+   The field announcement_text in the new table will get its value from the text
+   field of the old table (naturally), the other fields are filled with some
+   pre-defined values (in this case: 1 for all tinyint/smallint fields, because
+   we want the announcement to be shown, active, and allow HTML code, FS code
+   and paragraph processing).
+   During that process ALL existing announcements within the new announcement
+   table will be delteted!
+
+   parameters:
+       old_link - the MySQL link identifier (resource type) for the connection
+                  to the old database
+       new_link - the MySQL link identifier (resource type) for the connection
+                  to the new database
+   
+   return value:
+       true in case of success; false if failure
+*/
 
 function anouncementTransition($old_link, $new_link) //yes, it's spelled the wrong way
 {
   if (!selectOldDB($old_link))
   {
-    echo '<p>Could not select old database.<br>';
+    echo '<p class="error">Die Datenbank des FS1 konnte nicht ausgew&auml;hlt '
+        .'werden!<br>Folgender Fehler trat beim Versuch auf:<br>';
     echo mysql_errno($old_link).': '.mysql_error($old_link)."</p>\n";
     return false;
   }
-  //get all stuff from old DB's user table
+  //get all stuff from old DB's anouncement table
   $result = mysql_query('SELECT * FROM `'.OldDBTablePrefix.'anouncement`', $old_link);
   if ($result===false)
   {
-    echo '<p>Could not execute query on old anounement table.<br>';
+    echo '<p>Could not execute query on old anouncement table.<br>';
     echo mysql_errno($old_link).': '.mysql_error($old_link)."</p>\n";
     return false;
   }
   $announcement_entries = mysql_num_rows($result);
   if ($announcement_entries!=1)
   {
-    echo '<p>Got '.$announcement_entries." entries from anouncement table.</p>\n";
+    echo '<p>'.$announcement_entries." Eintr&auml;ge in der Tabelle anouncement gefunden.</p>\n";
   }
   else
   {
-    echo '<p>Got one entry from anouncement table.</p>'."\n";
+    echo '<p>Einen Eintrag in der Tabelle anouncement gefunden.</p>'."\n";
   }
 
   //go on with new DB
   if (!selectNewDB($new_link))
   {
-    echo '<p>Could not select new database.<br>';
+    echo '<p class="error">Die Datenbank des FS2 konnte nicht ausgew&auml;hlt '
+        .'werden!<br>Folgender Fehler trat beim Versuch auf:<br>';
     echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
     return false;
   }
@@ -56,13 +91,15 @@ function anouncementTransition($old_link, $new_link) //yes, it's spelled the wro
   $query_res = mysql_query('DELETE FROM `'.NewDBTablePrefix.'announcement` WHERE 1', $new_link);
   if (!$query_res)
   {
-    echo '<p>Could not delete existing values in new announcement table.<br>';
+    echo '<p class="error">Die existierenden Werte in der neuen announcement-'
+        .'Tabelle konnten nicht gel&ouml;scht werden.<br>Folgender Fehler trat'
+        .' dabei auf:<br>';
     echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
     return false;
   }//if
 
   //put stuff into new DB's table
-  echo '<span>Processing...</span>';
+  echo '<span>Verarbeitung l&auml;ft...</span>';
   if ($row = mysql_fetch_assoc($result))
   {
     $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'announcement` '
@@ -71,7 +108,8 @@ function anouncementTransition($old_link, $new_link) //yes, it's spelled the wro
                   ."VALUES (1, '".$row['text']."', 1, 1, 1, 1, 1)", $new_link);
     if (!$query_res)
     {
-      echo '<p>Could not insert value into new announcement table.<br>';
+      echo '<p class="error">Es konnten keine Werte in die neue announcement-'
+          .'Tabelle eingef&uuml;gt werden.<br>Folgender Fehler trat auf:<br>';
       echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
       return false;
     }//if
@@ -85,12 +123,13 @@ function anouncementTransition($old_link, $new_link) //yes, it's spelled the wro
                   ."VALUES (1, '', 2, 0, 1, 1, 1)", $new_link);
     if (!$query_res)
     {
-      echo '<p>Could not insert value into new announcement table.<br>';
+      echo '<p class="error">Es konnte kein Wert in die neue announcement-'
+          .'Tabelle eingef&uuml;gt werden.<br>Folgender Fehler trat auf:<br>';
       echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
       return false;
     }//if
   }
-  echo '<span>Done.</span>'."\n";
+  echo '<span>Fertig.</span>'."\n";
   return true;
 }//function anouncementTransition
 
