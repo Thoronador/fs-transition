@@ -69,7 +69,7 @@
         echo 'Datenbank des alten FS vorhanden!<br>';
         // ---- new DB is next
         $new_db = selectNewDB($new_link);
-        if (!$old_db)
+        if (!$new_db)
         {
           echo '<p class="error">Die Datenbank des FS2 konnte nicht ausgew&auml;hlt werden!'
               .'<br>Folgender Fehler trat beim Versuch auf:<br>'.mysql_errno()
