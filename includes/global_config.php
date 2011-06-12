@@ -55,8 +55,8 @@ require_once 'connect.inc.php'; //required for selectOldDB() and selectNewDB()
                                   home_text            VARCHAR(100)
                                   auto_forward         INT(2)
                                   search_index_update  TINYINT(1)
-                                  search:index_time    INT(11)
-   
+                                  search_index_time    INT(11)
+
    The new table should already have one row of own data, and this function
    updates this row with the corresponding data from the old table. All fields
    except virtualhost and admin_mail remain unchanged. virtualhost and
