@@ -196,6 +196,8 @@ function dl_catTransition($old_link, $new_link)
    file_is_mirror <- always zero (0), because the files aren't mirrors
 
    The auto-increment value of dl_files table will be reset before this happens.
+   The auto-increment value of the new dl table will be set to the value of the
+   old dl table.
 
    ALL previously existing downloads within the new dl table and all files
    within the new dl_files table will be deleted during the transition process!
@@ -230,7 +232,15 @@ function dlTransition($old_link, $new_link)
     echo mysql_errno($old_link).': '.mysql_error($old_link)."</p>\n";
     return false;
   }
-  echo '<p>Got '.mysql_num_rows($result)." entries from dl table.</p>\n";
+  $dl_num = mysql_num_rows($result);
+  if ($dl_num!=1)
+  {
+    echo '<p>'.$dl_num." Downloads in der alten Downloadtabelle gefunden.</p>\n";
+  }
+  else
+  {
+    echo "<p>Einen Download in der alten Downloadtabelle gefunden.</p>\n";
+  }
   //get current auto-increment value
   $query_res = mysql_query("SHOW TABLE STATUS LIKE '".OldDBTablePrefix."dl'", $old_link);
   if ($query_res===false)

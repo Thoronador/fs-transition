@@ -159,7 +159,8 @@ function shopTransition($old_link, $new_link, $old_basedir, $new_basedir)
   {
     if (!is_int($value))
     {
-      echo '<p>Ung&uuml;ltiger Wert in artikelarray gefunden! Abbruch.'."</p>\n";
+      echo '<p class="error">Ung&uuml;ltiger Wert in artikelarray gefunden!'
+          .' Abbruch.'."</p>\n";
       return false;
     }
     //check for existing file (large image)
