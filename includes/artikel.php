@@ -142,8 +142,9 @@ function artikelTransition($old_link, $new_link)
   $query_res = mysql_query('ALTER TABLE `'.NewDBTablePrefix.'articles` AUTO_INCREMENT=2', $new_link);
   if (!$query_res)
   {
-    echo '<p>Der Auto-increment-Wert der neuen Tabelle articles konnte nicht '
-        .'aktualisert werden.<br>Folgender Fehler trat beim Versuch auf:<br>';
+    echo '<p class="error">Der Auto-increment-Wert der neuen Tabelle articles '
+        .'konnte nicht aktualisert werden.<br>Folgender Fehler trat beim '
+        .'Versuch auf:<br>';
     echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
     return false;
   }//if

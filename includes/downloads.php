@@ -30,9 +30,9 @@ require_once 'connect.inc.php'; //required for selectOldDB() and selectNewDB()
      cat_id    MEDIUMINT(8), auto_inc       cat_id    MEDIUMINT(8), auto_inc
      subcat_id MEDIUMINT(8)                 subcat_id MEDIUMINT(8)
      cat_name  CHAR(100)                    cat_name  VARCHAR(100)
-     
+
      PRIMARY INDEX (cat_id)                 PRIMARY INDEX (cat_id)
-   
+
    Table structures are almost the same, so every field in the new table gets
    its value from the field with the same name in the old table. The auto-
    increment value of the new table will be adjusted to match the one of the
@@ -134,8 +134,9 @@ function dl_catTransition($old_link, $new_link)
   $query_res = mysql_query('ALTER TABLE `'.NewDBTablePrefix.'dl_cat` AUTO_INCREMENT='.$auto_inc_value, $new_link);
   if (!$query_res)
   {
-    echo '<p>Der Auto-increment-Wert der neuen Tabelle dl_cat konnte nicht '
-        .'aktualisert werden.<br>Folgender Fehler trat beim Versuch auf:<br>';
+    echo '<p class="error">Der Auto-increment-Wert der neuen Tabelle dl_cat '
+        .'konnte nicht aktualisert werden.<br>Folgender Fehler trat beim '
+        .'Versuch auf:<br>';
     echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
     return false;
   }//if
@@ -181,11 +182,11 @@ function dl_catTransition($old_link, $new_link)
    new one: dl_id, cat_id, user_id, dl_date, dl_name, dl_text, dl_autor,
    dl_autor_url, dl_open. The field dl_search_update will be set to the current
    Unix timestamp value. (Not sure if this is the original intention of FS.)
-   
+
    The file data of the old table, i.e. fields dl_size, dl_loads and dl_url,
    will be stored in the new dl_files table. The fields of that table get their
    values as follows:
-   
+
    dl_id          <- dl_id from the old dl table
    file_id        <- will be set implicitly be the auto-increment mechanism
    file_count     <- dl_loads from the old dl table
@@ -281,8 +282,9 @@ function dlTransition($old_link, $new_link)
   $query_res = mysql_query('ALTER TABLE `'.NewDBTablePrefix.'dl_files` AUTO_INCREMENT=1', $new_link);
   if (!$query_res)
   {
-    echo '<p>Der Auto-increment-Wert der neuen Tabelle dl_files konnte nicht '
-        .'zur&uuml;ckgesetzt werden.<br>Folgender Fehler trat beim Versuch auf:<br>';
+    echo '<p class="error">Der Auto-increment-Wert der neuen Tabelle dl_files '
+        .'konnte nicht zur&uuml;ckgesetzt werden.<br>Folgender Fehler trat beim'
+        .' Versuch auf:<br>';
     echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
     return false;
   }//if
@@ -325,8 +327,9 @@ function dlTransition($old_link, $new_link)
   $query_res = mysql_query('ALTER TABLE `'.NewDBTablePrefix.'dl` AUTO_INCREMENT='.$auto_inc_value, $new_link);
   if (!$query_res)
   {
-    echo '<p>Der Auto-increment-Wert der neuen Download-Tabelle konnte nicht '
-        .'aktualisert werden.<br>Folgender Fehler trat beim Versuch auf:<br>';
+    echo '<p class="error">Der Auto-increment-Wert der neuen Download-Tabelle '
+        .'konnte nicht aktualisert werden.<br>Folgender Fehler trat beim '
+        .'Versuch auf:<br>';
     echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
     return false;
   }//if
