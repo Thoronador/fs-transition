@@ -19,11 +19,53 @@
 
 require_once 'connect.inc.php';
 
+/* function pollTransition()
+   transfers polls from the old Frogsystem to the new Frogsystem.
+
+   table structures (old and new):
+
+   fs_poll                                 fs2_poll
+     poll_id    MEDIUMINT(8), auto_inc       poll_id           MEDIUMINT(8), auto_inc
+     poll_quest CHAR(255)                    poll_quest        VARCHAR(255)
+     poll_start INT(11)                      poll_start        INT(11)
+     poll_end   INT(11)                      poll_end          INT(11)
+     poll_type  TINYINT(4)                   poll_type         TINYINT(4)
+                                             poll_participants MEDIUMINT(8)
+     PRIMARY INDEX (poll_id)
+                                             PRIMARY INDEX (poll_id)
+   fs_poll_answers
+     poll_id      MEDIUMINT(8)
+     answer_id    MEDIUMINT(8), auto_inc
+     answer       CHAR(255)
+     answer_count MEDIUMINT(8)
+
+     PRIMARY INDEX (answer_id)
+
+   Table structures are almost the same, so every field in the new table gets
+   its value from the field with the same name in the old table, except
+   poll_participants. That field's value will be calculated as the sum of the
+   old poll_answers table's answer_count fields belonging to the same poll.
+
+   The auto-increment value of the new table will be adjusted to match the one
+   of the old table.
+   During the transition process ALL previously existing polls within the new
+   poll table will be deleted!
+
+   parameters:
+       old_link - the MySQL link identifier (resource type) for the connection
+                  to the old database
+       new_link - the MySQL link identifier (resource type) for the connection
+                  to the new database
+
+   return value:
+       true in case of success; false if failure
+*/
 function pollTransition($old_link, $new_link)
 {
   if (!selectOldDB($old_link))
   {
-    echo '<p>Could not select old database.<br>';
+    echo '<p class="error">Die Datenbank des FS1 konnte nicht ausgew&auml;hlt '
+        .'werden!<br>Folgender Fehler trat beim Versuch auf:<br>';
     echo mysql_errno($old_link).': '.mysql_error($old_link)."</p>\n";
     return false;
   }
@@ -31,22 +73,34 @@ function pollTransition($old_link, $new_link)
   $result = mysql_query('SELECT * FROM `'.OldDBTablePrefix.'poll`', $old_link);
   if ($result===false)
   {
-    echo '<p>Could not execute query on old poll table.<br>';
+    echo '<p class="error">Eine SQL-Abfrage f&uuml;r die alte Tabelle poll '
+        .'konnte nicht ausgef&uuml;hrt werden!<br>Folgender Fehler trat beim '
+        .'Versuch auf:<br>';
     echo mysql_errno($old_link).': '.mysql_error($old_link)."</p>\n";
     return false;
   }
-  echo '<p>Got '.mysql_num_rows($result)." entries from poll table.</p>\n";
+  $poll_num = mysql_num_rows($result);
+  if ($poll_num!=1)
+  {
+    echo '<p>'.$poll_num." Umfragen im alten FS gefunden.</p>\n";
+  }
+  else
+  {
+    echo '<p>Eine Umfrage im alten FS gefunden.</p>'."\n";
+  }
   //get current auto-increment value
   $query_res = mysql_query("SHOW TABLE STATUS LIKE '".OldDBTablePrefix."poll'", $old_link);
   if ($query_res===false)
   {
-    echo '<p>Could not execute status query on old poll table.<br>';
+    echo '<p class="error">Die Statusabfrage f&uuml;r die alte poll-Tabelle '
+        .'schlug fehl.<br>Folgender Fehler trat dabei auf:<br>';
     echo mysql_errno($old_link).': '.mysql_error($old_link)."</p>\n";
     return false;
   }
   if (!($row=mysql_fetch_assoc($query_res)))
   {
-    echo '<p>Could not fetch row from status query of old poll table.<br>';
+    echo '<p class="error">Das Ergebnis der Statusabfrage der Tabelle poll '
+        .'konnte nicht ermittelt werden.<br>Folgender Fehler trat auf:<br>';
     echo mysql_errno($old_link).': '.mysql_error($old_link)."</p>\n";
     return false;
   }
@@ -55,7 +109,8 @@ function pollTransition($old_link, $new_link)
   //go on with new DB
   if (!selectNewDB($new_link))
   {
-    echo '<p>Could not select new database.<br>';
+    echo '<p class="error">Die Datenbank des FS2 konnte nicht ausgew&auml;hlt '
+        .'werden!<br>Folgender Fehler trat beim Versuch auf:<br>';
     echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
     return false;
   }
@@ -63,12 +118,14 @@ function pollTransition($old_link, $new_link)
   $query_res = mysql_query('DELETE FROM `'.NewDBTablePrefix.'poll` WHERE 1', $new_link);
   if (!$query_res)
   {
-    echo '<p>Could not delete existing values in new poll table.<br>';
+    echo '<p class="error">Die existierenden Werte in der neuen poll-Tabelle '
+        .'konnten nicht gel&ouml;scht werden.<br>Folgender Fehler trat beim '
+        .'Versuch auf:<br>';
     echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
     return false;
   }//if
   //put stuff into new DB's table
-  echo '<span>Processing...</span>';
+  echo '<span>Verarbeitung l&auml;ft...</span>';
   while ($row = mysql_fetch_assoc($result))
   {
     $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'poll` '
@@ -78,24 +135,28 @@ function pollTransition($old_link, $new_link)
                   .$row['poll_type']."', 1)", $new_link);
     if (!$query_res)
     {
-      echo '<p>Could not insert values into poll table.<br>';
+      echo '<p class="error">Ein Wert konnte nicht in die neue poll-Tabelle '
+          .'eingef&uuml;gt werden.<br>Folgender Fehler trat auf:<br>';
       echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
       return false;
     }//if
   }//while
-  echo '<span>Done.</span>'."\n";
   //set auto increment value
   $query_res = mysql_query('ALTER TABLE `'.NewDBTablePrefix.'poll` AUTO_INCREMENT='.$auto_inc_value, $new_link);
   if (!$query_res)
   {
-    echo '<p>Could not set new auto-increment value on poll table.<br>';
+    echo '<p class="error">Der Auto-increment-Wert der neuen Tabelle poll '
+        .'konnte nicht aktualisert werden.<br>Folgender Fehler trat beim '
+        .'Versuch auf:<br>';
     echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
     return false;
   }//if
+
   //now try to get the participant count right
   if (!selectOldDB($old_link))
   {
-    echo '<p>Could not select old database again.<br>';
+    echo '<p class="error">Die Datenbank des FS1 konnte nicht erneut '
+        .'ausgew&auml;hlt werden!<br>Folgender Fehler trat beim Versuch auf:<br>';
     echo mysql_errno($old_link).': '.mysql_error($old_link)."</p>\n";
     return false;
   }
@@ -103,14 +164,17 @@ function pollTransition($old_link, $new_link)
                         .OldDBTablePrefix.'poll_answers` GROUP BY poll_id', $old_link);
   if ($result==false)
   {
-    echo '<p>Could not execute query for participants calculation on old poll_answers table.<br>';
+    echo '<p class="error">Die SQL-Abfrage f&uuml;r die alte poll_answers-Tabelle'
+        .' zur Berechnung der Umfrageteilnehmer konnte nicht ausgef&uuml;hrt '
+        .'werden!<br>Folgender Fehler trat beim Versuch auf:<br>';
     echo mysql_errno($old_link).': '.mysql_error($old_link)."</p>\n";
     return false;
   }
   //switch to new DB
   if (!selectNewDB($new_link))
   {
-    echo '<p>Could not select new database.<br>';
+    echo '<p class="error">Die Datenbank des FS2 konnte nicht ausgew&auml;hlt '
+        .'werden!<br>Folgender Fehler trat beim Versuch auf:<br>';
     echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
     return false;
   }
@@ -122,20 +186,53 @@ function pollTransition($old_link, $new_link)
                   .$row['participants']."' WHERE poll_id='".$row['poll_id']."'");
     if (!$query_res)
     {
-      echo '<p>Could not set update participant count in new poll table.<br>';
+      echo '<p class="error">Die Teilnehmeranzahl einer Umfrage in der neuen '
+          .'poll-Tabelle konnte nicht in aktualisiert werden.<br>Folgender '
+          .'Fehler trat beim Versuch auf:<br>';
       echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
       return false;
     }//if
   }//while
+  echo '<span>Fertig.</span>'."\n";
   return true;
 }//function pollTransition
 
 
+/* function poll_answersTransition()
+   transfers poll answers from the old Frogsystem to the new Frogsystem.
+
+   table structures (old and new):
+
+   fs_poll_answers                         fs2_poll_answers
+     poll_id      MEDIUMINT(8)               poll_id      MEDIUMINT(8)
+     answer_id    MEDIUMINT(8), auto_inc     answer_id    MEDIUMINT(8), auto:inc
+     answer       CHAR(255)                  answer       VARCHAR(255)
+     answer_count MEDIUMINT(8)               answer_count MEDIUMINT(8)
+
+     PRIMARY INDEX (answer_id)               PRIMARY INDEX (answer_id)
+
+   Table structures are almost the same, so every field in the new table gets
+   its value from the field with the same name in the old table. The auto-
+   increment value of the new table will be adjusted to match the one of the old
+   table.
+   During the transition process ALL previously existing poll answers within the
+   new poll_answers table will be deleted!
+
+   parameters:
+       old_link - the MySQL link identifier (resource type) for the connection
+                  to the old database
+       new_link - the MySQL link identifier (resource type) for the connection
+                  to the new database
+
+   return value:
+       true in case of success; false if failure
+*/
 function poll_answersTransition($old_link, $new_link)
 {
   if (!selectOldDB($old_link))
   {
-    echo '<p>Could not select old database.<br>';
+    echo '<p class="error">Die Datenbank des FS1 konnte nicht ausgew&auml;hlt '
+        .'werden!<br>Folgender Fehler trat beim Versuch auf:<br>';
     echo mysql_errno($old_link).': '.mysql_error($old_link)."</p>\n";
     return false;
   }
@@ -143,22 +240,35 @@ function poll_answersTransition($old_link, $new_link)
   $result = mysql_query('SELECT * FROM `'.OldDBTablePrefix.'poll_answers` WHERE 1', $old_link);
   if ($result===false)
   {
-    echo '<p>Could not execute query on old poll_answers table.<br>';
+    echo '<p class="error">Eine SQL-Abfrage f&uuml;r die alte Tabelle poll_answers'
+        .' konnte nicht ausgef&uuml;hrt werden!<br>Folgender Fehler trat beim '
+        .'Versuch auf:<br>';
     echo mysql_errno($old_link).': '.mysql_error($old_link)."</p>\n";
     return false;
   }
-  echo '<p>Got '.mysql_num_rows($result)." entries from poll_answers table.</p>\n";
+  $answer_num = mysql_num_rows($result);
+  if ($answer_num!=1)
+  {
+    echo '<p>'.$answer_num." Umfrageantworten im alten FS gefunden.</p>\n";
+  }
+  else
+  {
+    echo '<p>Eine Umfrageantwort im alten FS gefunden. Welch eine sinnlose Art '
+        .'von Umfrage ist das denn?</p>'."\n";
+  }
   //get current auto-increment value
   $query_res = mysql_query("SHOW TABLE STATUS LIKE '".OldDBTablePrefix."poll_answers'", $old_link);
   if ($query_res===false)
   {
-    echo '<p>Could not execute status query on old poll_answers table.<br>';
+    echo '<p class="error">Die Statusabfrage f&uuml;r die alte poll_answers-'
+        .'Tabelle schlug fehl.<br>Folgender Fehler trat dabei auf:<br>';
     echo mysql_errno($old_link).': '.mysql_error($old_link)."</p>\n";
     return false;
   }
   if (!($row=mysql_fetch_assoc($query_res)))
   {
-    echo '<p>Could not fetch row from status query of old poll_answers table.<br>';
+    echo '<p class="error">Das Ergebnis der Statusabfrage der Tabelle poll_answers'
+        . 'konnte nicht ermittelt werden.<br>Folgender Fehler trat auf:<br>';
     echo mysql_errno($old_link).': '.mysql_error($old_link)."</p>\n";
     return false;
   }
@@ -167,7 +277,8 @@ function poll_answersTransition($old_link, $new_link)
    //go on with new DB
   if (!selectNewDB($new_link))
   {
-    echo '<p>Could not select new database.<br>';
+    echo '<p class="error">Die Datenbank des FS2 konnte nicht ausgew&auml;hlt '
+        .'werden!<br>Folgender Fehler trat beim Versuch auf:<br>';
     echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
     return false;
   }
@@ -175,12 +286,14 @@ function poll_answersTransition($old_link, $new_link)
   $query_res = mysql_query('DELETE FROM `'.NewDBTablePrefix.'poll_answers` WHERE 1', $new_link);
   if (!$query_res)
   {
-    echo '<p>Could not delete existing values in new poll_answers table.<br>';
+    echo '<p class="error">Die existierenden Werte in der neuen poll_answers-'
+        .'Tabelle konnten nicht gel&ouml;scht werden.<br>Folgender Fehler trat'
+        .' beim Versuch auf:<br>';
     echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
     return false;
   }//if
   //put stuff into new DB's table
-  echo '<span>Processing...</span>';
+  echo '<span>Verarbeitung l&auml;ft...</span>';
   while ($row = mysql_fetch_assoc($result))
   {
     $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'poll_answers` '
@@ -189,20 +302,23 @@ function poll_answersTransition($old_link, $new_link)
                   .$row['answer']."', '".$row['answer_count']."')", $new_link);
     if (!$query_res)
     {
-      echo '<p>Could not insert values into poll_answers table.<br>';
+      echo '<p class="error">Ein Wert konnte nicht in die neue poll_answers-'
+          .'Tabelle eingef&uuml;gt werden.<br>Folgender Fehler trat auf:<br>';
       echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
       return false;
     }//if
   }//while
-  echo '<span>Done.</span>'."\n";
   //set auto-increment value
   $query_res = mysql_query('ALTER TABLE `'.NewDBTablePrefix.'poll_answers` AUTO_INCREMENT='.$auto_inc_value, $new_link);
   if (!$query_res)
   {
-    echo '<p>Could not set new auto-increment value on poll_answers table.<br>';
+    echo '<p class="error">Der Auto-increment-Wert der neuen Tabelle poll_answers'
+        .'konnte nicht aktualisert werden.<br>Folgender Fehler trat beim '
+        .'Versuch auf:<br>';
     echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
     return false;
   }//if
+  echo '<span>Fertig.</span>'."\n";
   return true;
 }//function poll_answersTransition
 
