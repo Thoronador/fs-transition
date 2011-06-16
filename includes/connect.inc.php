@@ -26,7 +26,7 @@ require_once 'config_constants.inc.php'; //required for the DB names and MySQL-
 */
 function connectOldDB()
 {
-  return mysql_connect('localhost', OldDBUser, OldDBPassword);
+  return mysql_connect(OldDBServer, OldDBUser, OldDBPassword);
 }//function
 
 /* tries to connect to the new database (i.e. database of FS2) and returns the
@@ -35,7 +35,7 @@ function connectOldDB()
 */
 function connectNewDB()
 {
-  return mysql_connect('localhost', NewDBUser, NewDBPassword);
+  return mysql_connect(NewDBServer, NewDBUser, NewDBPassword);
 }//function
 
 /* tries to set the database of the old Frogsystem as the active database and

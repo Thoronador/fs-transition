@@ -1,6 +1,6 @@
 <?php
 /*
-    This file is part of the Frogsystem Transition Tool. 
+    This file is part of the Frogsystem Transition Tool.
     Copyright (C) 2011  Thoronador
 
     The Frogsystem Transition Tool is free software: you can redistribute it
@@ -23,6 +23,8 @@
      anderen Datenbanken/ Seiten funktioniert.
   */
 
+  //Ort des MySQL-Servers mit den Daten des alten FS (d.h. FS1)
+  define('OldDBServer', 'localhost');
   //Name des MySQL-Nutzers für die Daten des alten FS (d.h. FS1)
   define('OldDBUser', 'user');
   //Passwort des MySQL-Nutzers für die Daten des alten FS (d.h. FS1)
@@ -36,6 +38,8 @@
     startTransition.php. Der Schrägstrich am Ende MUSS enthalten sein. */
   define('OldFSRoot', '../../www/');
 
+  //Ort des MySQL-Servers mit den Daten des neuen FS (d.h. FS2)
+  define('NewDBServer', 'localhost');
   //Name des MySQL-Nutzers für die Daten des neuen FS (d.h. FS2)
   define('NewDBUser', 'user');
   //Passwort des MySQL-Nutzers für die Daten des neuen FS (d.h. FS2)
