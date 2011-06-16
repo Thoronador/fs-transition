@@ -133,7 +133,7 @@ function news_catTransition($old_link, $new_link, $old_basedir, $new_basedir)
     if (!$query_res)
     {
       echo '<p class="error">Ein Wert konnte nicht in die neue news_cat-'
-          .'Tabelle eingef&uuml;gt werden.<br>Folgender Fehler trat auf:<br>'
+          .'Tabelle eingef&uuml;gt werden.<br>Folgender Fehler trat auf:<br>';
       echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
       return false;
     }//if
@@ -307,7 +307,7 @@ function newsTransition($old_link, $new_link)
     if (!$query_res)
     {
       echo '<p class="error">Ein Wert konnte nicht in die neue News-Tabelle '
-          .'eingef&uuml;gt werden.<br>Folgender Fehler trat auf:<br>'
+          .'eingef&uuml;gt werden.<br>Folgender Fehler trat auf:<br>';
       echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
       return false;
     }//if
@@ -418,7 +418,7 @@ function news_linksTransition($old_link, $new_link)
   echo '<span>Verarbeitung l&auml;uft...</span>';
   while ($row = mysql_fetch_assoc($result))
   {
-    $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'news_links `'
+    $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'news_links` '
                   .'(news_id, link_id, link_name, link_url, link_target) '
                   ."VALUES ('".$row['news_id']."', '".$row['link_id']."', '"
                   .$row['link_name']."', '".$row['link_url']."', '"
@@ -426,7 +426,7 @@ function news_linksTransition($old_link, $new_link)
     if (!$query_res)
     {
       echo '<p class="error">Ein Wert konnte nicht in die neue news_links-'
-          .'Tabelle eingef&uuml;gt werden.<br>Folgender Fehler trat auf:<br>'
+          .'Tabelle eingef&uuml;gt werden.<br>Folgender Fehler trat auf:<br>';
       echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
       return false;
     }//if
@@ -604,7 +604,7 @@ function codeSettingTransition($old_val)
 
    table structures (old and new):
 
-   fs_news_config                  fs2_news_config 
+   fs_news_config                  fs2_news_config
      num_news  INT(11)               id                   TINYINT(1)
      num_head  INT(11)               num_news             INT(11)
      html_code TINYINT(4)            num_head             INT(11)

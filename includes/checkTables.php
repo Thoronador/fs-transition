@@ -26,7 +26,7 @@ require_once 'includes/config_constants.inc.php';
    parameters:
        link - the MySQL link identifier (resource type) for the connection to
               the old database
-              
+
    return value:
        Returns true, if all required tables were found. If at least one table is
        missing, the function returns a string containing an error message in
@@ -60,7 +60,7 @@ function checkOldTables($link)
       OldDBTablePrefix.'screen_config', OldDBTablePrefix.'shop',
       OldDBTablePrefix.'user');
   //check for each table
-  foreach($table_required as $value)
+  foreach($tables_required as $value)
   {
     if (!in_array($value, $tables_found))
     {
@@ -115,7 +115,7 @@ function checkNewTables($link)
       NewDBTablePrefix.'shop', NewDBTablePrefix.'user',
       NewDBTablePrefix.'user_permissions',);
   //check for each table
-  foreach($table_required as $value)
+  foreach($tables_required as $value)
   {
     if (!in_array($value, $tables_found))
     {
