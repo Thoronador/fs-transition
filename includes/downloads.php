@@ -115,7 +115,7 @@ function dl_catTransition($old_link, $new_link)
   }//if
 
   //put stuff into new DB's table
-  echo '<span>Verarbeitung l&auml;ft...</span>';
+  echo '<span>Verarbeitung l&auml;uft...</span>';
   while ($row = mysql_fetch_assoc($result))
   {
     $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'dl_cat` '
@@ -300,7 +300,7 @@ function dlTransition($old_link, $new_link)
   }//if
 
   //put stuff into new DB's table
-  echo '<span>Verarbeitung l&auml;ft...</span>';
+  echo '<span>Verarbeitung l&auml;uft...</span>';
   while ($row = mysql_fetch_assoc($result))
   {
     //the download itself
@@ -315,7 +315,7 @@ function dlTransition($old_link, $new_link)
     if (!$query_res)
     {
       echo '<p class="error">Ein Wert konnte nicht in die neue Download-'
-          .'Tabelle eingef&uuml;gt werden.<br>Folgender Fehler trat auf:<br>'
+          .'Tabelle eingef&uuml;gt werden.<br>Folgender Fehler trat auf:<br>';
       echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
       return false;
     }//if

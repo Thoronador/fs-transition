@@ -99,7 +99,7 @@ function anouncementTransition($old_link, $new_link) //yes, it's spelled the wro
   }//if
 
   //put stuff into new DB's table
-  echo '<span>Verarbeitung l&auml;ft...</span>';
+  echo '<span>Verarbeitung l&auml;uft...</span>';
   if ($row = mysql_fetch_assoc($result))
   {
     $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'announcement` '

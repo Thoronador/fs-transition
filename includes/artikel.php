@@ -150,7 +150,7 @@ function artikelTransition($old_link, $new_link)
   }//if
 
   //put stuff into new DB's table
-  echo '<span>Verarbeitung l&auml;ft...</span>';
+  echo '<span>Verarbeitung l&auml;uft...</span>';
   while ($row = mysql_fetch_assoc($result))
   {
     $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'articles` '

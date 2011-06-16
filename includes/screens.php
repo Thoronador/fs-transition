@@ -26,15 +26,15 @@ require_once 'connect.inc.php';
    (thumbnails and full-sized) will be copied, too.
 
    table structures (old and new):
-   
+
    fs_screen                               fs2_screen
      screen_id   MEDIUMINT(8), auto_inc      screen_id MEDIUMINT(8), auto_inc
      cat_id      SMALLINT(6), UNSIGNED       cat_id    SMALLINT(6), UNSIGNED
      screen_name CHAR(100)                   screen_name VARCHAR(255)
-     
+
      PRIMARY INDEX (screen_id)               PRIMARY INDEX (screen_id)
                                              INDEX(cat_id)
-   
+
    The new screen table will get its values from the fields of the same name in
    the old screen table, the structure is nearly the same. The auto-increment
    value of the new table will be adjusted to match the one of the old table.
@@ -121,7 +121,7 @@ function screenTransition($old_link, $new_link, $old_basedir, $new_basedir)
   }//if
 
   //put stuff into new DB's table
-  echo '<span>Verarbeitung l&auml;ft...</span>';
+  echo '<span>Verarbeitung l&auml;uft...</span>';
   $screenarray = array();
   while ($row = mysql_fetch_assoc($result))
   {
@@ -197,9 +197,9 @@ function screenTransition($old_link, $new_link, $old_basedir, $new_basedir)
 /* function screen_catTransition()
    transfers screenshot categories from the old Frogsystem to the new Frogsystem
    by copying the data from the old screen_cat table to the new screen_cat table.
-   
+
    table structures (old and new):
-   
+
    fs_screen_cat                            fs2_screen_cat
      cat_id   SMALLINT(6), UNSIGNED, auto     cat_id         SMALLINT(6), auto_inc
      cat_name CHAR(100)                       cat_name       VARCHAR(255)
@@ -210,7 +210,7 @@ function screenTransition($old_link, $new_link, $old_basedir, $new_basedir)
 
                                               PRIMARY INDEX (cat_id)
 
-   The cat_id, cat_name and cat_date fields in the new table will get their 
+   The cat_id, cat_name and cat_date fields in the new table will get their
    values from the fields of the same name in the old table. cat_type will be
    set to 0 (zero) always, cat_visibility will be 1 (one), because every
    category of the old system was visible. randompic will be zero (0).
@@ -294,7 +294,7 @@ function screen_catTransition($old_link, $new_link)
   }//if
 
   //put stuff into new DB's table
-  echo '<span>Verarbeitung l&auml;ft...</span>';
+  echo '<span>Verarbeitung l&auml;uft...</span>';
   while ($row = mysql_fetch_assoc($result))
   {
     $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'screen_cat` '
@@ -408,7 +408,7 @@ function screen_configTransition($old_link, $new_link)
   }
   if ($entries==1)
   {
-    echo '<p>Einen Eintrag in der alten Screenshtkonfigurationstabelle gefunden.</p>'."\n";
+    echo '<p>Einen Eintrag in der alten Screenshotkonfigurationstabelle gefunden.</p>'."\n";
   }
   else if ($entries>1)
   {
@@ -437,7 +437,7 @@ function screen_configTransition($old_link, $new_link)
   }//if
   if (!($row = mysql_fetch_assoc($query_res)))
   {
-    echo '<p class="error">Das Abfrageergebnis der neuen global_config-Tabelle'
+    echo '<p class="error">Das Abfrageergebnis der neuen screen_config-Tabelle'
         .' konnte nicht ermittelt werden.</p>';
     return false;
   }//if

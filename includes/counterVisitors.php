@@ -26,7 +26,7 @@ require_once 'connect.inc.php'; //required for selectOldDB() and selectNewDB()
    table.
 
    table structures (old and new):
-   
+
    fs_counter_stat             fs2_counter_stat
      s_year   INT(4)             s_year   INT(4)
      s_month  INT(2)             s_month  INT(2)
@@ -36,7 +36,7 @@ require_once 'connect.inc.php'; //required for selectOldDB() and selectNewDB()
 
      INDEX (s_year,              PRIMARY INDEX (s_year,
             s_month, s_day)              s_month, s_day)
-   
+
    Since the table structure is nearly the same, transition is straightforward,
    no need to explain. However, the index in the old table is not unique, but
    the one in the new table is, so we will lose table rows, if there are days
@@ -105,7 +105,7 @@ function counter_statTransition($old_link, $new_link)
   }//if
 
   //put stuff into new DB's table
-  echo '<span>Verarbeitung l&auml;ft...</span>';
+  echo '<span>Verarbeitung l&auml;uft...</span>';
   while ($row = mysql_fetch_assoc($result))
   {
     $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'counter_stat` '
@@ -130,7 +130,7 @@ function counter_statTransition($old_link, $new_link)
    by copying the data from the old counter table to the new counter table.
 
    table structures (old and new):
-   
+
    fs_counter                  fs2_counter
      visits   INT(11)            id       TINYINT(1), PRIMARY INDEX
      hits     INT(11)            visits   INT(11)

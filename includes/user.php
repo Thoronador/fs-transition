@@ -138,7 +138,7 @@ function userTransition($old_link, $new_link, $old_basedir, $new_basedir)
   }//if
 
   //put stuff into new DB's table
-  echo '<span>Verarbeitung l&auml;ft...</span>';
+  echo '<span>Verarbeitung l&auml;uft...</span>';
   while ($row = mysql_fetch_assoc($result))
   {
     $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'user` '
@@ -189,7 +189,7 @@ function userTransition($old_link, $new_link, $old_basedir, $new_basedir)
   if ($handle===false)
   {
     echo '<p class="error">Das Verzeichnis '.htmlentities($old_basedir.'images/avatare/')
-         .' konnte nicht mit opendir() ge&oouml;ffnet werden!</p>';
+         .' konnte nicht mit opendir() ge&ouml;ffnet werden!</p>';
     return false;
   }
   //read the filenames
@@ -341,7 +341,7 @@ function permissionsTransition($old_link, $new_link)
   }//if
 
   //put stuff into new DB's table
-  echo '<span>Verarbeitung l&auml;ft...</span>';
+  echo '<span>Verarbeitung l&auml;uft...</span>';
   while ($row = mysql_fetch_assoc($result))
   {
     $query_string = 'INSERT INTO `'.NewDBTablePrefix.'user_permissions` '

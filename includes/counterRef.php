@@ -25,7 +25,7 @@ require_once 'connect.inc.php'; //required for selectOldDB() and selectNewDB()
    counter_ref table.
 
    table structures (old and new):
-   
+
    fs_counter_ref                   fs2_counter_ref
      ref_url   CHAR(255), INDEX       ref_url   VARCHAR(255), INDEX
      ref_count INT(11)                ref_count INT(11)
@@ -118,7 +118,7 @@ function counter_refTransition($old_link, $new_link)
   }//if
 
   //put stuff into new DB's table
-  echo '<span>Verarbeitung l&auml;ft...</span>';
+  echo '<span>Verarbeitung l&auml;uft...</span>';
   $has_to_do = true;
   while ($has_to_do)
   {

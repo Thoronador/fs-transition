@@ -25,7 +25,7 @@ require_once 'connect.inc.php';
    (thumbnails and full-sized) of the articles will be copied, too.
 
    table structures (old and new):
-   
+
    fs_shop                                        fs2_shop
      artikel_id    SMALLINT(6), UNSIGNED, auto      artikel_id    MEDIUMINT(8), auto
      artikel_name  VARCHAR(100)                     artikel_name  VARCHAR(100)
@@ -33,9 +33,9 @@ require_once 'connect.inc.php';
      artikel_text  TEXT                             artikel_text  TEXT
      artikel_preis VARCHAR(10)                      artikel_preis VARCHAR(10)
      artikel_hot   TINYINT(4)                       artikel_hot   TINYINT(4)
-     
+
      PRIMARY INDEX (artikel_id)                     PRIMARY INDEX (artikel_id)
-   
+
    The new shop table will get its values from the old shop table, the structure
    is nearly the same. The auto-increment value of the new table will be
    adjusted to match the one of the old table.
@@ -123,7 +123,7 @@ function shopTransition($old_link, $new_link, $old_basedir, $new_basedir)
   }//if
 
   //put stuff into new DB's table
-  echo '<span>Verarbeitung l&auml;ft...</span>';
+  echo '<span>Verarbeitung l&auml;uft...</span>';
   $artikelarray = array();
   while ($row = mysql_fetch_assoc($result))
   {
