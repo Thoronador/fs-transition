@@ -21,11 +21,11 @@ require_once 'connect.inc.php'; //required for selectNewDB()
 
 /* creates some aliases that help to keep URLs from the old Frogsystem intact
    under the new Frogsystem
-   
+
    parameters:
        new_link - the MySQL link identifier (resource type) for the connection
                   to the new database
-   
+
    return value:
        true in case of success; false if failure
 */

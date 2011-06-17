@@ -1,6 +1,6 @@
 <?php
 /*
-    This file is part of the Frogsystem Transition Tool. 
+    This file is part of the Frogsystem Transition Tool.
     Copyright (C) 2011  Thoronador
 
     The Frogsystem Transition Tool is free software: you can redistribute it
