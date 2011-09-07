@@ -1,4 +1,22 @@
 <?php
+/*
+    This file is part of the Frogsystem Spam Detector.
+    Copyright (C) 2011  Thoronador
+
+    The Frogsystem Spam Detector is free software: you can redistribute it
+    and/or modify it under the terms of the GNU General Public License as
+    published by the Free Software Foundation, either version 3 of the License,
+    or (at your option) any later version.
+
+    The Frogsystem Spam Detector is distributed in the hope that it will be
+    useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
   function spamEvaluation($title, $poster_id, $poster_name, $comment_text)
   {
     //test for url tags in comment text
@@ -52,7 +70,7 @@
     }//if title
     return $spam_level;
   }//function
-  
+
   function spamLevelToText($level)
   {
     if ($level<=0) return '<font color="#00cc0">unwahrscheinlich</font>';
