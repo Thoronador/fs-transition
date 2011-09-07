@@ -63,9 +63,15 @@ switch ($go)
     case 'commentedit':
         createpage('KOMMENTAR EDITIEREN', $_SESSION[perm_newsedit], 'admin_commentedit.php');
         break;
+    /* **********************************************
+     ****** Erste ANPASSUNG für Kommentarliste ******
+     ********************************************** */
     case 'commentlist':
         createpage('KOMMENTARE AUFLISTEN', $_SESSION[perm_newsedit], 'admin_commentlist.php');
         break;
+    /* ***************************************************
+     ****** Ende erste ANPASSUNG für Kommentarliste ******
+     *************************************************** */
     case 'newscat':
         createpage('NEWS KATEGORIEN', $_SESSION[perm_newscat], 'admin_newscat.php');
         break;
@@ -330,6 +336,9 @@ if ($_SESSION[perm_newsedit] == 1)
                     </td>
                 </tr>
     ';
+    /* ***********************************************
+     ****** Zweite ANPASSUNG für Kommentarliste ******
+     *********************************************** */
     echo'
                 <tr>
                     <td width="100%" class="menu">
@@ -339,6 +348,9 @@ if ($_SESSION[perm_newsedit] == 1)
                     </td>
                 </tr>
     ';
+    /* ****************************************************
+     ****** Ende Zweite ANPASSUNG für Kommentarliste ******
+     **************************************************** */
 }
 if ($_SESSION[perm_newscat] == 1)
 {
