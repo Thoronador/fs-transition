@@ -17,12 +17,44 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+  if (!isset($_GET['start']) || $_GET['start']<0)
+  {
+    $_GET['start'] = 0;
+  }
+  $_GET['start'] = (int) $_GET['start'];
+  settype($_GET['start'], "integer");
+  //Anzahl der Kommentare auslesen
+  $query = mysql_query('SELECT COUNT(comment_id) AS cc FROM fs_news_comments', $db);
+  $cc = mysql_fetch_assoc($query);
+  $cc = (int) $cc['cc'];
+  if ($_GET['start']>=$cc)
+  {
+    $_GET['start'] = $cc - ($cc % 30);
+  } 
+
   //Kommentare auslesen
   $query = mysql_query('SELECT comment_id, comment_title, comment_date, comment_poster, comment_poster_id, comment_text '
                       .'FROM fs_news_comments '
-                      //WHERE news_id = $_POST[newsid]
-                      .'ORDER BY comment_date DESC LIMIT 30', $db);
-                      
+                      .'ORDER BY comment_date DESC LIMIT '.$_GET['start'].', 30', $db);
+  $rows = mysql_num_rows($query);
+  //Bereich (zahlenm‰ﬂig)
+  $bereich = '<font class="small">'.($_GET['start']+1).' ... '.($_GET[start] + $rows).'</font>';
+  //Ist dies nicht die erste Seite?
+  if ($_GET['start']>0)
+  {
+    $prev_start = $_GET['start']-30;
+    if ($prev_start<0)
+    {
+      $prev_start = 0;
+    }
+    $prev_page = '<a href="'.$PHP_SELF.'?go=commentlist&start='.$prev_start.'&PHPSESSID='.session_id().'"><- zur¸ck</a>';
+  }//if nicht erste Seite
+  //Ist dies nicht die letzte Seite?
+  if ($_GET['start']+30<$cc)
+  {
+    $next_page = '<a href="'.$PHP_SELF.'?go=commentlist&start='.($_GET['start']+30).'&PHPSESSID='.session_id().'">weiter -></a>';
+  }//if nicht die letzte Seite
+
   echo '                    <p>
                     <form action="'.$PHP_SELF.'" method="post">
                         <input type="hidden" value="commentedit" name="go">
@@ -30,7 +62,7 @@
 ?>
                         <table border="0" cellpadding="2" cellspacing="0" width="600">
                             <tr>
-                                <td align="center" class="config" colspan="4">
+                                <td align="center" class="config" colspan="5">
                                     Kommentare
                                 </td>
                             </tr>
@@ -85,14 +117,43 @@
   }//while
 ?>
                             <tr>
-                                <td colspan="4">
+                                <td colspan="5">
                                     &nbsp;
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="4" align="center">
+                                <td colspan="5" align="center">
                                       <input class="button" type="submit" value="Editieren">
                                 </td>
                             </tr>
                         </table>
                       </form>
+                      <table border="0" cellpadding="2" cellspacing="0" width="600">
+                          <tr>
+                              <td width="33%" style="text-align:left;" class="configthin">
+<?php
+  if (isset($prev_page))
+  {
+    echo $prev_page;
+  }
+?>
+                              </td>
+                              <td width="33%" style="text-align:center;">
+<?php
+  if (isset($bereich))
+  {
+    echo $bereich;
+  }
+?>
+                              </td>
+                              <td width="33%" style="text-align:right;" class="configthin">
+<?php
+  if (isset($next_page))
+  {
+    echo $next_page;
+  }
+?>
+                              </td>
+                          </tr>
+                      </table>
+                    </p>

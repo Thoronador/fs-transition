@@ -23,7 +23,8 @@
     // ---- raise level for every opening url tag
     $comment_text = strtolower($comment_text);
     $spam_level = substr_count($comment_text, '[url=')
-                 + substr_count($comment_text, '[url]');
+                 + substr_count($comment_text, '[url]')
+                 + substr_count($comment_text, '<a href=');
     //test for poster being not a registered user
     if ($poster_id!=0 && strlen($poster_name)>=3)
     {
