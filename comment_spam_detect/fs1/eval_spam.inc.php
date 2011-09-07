@@ -17,6 +17,20 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+  /* evaluates a comment and returns its "spam level", i.e. an integer value
+     that indicates the likeliness of a comment being spam. Main criterion is
+     the number of links included in the comment's text.
+     A return value of zero means that the comment does not seem to be spam, a
+     value of three or higher indicates that the comment is most likely to be
+     a spam comment. Values in between indicate that the comment might be spam.
+
+     parameters:
+         title        - the title of the comment
+         poster_id    - the ID of the user who posted the comment; must be zero
+                        for an unregistered user
+         poster_name  - the name of the user who posted the comment
+         comment_text - the comment's complete text
+  */
   function spamEvaluation($title, $poster_id, $poster_name, $comment_text)
   {
     //test for url tags in comment text
@@ -25,6 +39,11 @@
     $spam_level = substr_count($comment_text, '[url=')
                  + substr_count($comment_text, '[url]')
                  + substr_count($comment_text, '<a href=');
+    // ---- if no spam was found so far, check for plain URLs
+    if ($spam_level==0)
+    {
+      $spam_level = substr_count($comment_text, 'http://');
+    }
     //test for poster being not a registered user
     if ($poster_id!=0 && strlen($poster_name)>=3)
     {
@@ -46,7 +65,7 @@
     //test for strange title
     if (strlen($title)>=3)
     {
-      $res = substr($poster_name, 0, 3);
+      $res = substr($title, 0, 3);
       $no_vowel = true;
       $case_profile = 0;
       for($i=0; $i<3; $i=$i+1)
@@ -72,6 +91,13 @@
     return $spam_level;
   }//function
 
+  /* turns the given spam level into a human-readable text with approoriate
+     colour and returns that as HTML code snippet
+
+     parameters:
+         level - the spam level, an integer value (ideally the one returned by
+                 the spamEvaluation() function)
+  */
   function spamLevelToText($level)
   {
     if ($level<=0) return '<font color="#00cc0">unwahrscheinlich</font>';
