@@ -24,7 +24,10 @@
   */
   $FS2_permissions = array(
       'perm_newsadd' => 'news_add', //News hinzufügen
-      'perm_newsedit' => 'news_edit', //News bearbeiten
+      'perm_newsedit' => array('news_edit',    //News bearbeiten
+                               'news_delete',  //News löschen (ist in FS1 in newsedit inbegriffen)
+                               'news_comments' //Newskommentare bearbeiten (in FS1 in newsedit enthalten)
+                              ),
       'perm_newscat' => 'news_cat', //News Kategorien
       //'perm_newsnewcat' => '???', //News Kategorien hinzufügen
       'perm_newsconfig' => 'news_config', //Newskonfiguration
