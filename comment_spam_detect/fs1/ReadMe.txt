@@ -61,5 +61,5 @@ daher NICHT mit späteren Versionen, im besonderen FrogSystem 2 aller Arten,
 kompatibel. Bei Upgrades des FrogSystem (1) oder Modifikationen sollten die
 Dateien admin_commentlist.php und eval_spam.inc.php jedoch in der Regel weiter
 unverändert funktionieren; es muss nur die index.php im admin-Unterordner ange-
-passt werden, indem man die Änderungen aus Schrit 2b des Installations-
+passt werden, indem man die Änderungen aus Schritt 2b des Installations-
 abschnittes durchführt.
