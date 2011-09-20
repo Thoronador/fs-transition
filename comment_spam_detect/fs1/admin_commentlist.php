@@ -30,11 +30,12 @@
   if ($_GET['start']>=$cc)
   {
     $_GET['start'] = $cc - ($cc % 30);
-  } 
+  }
 
   //Kommentare auslesen
-  $query = mysql_query('SELECT comment_id, comment_title, comment_date, comment_poster, comment_poster_id, comment_text '
-                      .'FROM fs_news_comments '
+  $query = mysql_query('SELECT comment_id, comment_title, comment_date, comment_poster, comment_poster_id, comment_text, '
+                      .'fs_news_comments.news_id AS news_id, fs_news.news_id, news_title '
+                      .'FROM fs_news_comments, fs_news WHERE fs_news_comments.news_id=fs_news.news_id '
                       .'ORDER BY comment_date DESC LIMIT '.$_GET['start'].', 30', $db);
   $rows = mysql_num_rows($query);
   //Bereich (zahlenm‰ﬂig)
@@ -113,6 +114,14 @@
            <td class="configthin">
                <input type="radio" name="commentid" value="'.$comment_arr['comment_id'].'">
            </td>
+         </tr>
+         <tr>
+           <td style="text-align:center;" colspan="5"><font size="1">Zugeh&ouml;rige Newsmeldung: <a href="../?go=comments&id='.$comment_arr['news_id'].'">&quot;'
+                                              .htmlentities($comment_arr['news_title'], ENT_QUOTES).'&quot;</a></font>
+           </td>
+         </tr>
+         <tr>
+           <td colspan="5"><hr width="95%" style="color: #cccccc; background-color: #cccccc;"></td>
          </tr>';
   }//while
 ?>
