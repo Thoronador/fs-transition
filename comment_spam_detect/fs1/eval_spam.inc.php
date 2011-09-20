@@ -17,6 +17,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+
+  /* configuration "constants" */
+  /* lower_level_for_registered_users - if this is true, comments of registered
+     users will have a spam level one lower than unregistered users. If this is
+     false, those comments don't get the bonus. */
+  define('lower_level_for_registered_users', true);
+
   /* evaluates a comment and returns its "spam level", i.e. an integer value
      that indicates the likeliness of a comment being spam. Main criterion is
      the number of links included in the comment's text.
@@ -36,9 +43,10 @@
     //test for url tags in comment text
     // ---- raise level for every opening url tag
     $comment_text = strtolower($comment_text);
-    $spam_level = substr_count($comment_text, '[url=')
-                 + substr_count($comment_text, '[url]')
-                 + substr_count($comment_text, '<a href=');
+    $spam_level = substr_count($comment_text, '[url=') //URL tag with name
+                 + substr_count($comment_text, '[url]') //URL tag w/o name
+                 + substr_count($comment_text, '[link') //invalid URL tag, but some bots seem to use that one
+                 + substr_count($comment_text, '<a href='); //HTML links
     // ---- if no spam was found so far, check for plain URLs
     if ($spam_level==0)
     {
@@ -63,7 +71,7 @@
       }
     }//if
     //test for strange title
-    if (strlen($title)>=3)
+    if (($poster_id!=0) && (strlen($title)>=3))
     {
       $res = substr($title, 0, 3);
       $no_vowel = true;
@@ -88,6 +96,11 @@
         $spam_level = $spam_level +1;
       }
     }//if title
+    //lower spam level for registered users?
+    if (lower_level_for_registered_users && ($poster_id!=0) && ($spam_level>0))
+    {
+      $spam_level = $spam_level -1;
+    }//if
     return $spam_level;
   }//function
 
