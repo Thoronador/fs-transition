@@ -56,11 +56,8 @@
     $next_page = '<a href="'.$PHP_SELF.'?go=commentlist&start='.($_GET['start']+30).'&PHPSESSID='.session_id().'">weiter -></a>';
   }//if nicht die letzte Seite
 
-  echo '                    <p>
-                    <form action="'.$PHP_SELF.'" method="post">
-                        <input type="hidden" value="commentedit" name="go">
-                        <input type="hidden" value="'.session_id().'" name="PHPSESSID">';
 ?>
+                    <p>
                         <table border="0" cellpadding="2" cellspacing="0" width="600">
                             <tr>
                                 <td align="center" class="config" colspan="5">
@@ -112,7 +109,12 @@
                  $comment_arr['comment_poster_id'], $comment_arr['comment_poster'], $comment_arr['comment_text'])).'
            </td>
            <td class="configthin">
-               <input type="radio" name="commentid" value="'.$comment_arr['comment_id'].'">
+             <form action="'.$PHP_SELF.'" method="post">
+               <input type="hidden" value="commentedit" name="go">
+               <input type="hidden" value="'.session_id().'" name="PHPSESSID">
+               <input type="hidden" name="commentid" value="'.$comment_arr['comment_id'].'">
+               <input class="button" type="submit" value="Editieren">
+             </form>
            </td>
          </tr>
          <tr>
@@ -130,13 +132,7 @@
                                     &nbsp;
                                 </td>
                             </tr>
-                            <tr>
-                                <td colspan="5" align="center">
-                                      <input class="button" type="submit" value="Editieren">
-                                </td>
-                            </tr>
                         </table>
-                      </form>
                       <table border="0" cellpadding="2" cellspacing="0" width="600">
                           <tr>
                               <td width="33%" style="text-align:left;" class="configthin">
