@@ -99,8 +99,12 @@
                '.$comment_arr['comment_title'].'
            </td>
            <td class="configthin">
-               '.$comment_arr['comment_poster'].'
-           </td>
+               '.$comment_arr['comment_poster'];
+    if ($comment_arr['comment_poster_id'] == 0)
+    {
+      echo '<br><small>(unregistriert)</small>';
+    }
+    echo '           </td>
            <td class="configthin">
                '.$comment_arr['comment_date'].'
            </td>
@@ -118,7 +122,8 @@
            </td>
          </tr>
          <tr>
-           <td style="text-align:center;" colspan="5"><font size="1">Zugeh&ouml;rige Newsmeldung: <a href="../?go=comments&id='.$comment_arr['news_id'].'">&quot;'
+           <td style="text-align:center;" colspan="5"><font size="1">Zugeh&ouml;rige Newsmeldung: <a href="../?go=comments&id='
+                                              .$comment_arr['news_id'].'" target="_blank">&quot;'
                                               .htmlentities($comment_arr['news_title'], ENT_QUOTES).'&quot;</a></font>
            </td>
          </tr>
