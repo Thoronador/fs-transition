@@ -32,6 +32,18 @@
     $_GET['start'] = $uc - ($uc % 30);
   }
 
+  //Sortierreihenfolge festgelegt?
+  if (!isset($_GET['order']))
+  {
+    $_GET['order'] = 1;
+  }
+  settype($_GET['order'], 'integer');
+  //erlaubte Werte prüfen
+  if ($_GET['order']!==1)
+  {
+    $_GET['order'] = 0;
+  }//if
+
   //Sortierkriterium festgelegt?
   if (!isset($_GET['sort']))
   {
@@ -43,31 +55,51 @@
   switch ($_GET['sort'])
   {
     case 'reg_date':
-    case 'user_id':
-    case 'articles':
-    case 'comments':
+         if ($_GET['order']==1)
+         {
+           $order = 'reg_date DESC';
+         }
+         else
+         {
+           $order = 'reg_date ASC';
+         }
+         break;
+    case 'mail':
+         if ($_GET['order']==1)
+         {
+           $order = 'user_mail DESC';
+         }
+         else
+         {
+           $order = 'user_mail ASC';
+         }
+         break;
     case 'name':
-    case 'news':
+         if ($_GET['order']==1)
+         {
+           $order = 'user_name DESC';
+         }
+         else
+         {
+           $order = 'user_name ASC';
+         }
          break;
     default:
-         $_GET['sort'] = 'reg_date'; 
+         $_GET['sort'] = 'reg_date';
+         if ($_GET['order']==1)
+         {
+           $order = 'reg_date DESC';
+         }
+         else
+         {
+           $order = 'reg_date ASC';
+         }
+         break;
   }//switch
-
-  //Sortierreihenfolge festgelegt?
-  if (!isset($_GET['order']))
-  {
-    $_GET['order'] = 'DESC';
-  }
-  settype($_GET['order'], 'string');
-
-  if ($_GET['order']!=='ASC')
-  {
-    $_GET['order'] = 'DESC'; 
-  }//if
 
   //Nutzer auslesen
   $query = mysql_query('SELECT user_id, user_name, user_mail, is_admin, reg_date '
-                      .'FROM fs_user ORDER BY reg_date DESC LIMIT '.$_GET['start'].', 30', $db);
+                      .'FROM fs_user ORDER BY '.$order.' LIMIT '.$_GET['start'].', 30', $db);
   $rows = mysql_num_rows($query);
   //Bereich (zahlenmäßig)
   $bereich = '<font class="small">'.($_GET['start']+1).' ... '.($_GET[start] + $rows).'</font>';
@@ -79,13 +111,18 @@
     {
       $prev_start = 0;
     }
-    $prev_page = '<a href="'.$PHP_SELF.'?go=userlist&start='.$prev_start.'&PHPSESSID='.session_id().'"><- zurück</a>';
+    $prev_page = '<a href="'.$PHP_SELF.'?go=userlist&start='.$prev_start.'&sort='.$_GET['sort']
+                .'&order='.$_GET['order'].'&PHPSESSID='.session_id().'"><- zurück</a>';
   }//if nicht erste Seite
   //Ist dies nicht die letzte Seite?
   if ($_GET['start']+30<$uc)
   {
-    $next_page = '<a href="'.$PHP_SELF.'?go=userlist&start='.($_GET['start']+30).'&PHPSESSID='.session_id().'">weiter -></a>';
+    $next_page = '<a href="'.$PHP_SELF.'?go=userlist&start='.($_GET['start']+30)
+                .'&sort='.$_GET['sort'].'&order='.$_GET['order']
+                .'&PHPSESSID='.session_id().'">weiter -></a>';
   }//if nicht die letzte Seite
+
+  $inverse_order = ($_GET['order']+1) % 2;
 ?>
                     <p>
                         <table border="0" cellpadding="2" cellspacing="0" width="600">
@@ -96,16 +133,22 @@
                             </tr>
                             <tr>
                                 <td class="config" width="30%">
-                                    Name
+<?php
+  echo '<a href="'.$PHP_SELF.'?go=userlist&start='.$_GET['start'].'&sort=name&order='.$inverse_order.'">Name</a>';
+?>
                                 </td>
                                 <td class="config" width="30%">
-                                    Mail
+<?php
+  echo '<a href="'.$PHP_SELF.'?go=userlist&start='.$_GET['start'].'&sort=mail&order='.$inverse_order.'">Mail</a>';
+?>
                                 </td>
                                 <td class="config" width="10%">
                                     Admin
                                 </td>
                                 <td class="config" width="20%">
-                                    Reg.datum
+<?php
+  echo '<a href="'.$PHP_SELF.'?go=userlist&start='.$_GET['start'].'&sort=reg_date&order='.$inverse_order.'">Reg.datum</a>';
+?>
                                 </td>
                                 <td class="config" width="10%">
                                     bearbeiten
@@ -115,7 +158,7 @@
   require_once 'eval_spam.inc.php';
 
   while ($user_arr = mysql_fetch_assoc($query))
-  {   
+  {
     $user_arr['reg_date'] = date('d.m.Y' , $user_arr['reg_date'])
                            ." um ".date('H:i' , $user_arr['reg_date']);
     settype($user_arr['user_id'], 'integer');
@@ -230,7 +273,7 @@
     {
       echo 'Kommentare: '.$user_arr['comments'].'&#09;';
     }
-    
+
 echo '</font>
            </td>
          </tr>
