@@ -138,15 +138,15 @@ switch ($go)
     case 'useredit':
         createpage('USER BEARBEITEN', $_SESSION[perm_useredit], 'admin_useredit.php');
         break;
-    /* **********************************************
+    /* *******************************************
      ****** Erste ANPASSUNG für Nutzerliste ******
-     ********************************************** */
-    case 'commentlist':
+     ******************************************* */
+    case 'userlist':
         createpage('USER AUFLISTEN', $_SESSION[perm_useredit], 'admin_userlist.php');
         break;
-    /* ***************************************************
+    /* ************************************************
      ****** Ende erste ANPASSUNG für Nutzerliste ******
-     *************************************************** */
+     ************************************************ */
     case 'userrights':
         createpage('USER RECHTE', $_SESSION[perm_userrights], 'admin_userrights.php');
         break;
@@ -995,9 +995,9 @@ if ($_SESSION[perm_useredit] == 1)
                     </td>
                 </tr>
     ';
-    /* ***********************************************
+    /* ********************************************
      ****** Zweite ANPASSUNG für Nutzerliste ******
-     *********************************************** */
+     ******************************************** */
     echo'
                 <tr>
                     <td width="100%" class="menu">
@@ -1007,9 +1007,9 @@ if ($_SESSION[perm_useredit] == 1)
                     </td>
                 </tr>
     ';
-    /* ****************************************************
+    /* *************************************************
      ****** Ende Zweite ANPASSUNG für Nutzerliste ******
-     **************************************************** */
+     ************************************************* */
 }
 if ($_SESSION[perm_userrights] == 1)
 {
