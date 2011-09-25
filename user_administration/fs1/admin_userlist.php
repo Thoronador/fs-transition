@@ -182,6 +182,8 @@
                             .'WHERE comment_poster_id=\''.$user_arr['user_id'].'\'' , $db);
     $sub_res = mysql_fetch_assoc($sub_query);
     $user_arr['comments'] = (int) $sub_res['cc'];
+    //auf Avatar prüfen
+    $user_arr['avatar'] = file_exists('../images/avatare/'.$user_arr['user_id'].'.gif');
     //list the stuff
     echo'<tr>
            <td class="configthin">
@@ -200,7 +202,7 @@
            <td class="configthin">';
     if ($user_arr['is_admin']==0 && $user_arr['news']==0
         && $user_arr['artikel']==0 && $user_arr['downloads']==0
-        && $user_arr['comments']==0)
+        && $user_arr['comments']==0 && !$user_arr['avatar'])
     {
       echo '             <form action="'.$PHP_SELF.'" method="post">
                <input type="hidden" value="useredit" name="go">
@@ -225,7 +227,7 @@
          <tr>
            <td class="configthin">
              <font size="1"><u>';
-    if ($user_arr['artikel']+$user_arr['downloads']+$user_arr['news']+$user_arr['comments']>0)
+    if (($user_arr['artikel']+$user_arr['downloads']+$user_arr['news']+$user_arr['comments']>0) || $user_arr['avatar'])
     {
       echo '<b>Aktivit&auml;t:</b>';
     }
@@ -272,6 +274,15 @@
     else
     {
       echo 'Kommentare: '.$user_arr['comments'].'&#09;';
+    }
+    //Avatarexistenz
+    if ($user_arr['avatar']>0)
+    {
+      echo '<b>Avatar: ja</b>&#09;';
+    }
+    else
+    {
+      echo 'Avatar:  nein&#09;';
     }
 
 echo '</font>
