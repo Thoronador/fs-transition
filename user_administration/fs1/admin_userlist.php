@@ -74,6 +74,16 @@
            $order = 'user_mail ASC';
          }
          break;
+    case 'domain':
+         if ($_GET['order']==1)
+         {
+           $order = 'mail_dom DESC';
+         }
+         else
+         {
+           $order = 'mail_dom ASC';
+         }
+         break;
     case 'name':
          if ($_GET['order']==1)
          {
@@ -98,7 +108,8 @@
   }//switch
 
   //Nutzer auslesen
-  $query = mysql_query('SELECT user_id, user_name, user_mail, is_admin, reg_date '
+  $query = mysql_query('SELECT user_id, user_name, user_mail, is_admin, reg_date, '
+                      .'SUBSTRING(user_mail FROM LOCATE(\'@\', user_mail)) AS mail_dom '
                       .'FROM fs_user ORDER BY '.$order.' LIMIT '.$_GET['start'].', 30', $db);
   $rows = mysql_num_rows($query);
   //Bereich (zahlenm‰ﬂig)
@@ -139,7 +150,8 @@
                                 </td>
                                 <td class="config" width="30%">
 <?php
-  echo '<a href="'.$PHP_SELF.'?go=userlist&start='.$_GET['start'].'&sort=mail&order='.$inverse_order.'">Mail</a>';
+  echo '<a href="'.$PHP_SELF.'?go=userlist&start='.$_GET['start'].'&sort=mail&order='.$inverse_order.'">Mail</a> / '
+      .'<a href="'.$PHP_SELF.'?go=userlist&start='.$_GET['start'].'&sort=domain&order='.$inverse_order.'">Domain</a>';
 ?>
                                 </td>
                                 <td class="config" width="10%">
