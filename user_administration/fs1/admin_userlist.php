@@ -77,11 +77,11 @@
     case 'domain':
          if ($_GET['order']==1)
          {
-           $order = 'mail_dom DESC';
+           $order = 'mail_dom DESC, reg_date DESC';
          }
          else
          {
-           $order = 'mail_dom ASC';
+           $order = 'mail_dom ASC, reg_date ASC';
          }
          break;
     case 'name':
