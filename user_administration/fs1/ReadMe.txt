@@ -7,6 +7,7 @@ Berechtigung haben, Benutzer zu editieren. Neben der reinen Auflistung wird
 auch die Anzahl der vom jeweiligen Nutzer erstellten Artikel, Downloads, News
 und Newskommentare angezeigt.
 
+
 Installation
 ------------
 
@@ -32,7 +33,8 @@ Die Deinstallation erfolgt analog zur Installation durch Umkehr der dort
 beschriebenen Schritte.
 
 1. Ersetzen der Datei index.php im admin-Unterordner des FrogSystem durch die
-   im zweiten Schritt der Installation angelegten Kopie.
+   im zweiten Schritt der Installation angelegten Kopie bzw. Entfernen der dort
+   vorgenommenen Einfügungen.
 2. Die Datei admin_userlist.php im admin-Unterordner des FrogSystem entfernen.
 
 
@@ -41,7 +43,7 @@ Kompatibilität und Upgrades
 
 Die Dateien wurden für ein unmodifiziertes FrogSystem 1 entwickelt und sind
 daher NICHT mit späteren Versionen, im besonderen FrogSystem 2 aller Arten,
-kompatibel. Bei Upgrades des FrogSystem (1) oder Modifikationen sollte die
-Dateie admin_userlist.php jedoch in der Regel weiter unverändert funktionieren;
-es muss nur die index.php im admin-Unterordner angepasst werden, indem man die
+kompatibel. Bei Modifikationen des FrogSystem (1) sollte die Datei
+admin_userlist.php jedoch in der Regel weiter unverändert funktionieren; es
+muss nur die index.php im admin-Unterordner angepasst werden, indem man die
 Änderungen aus Schritt 2 des Installationsabschnittes durchführt.
