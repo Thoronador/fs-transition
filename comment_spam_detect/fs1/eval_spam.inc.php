@@ -24,6 +24,47 @@
      false, those comments don't get the bonus. */
   define('lower_level_for_registered_users', true);
 
+  //functions
+  /* returns true, if the first three characters of the given string do not
+     contain any vowels. Returns false otherwise.
+
+     parameters:
+         $input - a string of at least three (3) characters
+  */
+  function noVowel($input)
+  {
+    $sub = strtolower(substr($input, 0, 3));
+    $no_vowel = true;
+    for($i=0; $i<3 && $no_vowel; $i=$i+1)
+    {
+      if ($sub[$i]=='a' || $sub[$i]=='e' || $sub[$i]=='i' || $sub[$i]=='o' || $sub[$i]=='u')
+      {
+        $no_vowel = false;
+      }
+    }//for
+    return $no_vowel;
+  }//function
+
+  /* returns true, if the first three characters of the given string do have
+     a "strange" change of upper and lower case. Returns false otherwise.
+
+     parameters:
+         $input - a string of at least three (3) characters
+  */
+  function strangeCase($input)
+  {
+    $sub = substr($title, 0, 3);
+    $case_profile = 0;
+    for($i=0; $i<3; $i=$i+1)
+    {
+      if (strtoupper($sub[$i])==$sub[$i])
+      {
+        $case_profile = $case_profile + (1 << (2-$i));
+      }
+    }//for
+    return ($case_profile!=0 && $case_profile<4);
+  }//function
+
   /* evaluates a comment and returns its "spam level", i.e. an integer value
      that indicates the likeliness of a comment being spam. Main criterion is
      the number of links included in the comment's text.
@@ -56,16 +97,7 @@
     if ($poster_id!=0 && strlen($poster_name)>=3)
     {
       //check for name
-      $res = strtolower(substr($poster_name, 0, 3));
-      $no_vowel = true;
-      for($i=0; $i<3 && $no_vowel; $i=$i+1)
-      {
-        if ($res[$i]=='a' || $res[$i]=='e' || $res[$i]=='i' || $res[$i]=='o' || $res[$i]=='u')
-        {
-          $no_vowel = false;
-        }
-      }//for
-      if ($no_vowel)
+      if (noVowel($poster_name) || strangeCase($poster_name))
       {
         $spam_level = $spam_level +1;
       }
@@ -73,25 +105,7 @@
     //test for strange title
     if (($poster_id!=0) && (strlen($title)>=3))
     {
-      $res = substr($title, 0, 3);
-      $no_vowel = true;
-      $case_profile = 0;
-      for($i=0; $i<3; $i=$i+1)
-      {
-        if (strtoupper($res[$i])==$res[$i])
-        {
-          $case_profile = $case_profile + (1 << (2-$i));
-        }
-        else
-        {
-          $res[$i] = strtolower($res[$i]);
-        }
-        if ($res[$i]=='a' || $res[$i]=='e' || $res[$i]=='i' || $res[$i]=='o' || $res[$i]=='u')
-        {
-          $no_vowel = false;
-        }
-      }//for
-      if ($no_vowel || ($case_profile!=0 && $case_profile<4))
+      if (noVowel($title) || strangeCase($title))
       {
         $spam_level = $spam_level +1;
       }
@@ -113,7 +127,7 @@
   */
   function spamLevelToText($level)
   {
-    if ($level<=0) return '<font color="#00cc0">unwahrscheinlich</font>';
+    if ($level<=0) return '<font color="#00cc00">unwahrscheinlich</font>';
     if ($level==1) return '<font color="#cccc00">gering</font>';
     if ($level==2) return '<font color="#ff8000">mittel</font>';
     //3 or higher
