@@ -86,7 +86,6 @@
 
   while ($comment_arr = mysql_fetch_assoc($query))
   {
-    $dbcommentposterid = $comment_arr['comment_poster_id'];
     if ($comment_arr['comment_poster_id'] != 0)
     {
       $userindex = mysql_query('SELECT user_name FROM fs_user WHERE user_id = \''.$comment_arr['comment_poster_id'].'\'', $db);
