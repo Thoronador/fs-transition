@@ -4,20 +4,56 @@ Kommentarliste und Spamerkennung für FrogSystem 2
 Diese Dateien fügen dem Admin-CP des FrogSystem 2 eine Auflistungsmöglichkeit
 für Newskommentare hinzu. Neben der reinen Auflistung werden die Kommentare
 auch auf möglichen Spam untersucht und das Ergebnis wird neben dem Kommentar in
-der Liste angezeigt. Hauptkriterium ist dabei das Vorhandensein von Links in
-den Kommentaren. Es kann jedoch mitunter auch passieren, dass normale
-Kommentare als Spam eingestuft werden oder Spamkommentare nicht als solche er-
-kannt werden. Daher ist die angezeigte Einstufung nur als Hilfe und Orientie-
-rungswert zu verstehen. Ein PHP-Skript wird es niemals schaffen, stets völlig
-eindeutig und richtig bestimmen können, ob ein Kommentar Spam ist oder nicht.
+der Liste angezeigt. Dafür wird ein statistischer Spamfilter genutzt
+(bayesscher Spamfilter, hier implementiert mit Hilfe von b8, siehe dazu auch
+<http://nasauber.de/opensource/b8/>). Dieser Filter "lernt" anhand schon vor-
+handener Kommentare, was Spam ist und was nicht. Dazu füttert man den Filter
+mit Kommentaren und teilt ihm mit, ob der Kommentar Spam ist. Dafür stehen in
+der Liste entsprechende Einstellungsmöglichkeiten zur Verfügung. In Zukunft
+werden dann Worte aus diesen Kommentaren bei Berechnung der Spamwahrschein-
+lichkeit berücksichtigt.
+Direkt nach der Installation wird jeder Kommentar zunächst mit 50% bewertet.
+Das liegt daran, dass am Anfang die Wortliste noch leer ist. Um eine einiger-
+maßen sinnvolle Bewertung zu erhalten, muss der Filter mit mindestens einem
+Spamkommentar und einem spamfreien Kommentar gefüttert worden sein. Je mehr
+Kommentare man den Filter "lernen" lässt, umso umfassender wird die Bewertung
+ausfallen. Man sollte dabei jedoch tunlichst vermeiden, einen Spamkommentar als
+spamfrei an den Filter zu schicken oder einen spamfreien Kommentar als Spam an
+den Filter zu geben. Dies verschlechtert die Erkennungsrate.
 
 
 Installation
 ------------
 
-1. Die beigefügten Dateien admin_news_comments_list.php und eval_spam.inc.php
+1. Zunächst muss in der MySQL-Datenbank eine neue Tabelle angelegt werden,
+   worin der Spamfilter seine Wortliste ablegt. Dazu sind folgende SQL-Abfragen
+   notwendig:
+
+      CREATE TABLE `b8_wordlist` (
+        `token` varchar(255) character set utf8 collate utf8_bin NOT NULL,
+        `count` varchar(255) default NULL,
+        PRIMARY KEY  (`token`)
+      ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+      INSERT INTO `b8_wordlist` VALUES ('bayes*dbversion', '2');
+      INSERT INTO `b8_wordlist` VALUES ('bayes*texts.ham', '0');
+      INSERT INTO `b8_wordlist` VALUES ('bayes*texts.spam', '0');
+
+   Die letzten drei Anweisungen erzeugen Tabelleneinträge, welche für die
+   korrekte Funktionsweise des Filters notwendig sind.
+2. Weiterhin muss der Tabelle mit den Newskommentaren ein weiteres Feld hinzu-
+   gefügt werden, welches speichert, ob ein Kommentar schon als Spam klassifi-
+   ziert wurde:
+
+     ALTER TABLE `fs2_news_comments` ADD `comment_classification` TINYINT NOT NULL DEFAULT '0';
+
+3. Die Dateien des Spamfilters ins Verzeichnis b8 unterhalb in der Serverkonfi-
+   guration festgelegten "Document Root"-Verzeichnisses installieren. Meist ist
+   dies auch das Verzeichnis, in dem sich das Frogsystem befindet (d.h. in der
+   Regel heißt dieses Verzeichnis www/).
+4. Die beigefügten Dateien admin_news_comments_list.php und eval_spam.inc.php
    in den Unterordner admin des FrogSystem 2 kopieren.
-2. Damit die Kommentarliste im Menü erscheint, muss noch ein Eintrag in der
+5. Damit die Kommentarliste im Menü erscheint, muss noch ein Eintrag in der
    Datenbank des FS2 vorgenommen werden, welchen man durch folgende SQL-
    Abfrage erzeugt:
 
@@ -42,6 +78,16 @@ beschriebenen Schritte.
 
 2. Die Dateien admin_news_comments_list.php und eval_spam.inc.php im admin-
    Unterordner des FrogSystem 2 entfernen.
+3. Die b8-Dateien entfernen.
+4. Entfernen der hinzugefügten Spalte in der Kommentartabelle:
+
+      ALTER TABLE `fs2_news_comments` DROP COLUMN `comment_classification`
+
+5. Entferen der Tabelle mit der Wortliste für den Spamfilter:
+
+      DROP TABLE b8_wordlist
+
+   Danach ist der Spamfilter wieder komplett entfernt.
 
 
 Kompatibilität und Upgrades

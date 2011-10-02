@@ -15,6 +15,16 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+    Additional permission under GNU GPL version 3 section 7
+
+    If you modify this Program, or any covered work, by linking or combining it
+    with Frogsystem 2 (or a modified version of Frogsystem 2), containing parts
+    covered by the terms of Creative Commons Attribution-ShareAlike 3.0, the
+    licensors of this Program grant you additional permission to convey the
+    resulting work. Corresponding Source for a non-source form of such a
+    combination shall include the source code for the parts of Frogsystem used
+    as well as that of the covered work.
 */
 
   //no b8 at first
@@ -230,7 +240,7 @@
                <input type="hidden" name="comment_action" value="delete">
                <input class="button" type="submit" value="L&ouml;schen">
              </form><br>';
-    
+
 echo '           </td>
          </tr>
          <tr>

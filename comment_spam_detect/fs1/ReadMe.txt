@@ -41,7 +41,7 @@ Installation
       INSERT INTO `b8_wordlist` VALUES ('bayes*texts.spam', '0');
 
    Die letzten drei Anweisungen erzeugen Tabelleneinträge, welche für die
-   korrekte Funkktionsweise des Filters notwendig sind.
+   korrekte Funktionsweise des Filters notwendig sind.
 2. Weiterhin muss der Tabelle mit den Newskommentaren ein weiteres Feld hinzu-
    gefügt werden, welches speichert, ob ein Kommentar schon als Spam klassifi-
    ziert wurde:
