@@ -230,17 +230,27 @@
                <input type="hidden" name="comment_action" value="delete">
                <input class="button" type="submit" value="L&ouml;schen">
              </form><br>';
-    if ($comment_arr['comment_classification']==0)
+    
+echo '           </td>
+         </tr>
+         <tr>
+           <td style="text-align:center;" colspan="4"><font size="1">Zugeh&ouml;rige Newsmeldung: <a href="../?go=comments&id='
+                                              .$comment_arr['news_id'].'" target="_blank">&quot;'
+                                              .htmlentities($comment_arr['news_title'], ENT_QUOTES).'&quot;</a></font>
+           </td>
+         </tr>
+         <tr>
+           <td style="text-align:center;" colspan="5">';
+if ($comment_arr['comment_classification']==0)
     {
       //unclassified comment
-echo '             <form action="'.$PHP_SELF.'" method="post">
+echo '             <form action="'.$PHP_SELF.'" method="post" style="display:inline";>
                <input type="hidden" value="news_comments_list" name="go">
                <input type="hidden" value="'.$_GET['start'].'" name="start">
                <input type="hidden" name="commentid" value="'.$comment_arr['comment_id'].'">
                <input type="hidden" name="b8_action" value="mark_as_ham">
                <input class="button" type="submit" value="Kein Spam :)">
-             </form>
-             <form action="'.$PHP_SELF.'" method="post">
+             </form><form action="'.$PHP_SELF.'" method="post" style="display:inline";>
                <input type="hidden" value="news_comments_list" name="go">
                <input type="hidden" value="'.$_GET['start'].'" name="start">
                <input type="hidden" name="commentid" value="'.$comment_arr['comment_id'].'">
@@ -258,13 +268,7 @@ echo '             <form action="'.$PHP_SELF.'" method="post">
       //comment classified as spam
       echo '<font color="#C00000" size="1">Als Spam markiert</font>';
     }
-echo '           </td>
-         </tr>
-         <tr>
-           <td style="text-align:center;" colspan="4"><font size="1">Zugeh&ouml;rige Newsmeldung: <a href="../?go=comments&id='
-                                              .$comment_arr['news_id'].'" target="_blank">&quot;'
-                                              .htmlentities($comment_arr['news_title'], ENT_QUOTES).'&quot;</a></font>
-           </td>
+echo '         </td>
          </tr>
          <tr>
            <td colspan="5"><hr width="95%" style="color: #cccccc; background-color: #cccccc;"></td>
