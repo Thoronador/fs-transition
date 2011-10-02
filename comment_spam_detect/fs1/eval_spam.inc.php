@@ -107,7 +107,8 @@
 		return spamEvaluation($title, $poster_id, $poster_name, $comment_text, false, NULL);
 	  }
 	  //pass comment title, poster's name and comment text as text
-	  return $b8->classify($title.' '.$poster_name.' '.$comment_text);
+	  // -- comment text is already in lower case, so no strtolower() on that part
+	  return $b8->classify(strtolower($title.' '.$poster_name).' '.$comment_text);
     }//if b8
     //test for url tags in comment text
     // ---- raise level for every opening url tag

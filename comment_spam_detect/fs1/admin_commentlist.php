@@ -88,7 +88,7 @@
                    //MySQL error?
                    echo mysql_error();
                  }
-	             $b8->learn($result['comment_title'].' '.$result['comment_poster'].' '.strtolower($result['comment_text']), b8::HAM);
+	             $b8->learn(strtolower($result['comment_title'].' '.$result['comment_poster'].' '.$result['comment_text']), b8::HAM);
 	             break;
 	        case 'mark_as_spam':
 	             $query = mysql_query('UPDATE fs_news_comments SET comment_classification=\'-1\' WHERE comment_id=\''.$_POST['commentid'].'\'', $db);
@@ -97,7 +97,7 @@
                    //MySQL error?
                    echo mysql_error();
                  }
-                 $b8->learn($result['comment_title'].' '.$result['comment_poster'].' '.strtolower($result['comment_text']), b8::SPAM);
+                 $b8->learn(strtolower($result['comment_title'].' '.$result['comment_poster'].' '.$result['comment_text']), b8::SPAM);
 	             break;
 	        default:
 	             //Form manipulation or programmer's stupidity? I don't like it either way!
@@ -116,7 +116,12 @@
     }//else
   }//if b8
 
-  //GET-Parameter prüfen
+  //GET-Parameter start prüfen
+  if (isset($_POST['start']) && !isset($_GET['start']))
+  {
+    //Wert von start kann auch via POST (Formular) kommen
+    $_GET['start'] = $_POST['start'];
+  }
   if (!isset($_GET['start']) || $_GET['start']<0)
   {
     $_GET['start'] = 0;
@@ -224,6 +229,7 @@
 echo '             <form action="'.$PHP_SELF.'" method="post">
                <input type="hidden" value="commentlist" name="go">
                <input type="hidden" value="'.session_id().'" name="PHPSESSID">
+               <input type="hidden" value="'.$_GET['start'].'" name="start">
                <input type="hidden" name="commentid" value="'.$comment_arr['comment_id'].'">
                <input type="hidden" name="b8_action" value="mark_as_ham">
                <input class="button" type="submit" value="Kein Spam :)">
@@ -231,6 +237,7 @@ echo '             <form action="'.$PHP_SELF.'" method="post">
              <form action="'.$PHP_SELF.'" method="post">
                <input type="hidden" value="commentlist" name="go">
                <input type="hidden" value="'.session_id().'" name="PHPSESSID">
+               <input type="hidden" value="'.$_GET['start'].'" name="start">
                <input type="hidden" name="commentid" value="'.$comment_arr['comment_id'].'">
                <input type="hidden" name="b8_action" value="mark_as_spam">
                <input class="button" type="submit" value="Das ist Spam!">
