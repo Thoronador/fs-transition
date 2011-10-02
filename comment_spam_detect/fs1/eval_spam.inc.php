@@ -19,7 +19,7 @@
     Additional permission under GNU GPL version 3 section 7
 
     If you modify this Program, or any covered work, by linking or combining it
-    with Frogsystem 2 (or a modified version of Frogsystem 2), containing parts
+    with Frogsystem (or a modified version of Frogsystem), containing parts
     covered by the terms of Creative Commons Attribution-ShareAlike 3.0, the
     licensors of this Program grant you additional permission to convey the
     resulting work. Corresponding Source for a non-source form of such a
@@ -96,7 +96,7 @@
     $comment_text = strtolower($comment_text);
     if ($use_b8)
     {
-      require_once '../b8/b8.php';
+      require_once $_SERVER['DOCUMENT_ROOT'].'/b8/b8.php';
       $b8 = new b8(array('storage' => 'mysql'), array('connection' => $connex));
       //check if construction was successful
       $success = $b8->validate();
@@ -157,9 +157,9 @@
     if (is_float($level))
     {
       $percentage = round($level*100);
-      if ($level<=25) return '<font color="#00cc00">unwahrscheinlich ('.$percentage.'%)</font>';
-      if ($level<=50) return '<font color="#cccc00">gering ('.$percentage.'%)</font>';
-      if ($level<=75) return '<font color="#ff8000">mittel ('.$percentage.'%)</font>';
+      if ($level<=0.25) return '<font color="#00cc00">unwahrscheinlich ('.$percentage.'%)</font>';
+      if ($level<=0.5) return '<font color="#cccc00">gering ('.$percentage.'%)</font>';
+      if ($level<=0.75) return '<font color="#ff8000">mittel ('.$percentage.'%)</font>';
       //higher than 75%
       return '<font color="#ff0000"><b>hoch ('.$percentage.'%)</b></font>';
     }
