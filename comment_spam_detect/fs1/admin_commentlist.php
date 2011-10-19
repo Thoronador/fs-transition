@@ -148,9 +148,11 @@
     echo '</table>
     <br>
     <center><a href="'.$PHP_SELF.'?go=commentlist">Zur&uuml;ck zur Kommentarliste</a></center><br>';
-    exit();
   }//if stats
-
+  else
+  {
+    //just normal list
+  
   //no b8 at first
   $b8 = NULL;
   //Ist für b8 etwas zu tun?
@@ -430,3 +432,6 @@ echo '           </td>
                           </tr>
                       </table>
                     </p>
+<?php
+  } //else
+?>
