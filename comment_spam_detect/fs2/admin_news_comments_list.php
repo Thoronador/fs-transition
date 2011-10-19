@@ -144,7 +144,7 @@
         }
       }//for
     }//else (Tokens vorhanden)
-    
+
     echo '</table>
     <br>
     <center><a href="'.$PHP_SELF.'?go=news_comments_list">Zur&uuml;ck zur Kommentarliste</a></center><br>';
