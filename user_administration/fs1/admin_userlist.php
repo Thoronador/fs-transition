@@ -122,15 +122,15 @@
     {
       $prev_start = 0;
     }
-    $prev_page = '<a href="'.$PHP_SELF.'?go=userlist&start='.$prev_start.'&sort='.$_GET['sort']
-                .'&order='.$_GET['order'].'&PHPSESSID='.session_id().'"><- zurück</a>';
+    $prev_page = '<a href="'.$PHP_SELF.'?go=userlist&amp;start='.$prev_start.'&amp;sort='.$_GET['sort']
+                .'&amp;order='.$_GET['order'].'&amp;PHPSESSID='.session_id().'"><- zurück</a>';
   }//if nicht erste Seite
   //Ist dies nicht die letzte Seite?
   if ($_GET['start']+30<$uc)
   {
-    $next_page = '<a href="'.$PHP_SELF.'?go=userlist&start='.($_GET['start']+30)
-                .'&sort='.$_GET['sort'].'&order='.$_GET['order']
-                .'&PHPSESSID='.session_id().'">weiter -></a>';
+    $next_page = '<a href="'.$PHP_SELF.'?go=userlist&amp;start='.($_GET['start']+30)
+                .'&amp;sort='.$_GET['sort'].'&amp;order='.$_GET['order']
+                .'&amp;PHPSESSID='.session_id().'">weiter -></a>';
   }//if nicht die letzte Seite
 
   $inverse_order = ($_GET['order']+1) % 2;
@@ -145,13 +145,13 @@
                             <tr>
                                 <td class="config" width="30%">
 <?php
-  echo '<a href="'.$PHP_SELF.'?go=userlist&start='.$_GET['start'].'&sort=name&order='.$inverse_order.'">Name</a>';
+  echo '<a href="'.$PHP_SELF.'?go=userlist&amp;start='.$_GET['start'].'&amp;sort=name&amp;order='.$inverse_order.'">Name</a>';
 ?>
                                 </td>
                                 <td class="config" width="30%">
 <?php
-  echo '<a href="'.$PHP_SELF.'?go=userlist&start='.$_GET['start'].'&sort=mail&order='.$inverse_order.'">Mail</a> / '
-      .'<a href="'.$PHP_SELF.'?go=userlist&start='.$_GET['start'].'&sort=domain&order='.$inverse_order.'">Domain</a>';
+  echo '<a href="'.$PHP_SELF.'?go=userlist&amp;start='.$_GET['start'].'&amp;sort=mail&amp;order='.$inverse_order.'">Mail</a> / '
+      .'<a href="'.$PHP_SELF.'?go=userlist&amp;start='.$_GET['start'].'&amp;sort=domain&amp;order='.$inverse_order.'">Domain</a>';
 ?>
                                 </td>
                                 <td class="config" width="10%">
@@ -159,7 +159,7 @@
                                 </td>
                                 <td class="config" width="20%">
 <?php
-  echo '<a href="'.$PHP_SELF.'?go=userlist&start='.$_GET['start'].'&sort=reg_date&order='.$inverse_order.'">Reg.datum</a>';
+  echo '<a href="'.$PHP_SELF.'?go=userlist&amp;start='.$_GET['start'].'&amp;sort=reg_date&amp;order='.$inverse_order.'">Reg.datum</a>';
 ?>
                                 </td>
                                 <td class="config" width="10%">
@@ -199,7 +199,7 @@
     //list the stuff
     echo'<tr>
            <td class="configthin">
-               <a href="../?go=profil&userid='.$user_arr['user_id'].'" target="_blank">'
+               <a href="../?go=profil&amp;userid='.$user_arr['user_id'].'" target="_blank">'
                .killhtml($user_arr['user_name']).'</a>
            </td>
            <td class="configthin">
