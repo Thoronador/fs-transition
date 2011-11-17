@@ -53,7 +53,7 @@
               {
                 echo "Newskonfiguration wurden aktualisiert!<br>\n";
                 //We can proceed to the next step now, add link to go on.
-                echo '<p><a href="stepDownloads.php"><strong>N&aul;chster Schritt: Downloads</strong></a></p>';
+                echo '<p><a href="stepDownloads.php"><strong>N&auml;chster Schritt: Downloads</strong></a></p>';
               }//if
               else
               {
