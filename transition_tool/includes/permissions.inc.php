@@ -39,8 +39,8 @@
       'perm_polledit' => 'poll_edit', //Umfragenarchiv
       //'perm_potmadd' => '???', //POTM-Bild hinzufügen
       //'perm_potmedit' => '???', //POTM-Übersicht
-      'perm_screenadd' => 'screen_add', //Screenshots hinzufügen
-      'perm_screenedit' => 'screen_edit', //Screenshots bearbeiten
+      'perm_screenadd' => 'screens_add', //Screenshots hinzufügen
+      'perm_screenedit' => 'screens_edit', //Screenshots bearbeiten
       'perm_screencat' => 'gallery_cat', //Screenshotkategorien
       'perm_screennewcat' => 'gallery_newcat', //Screenshotkategorien hinzufügen
       'perm_screenconfig' => 'gallery_config', //Screenshotkonfiguration
