@@ -299,7 +299,7 @@ function screen_catTransition($old_link, $new_link)
   {
     $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'screen_cat` '
                   .'(cat_id, cat_name, cat_type, cat_visibility, cat_date, randompic) '
-                  ."VALUES ('".$row['cat_id']."', '".$row['cat_name']."', 0, 1, '"
+                  ."VALUES ('".$row['cat_id']."', '".$row['cat_name']."', 1, 1, '"
                   .$row['cat_date']."', 0)", $new_link);
     if (!$query_res)
     {
