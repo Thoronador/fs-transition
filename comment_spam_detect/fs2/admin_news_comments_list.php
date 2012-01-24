@@ -451,7 +451,7 @@
   }
 
   //Kommentare auslesen
-  $query = mysql_query('SELECT comment_id, comment_title, comment_date, comment_poster, comment_poster_id, comment_text, comment_classification, spam_probability, '
+  $query = mysql_query('SELECT comment_id, comment_title, comment_date, comment_poster, comment_poster_id, comment_text, comment_classification, '
                       .'`'.$global_config_arr['pref'].'news_comments`.news_id AS news_id, `'.$global_config_arr['pref'].'news`.news_id, news_title, '
                       .'IF(comment_poster_id=0, comment_poster, `'.$global_config_arr['pref'].'user`.user_name) AS real_name, needs_update '
                       .'FROM `'.$global_config_arr['pref'].'news_comments` LEFT JOIN `'.$global_config_arr['pref'].'user` '

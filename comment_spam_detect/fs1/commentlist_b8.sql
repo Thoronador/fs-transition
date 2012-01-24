@@ -38,3 +38,6 @@ INSERT INTO `b8_wordlist` VALUES ('bayes*texts.spam', '0');
 --
 
 ALTER TABLE `fs_news_comments` ADD `comment_classification` TINYINT NOT NULL DEFAULT '0';
+
+ALTER TABLE `fs_news_comments` ADD `spam_probability` FLOAT NOT NULL DEFAULT '0.5',
+ADD `needs_update` TINYINT NOT NULL DEFAULT '1';
