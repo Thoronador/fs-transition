@@ -1,7 +1,7 @@
 <?php
 /*
     This file is part of the Frogsystem Spam Detector.
-    Copyright (C) 2011  Thoronador
+    Copyright (C) 2011, 2012  Thoronador
 
     The Frogsystem Spam Detector is free software: you can redistribute it
     and/or modify it under the terms of the GNU General Public License as
@@ -26,6 +26,191 @@
     combination shall include the source code for the parts of Frogsystem used
     as well as that of the covered work.
 */
+
+  //Anzahl der DB-Einträge, die pro Seitenaufruf maximal aktualisiert werden
+  // Der Wert ist nach Belieben anpassbar, sollte aber vermutlich nicht größer
+  // als 100 sein, um zu hohe Auslastung des Servers zu vermeiden.
+  $update_limit = 30;
+
+  //no b8 at first
+  $b8 = NULL;
+  //put b8-related GET parameters into POST, so we need to check $_POST only
+  if (isset($_GET['commentid']) && !isset($_POST['commentid']))
+  {
+    $_POST['commentid'] = $_GET['commentid'];
+    unset($_GET['commentid']);
+  }
+  if (isset($_GET['b8_action']) && !isset($_POST['b8_action']))
+  {
+    $_POST['b8_action'] = $_GET['b8_action'];
+    unset($_GET['b8_action']);
+  }
+
+  //Ist für b8 etwas zu tun?
+  if (isset($_POST['commentid']) && isset($_POST['b8_action']))
+  {
+    //got work to do
+    settype($_POST['commentid'], 'integer');
+    $_POST['commentid'] = (int) $_POST['commentid'];
+    //check comment's current status
+    $query = mysql_query('SELECT comment_id, comment_title, comment_poster, '
+                        .'comment_poster_id, comment_text, comment_classification '
+                        .'FROM `'.$global_config_arr['pref'].'news_comments` WHERE comment_id=\''.$_POST['commentid'].'\'', $db);
+    if ($result = mysql_fetch_assoc($query))
+    {
+      //found it, go on
+      if (($result['comment_classification']!=0) && ($_POST['b8_action']!='unclassify'))
+      {
+        //already has classification
+        echo '<center><b>Fehler:</b> Der Kommentar mit der angegebenen ID ist '
+          .'schon als ';
+        if ($result['comment_classification']>0)
+        {
+          echo 'spamfrei';
+        }
+        else
+        {
+          echo 'Spam';
+        }
+        echo ' klassifiert!</center>';
+      }//if classification<>0
+      else
+      {
+        //no classification, go for it!
+        // -- retrieve name, if applicable
+        if ($result['comment_poster_id'] != 0)
+        {
+          $userindex = mysql_query('SELECT user_name FROM `'.$global_config_arr['pref'].'user` WHERE user_id = \''.$result['comment_poster_id'].'\'', $db);
+          $comment_arr['comment_poster'] = mysql_result($userindex, 0, 'user_name');
+        }
+        //include b8 stuff
+        require_once $_SERVER['DOCUMENT_ROOT'].'/b8/b8.php';
+        //create b8 object
+        $b8 = new b8(array('storage' => 'mysql'), array('connection' => $db));
+        //check if construction was successful
+        $success = $b8->validate();
+        if ($success!==true)
+        {
+		  echo '<center><b>Fehler:</b> Konnte b8 nicht starten!</center>';
+		  $b8 = NULL; //free it
+	    }
+	    else
+	    {
+	      switch ($_POST['b8_action'])
+	      {
+	        case 'mark_as_ham':
+                 $query = mysql_query('UPDATE `'.$global_config_arr['pref'].'news_comments` SET comment_classification=\'1\' WHERE comment_id=\''.$_POST['commentid'].'\'', $db);
+                 if (!$query)
+                 {
+                   //MySQL error?
+                   echo mysql_error();
+                 }
+	             $b8->learn(strtolower($result['comment_title'].' '.$result['comment_poster'].' '.$result['comment_text']), b8::HAM);
+	             //mark all comments for probability update
+                 $query = mysql_query('UPDATE `'.$global_config_arr['pref'].'news_comments` SET needs_update=\'1\'', $db);
+	             break;
+	        case 'mark_as_spam':
+	             $query = mysql_query('UPDATE `'.$global_config_arr['pref'].'news_comments` SET comment_classification=\'-1\' WHERE comment_id=\''.$_POST['commentid'].'\'', $db);
+	             if (!$query)
+                 {
+                   //MySQL error?
+                   echo mysql_error();
+                 }
+                 $b8->learn(strtolower($result['comment_title'].' '.$result['comment_poster'].' '.$result['comment_text']), b8::SPAM);
+                 //mark all comments for probability update
+                 $query = mysql_query('UPDATE `'.$global_config_arr['pref'].'news_comments` SET needs_update=\'1\'', $db);
+	             break;
+	        case 'unclassify':
+	             if ($result['comment_classification']!=0)
+	             {
+	               $query = mysql_query('UPDATE `'.$global_config_arr['pref'].'news_comments` SET comment_classification=\'0\' WHERE comment_id=\''.$_POST['commentid'].'\'', $db);
+	               if ($result['comment_classification']>0)
+	               {
+	                 //it's marked as ham, revoke it
+	                 $b8->unlearn(strtolower($result['comment_title'].' '.$result['comment_poster'].' '.$result['comment_text']), b8::HAM);
+	               }
+	               else
+	               {
+	                 //it's marked as spam, revoke it
+	                 $b8->unlearn(strtolower($result['comment_title'].' '.$result['comment_poster'].' '.$result['comment_text']), b8::SPAM);
+	               }
+	               //mark all comments for probability update
+	               $query = mysql_query('UPDATE `'.$global_config_arr['pref'].'news_comments` SET needs_update=\'1\'', $db);
+	             }
+	             else
+	             {
+	               echo '<center><b>b8-Fehler:</b> Der angegebene Kommentar ist nicht'
+                       .' klassifiziert, daher kann dies auch nicht r&uuml;ckg&auml;ngig gemacht werden.</center>';
+	             }
+	             break;
+	        default:
+	             //Form manipulation or programmer's stupidity? I don't like it either way!
+	             echo '<center><b>b8-Fehler:</b> Die angegebene Aktion ist nicht'
+                     .'g&uuml;ltig.</center>';
+                 break;
+	      }//swi
+	    }//else (b8 init successful)
+      }//else
+    }
+    else
+    {
+      //not found, there is no such comment
+      echo '<center><b>Fehler:</b> Kein Kommentar mit der angegebenen ID ist '
+          .'vorhanden! Es wird keine Klassifizierung vorgenommen.</center>';
+    }//else
+  }//if b8
+
+
+  // ---- update probability values in DB, if required
+  //check update limit
+  settype($update_limit, 'integer');
+  if ($update_limit<10)
+  {
+    //prevent negative and ridiculously small values
+    $update_limit = 10;
+  }
+  else if ($update_limit>100)
+  {
+    //avoid higher values to reduce server load
+    $update_limit = 100;
+  }
+  //zu aktualisierende Kommentare auslesen
+  $update_query = mysql_query('SELECT comment_id, comment_title, comment_poster, comment_poster_id, comment_text, '
+                      .'IF(comment_poster_id=0, comment_poster, `'.$global_config_arr['pref'].'user`.user_name) AS real_name '
+                      .'FROM `'.$global_config_arr['pref'].'news_comments` LEFT JOIN `'.$global_config_arr['pref'].'user` '
+                      .'ON `'.$global_config_arr['pref'].'news_comments`.comment_poster_id=`'.$global_config_arr['pref'].'user`.user_id '
+                      .'WHERE needs_update=1 ORDER BY ABS(0.5-spam_probability) LIMIT '.$update_limit, $db);
+  //include b8 stuff
+  require_once $_SERVER['DOCUMENT_ROOT'].'/b8/b8.php';
+  //evaluation functions
+  require_once 'eval_spam.inc.php';
+  //create b8 object
+  if ($b8==NULL)
+  {
+    $b8 = new b8(array('storage' => 'mysql'), array('connection' => $db));
+  }
+  if ($b8->validate()!==true)
+  {
+    echo '<center><b>Fehler:</b> b8 konnte nicht initialisiert werden!</center>';
+  }
+  else
+  {
+    while ($row=mysql_fetch_assoc($update_query))
+    {
+      $prob = spamEvaluation($row['comment_title'], $row['comment_poster_id'],
+                             $row['real_name'], $row['comment_text'],
+                             true, $b8);
+      //this check is needed to distinguish fallback values (integer) from b8 values (float)
+      if (is_float($prob))
+      {
+        mysql_query('UPDATE `'.$global_config_arr['pref'].'news_comments` '
+                   .'SET needs_update=\'0\', spam_probability=\''.$prob.'\' '
+                   .'WHERE comment_id=\''.$row['comment_id'].'\' LIMIT 1', $db);
+      }
+    }//while
+  }//else
+
+
 
   //statistics requested?
   if (isset($_REQUEST['b8_stats']))
@@ -58,6 +243,42 @@
         <td class="configthin" style="text-align:center;">'.$b8_info['bayes*texts.ham'].'</td>
         <td class="configthin" style="text-align:center;">'.$b8_info['bayes*texts.spam'].'</td>
         <td class="configthin" style="text-align:center;">'.$b8_info['bayes*dbversion'].'</td>
+      </tr>
+    </table>';
+    //get number of comments that need a probability update
+    $query = mysql_query('SELECT COUNT(*) AS update_count '
+                        .'FROM `'.$global_config_arr['pref'].'news_comments` WHERE needs_update=1', $db);
+    $update_count = mysql_fetch_assoc($query);
+    $update_count = $update_count['update_count'];
+    //get total number of comments in DB
+    $query = mysql_query('SELECT COUNT(*) AS total_count '
+                        .'FROM `'.$global_config_arr['pref'].'news_comments`', $db);
+    $total_count = mysql_fetch_assoc($query);
+    $total_count = $total_count['total_count'];
+    if ($total_count>0)
+    {
+      $percentage = round(((float)$update_count) / ((float)$total_count) * 100.0, 1);
+    }
+    else
+    {
+      $percentage = 0;
+    }
+    echo '
+    <table class="configtable" cellpadding="4" cellspacing="0">
+      <tr>
+        <td class="config" width="50%">
+          Kommentare, deren Wahrscheinlichkeit in der Datenbank nicht aktuell ist
+        </td>
+        <td class="config" width="50%">
+          Gesamtzahl der Kommentare
+        </td>
+      </tr>
+      <tr>
+        <td class="configthin" style="text-align:center;">'.$update_count.' ('.$percentage.'%)<br>
+          <small>(Dieser Wert sollte m&ouml;glichst klein sein, um eine korrekte Sortierung nach
+                  Wahrscheinlichkeiten zu erm&ouml;glichen.)</small>
+        </td>
+        <td class="configthin" style="text-align:center;">'.$total_count.'</td>
       </tr>
     </table>';
     //get most used ham words
@@ -157,129 +378,6 @@
   {
     //no stats, normal list
 
-
-  //no b8 at first
-  $b8 = NULL;
-  //put b8-related GET parameters into POST, so we need to check $_POST only
-  if (isset($_GET['commentid']) && !isset($_POST['commentid']))
-  {
-    $_POST['commentid'] = $_GET['commentid'];
-    unset($_GET['commentid']);
-  }
-  if (isset($_GET['b8_action']) && !isset($_POST['b8_action']))
-  {
-    $_POST['b8_action'] = $_GET['b8_action'];
-    unset($_GET['b8_action']);
-  }
-
-  //Ist für b8 etwas zu tun?
-  if (isset($_POST['commentid']) && isset($_POST['b8_action']))
-  {
-    //got work to do
-    settype($_POST['commentid'], 'integer');
-    $_POST['commentid'] = (int) $_POST['commentid'];
-    //check comment's current status
-    $query = mysql_query('SELECT comment_id, comment_title, comment_poster, '
-                        .'comment_poster_id, comment_text, comment_classification '
-                        .'FROM `'.$global_config_arr['pref'].'news_comments` WHERE comment_id=\''.$_POST['commentid'].'\'', $db);
-    if ($result = mysql_fetch_assoc($query))
-    {
-      //found it, go on
-      if (($result['comment_classification']!=0) && ($_POST['b8_action']!='unclassify'))
-      {
-        //already has classification
-        echo '<center><b>Fehler:</b> Der Kommentar mit der angegebenen ID ist '
-          .'schon als ';
-        if ($result['comment_classification']>0)
-        {
-          echo 'spamfrei';
-        }
-        else
-        {
-          echo 'Spam';
-        }
-        echo ' klassifiert!</center>';
-      }//if classification<>0
-      else
-      {
-        //no classification, go for it!
-        // -- retrieve name, if applicable
-        if ($result['comment_poster_id'] != 0)
-        {
-          $userindex = mysql_query('SELECT user_name FROM `'.$global_config_arr['pref'].'user` WHERE user_id = \''.$result['comment_poster_id'].'\'', $db);
-          $comment_arr['comment_poster'] = mysql_result($userindex, 0, 'user_name');
-        }
-        //include b8 stuff
-        require_once $_SERVER['DOCUMENT_ROOT'].'/b8/b8.php';
-        //create b8 object
-        $b8 = new b8(array('storage' => 'mysql'), array('connection' => $db));
-        //check if construction was successful
-        $success = $b8->validate();
-        if ($success!==true)
-        {
-		  echo '<center><b>Fehler:</b> Konnte b8 nicht starten!</center>';
-		  $b8 = NULL; //free it
-	    }
-	    else
-	    {
-	      switch ($_POST['b8_action'])
-	      {
-	        case 'mark_as_ham':
-                 $query = mysql_query('UPDATE `'.$global_config_arr['pref'].'news_comments` SET comment_classification=\'1\' WHERE comment_id=\''.$_POST['commentid'].'\'', $db);
-                 if (!$query)
-                 {
-                   //MySQL error?
-                   echo mysql_error();
-                 }
-	             $b8->learn(strtolower($result['comment_title'].' '.$result['comment_poster'].' '.$result['comment_text']), b8::HAM);
-	             break;
-	        case 'mark_as_spam':
-	             $query = mysql_query('UPDATE `'.$global_config_arr['pref'].'news_comments` SET comment_classification=\'-1\' WHERE comment_id=\''.$_POST['commentid'].'\'', $db);
-	             if (!$query)
-                 {
-                   //MySQL error?
-                   echo mysql_error();
-                 }
-                 $b8->learn(strtolower($result['comment_title'].' '.$result['comment_poster'].' '.$result['comment_text']), b8::SPAM);
-	             break;
-	        case 'unclassify':
-	             if ($result['comment_classification']!=0)
-	             {
-	               $query = mysql_query('UPDATE `'.$global_config_arr['pref'].'news_comments` SET comment_classification=\'0\' WHERE comment_id=\''.$_POST['commentid'].'\'', $db);
-	               if ($result['comment_classification']>0)
-	               {
-	                 //it's marked as ham, revoke it
-	                 $b8->unlearn(strtolower($result['comment_title'].' '.$result['comment_poster'].' '.$result['comment_text']), b8::HAM);
-	               }
-	               else
-	               {
-	                 //it's marked as spam, revoke it
-	                 $b8->unlearn(strtolower($result['comment_title'].' '.$result['comment_poster'].' '.$result['comment_text']), b8::SPAM);
-	               }
-	             }
-	             else
-	             {
-	               echo '<center><b>b8-Fehler:</b> Der angegebene Kommentar ist nicht'
-                       .' klassifiziert, daher kann dies auch nicht r&uuml;ckg&auml;ngig gemacht werden.</center>';
-	             }
-	             break;
-	        default:
-	             //Form manipulation or programmer's stupidity? I don't like it either way!
-	             echo '<center><b>b8-Fehler:</b> Die angegebene Aktion ist nicht'
-                     .'g&uuml;ltig.</center>';
-                 break;
-	      }//swi
-	    }//else (b8 init successful)
-      }//else
-    }
-    else
-    {
-      //not found, there is no such comment
-      echo '<center><b>Fehler:</b> Kein Kommentar mit der angegebenen ID ist '
-          .'vorhanden! Es wird keine Klassifizierung vorgenommen.</center>';
-    }//else
-  }//if b8
-
   //GET-Parameter start prüfen
   if (isset($_POST['start']) && !isset($_GET['start']))
   {
@@ -291,7 +389,7 @@
     $_GET['start'] = 0;
   }
   $_GET['start'] = (int) $_GET['start'];
-  settype($_GET['start'], "integer");
+  settype($_GET['start'], 'integer');
   //GET-Parameter order prüfen
   if (isset($_POST['order']) && !isset($_GET['order']))
   {
@@ -335,6 +433,9 @@
     case 'title':
          $order = 'comment_title';
          break;
+    case 'prob':
+         $order = 'spam_probability';
+         break;
     default:
          $_GET['sort'] = 'date';
          $order = 'comment_date';
@@ -350,9 +451,9 @@
   }
 
   //Kommentare auslesen
-  $query = mysql_query('SELECT comment_id, comment_title, comment_date, comment_poster, comment_poster_id, comment_text, comment_classification, '
+  $query = mysql_query('SELECT comment_id, comment_title, comment_date, comment_poster, comment_poster_id, comment_text, comment_classification, spam_probability, '
                       .'`'.$global_config_arr['pref'].'news_comments`.news_id AS news_id, `'.$global_config_arr['pref'].'news`.news_id, news_title, '
-                      .'IF(comment_poster_id=0, comment_poster, `'.$global_config_arr['pref'].'user`.user_name) AS real_name '
+                      .'IF(comment_poster_id=0, comment_poster, `'.$global_config_arr['pref'].'user`.user_name) AS real_name, needs_update '
                       .'FROM `'.$global_config_arr['pref'].'news_comments` LEFT JOIN `'.$global_config_arr['pref'].'user` '
                       .'ON `'.$global_config_arr['pref'].'news_comments`.comment_poster_id=`'.$global_config_arr['pref'].'user`.user_id, `'.$global_config_arr['pref'].'news` '
                       .'WHERE `'.$global_config_arr['pref'].'news_comments`.news_id=`'.$global_config_arr['pref'].'news`.news_id '
@@ -405,21 +506,17 @@
 ?>
       </td>
       <td class="config" width="10%">
-          Spamwahrscheinlichkeit
+<?php
+  echo '<a href="'.$PHP_SELF.'?go=news_comments_list&amp;sort=prob&amp;order='.$inverse_order.'&amp;start='.$_GET['start'].'">Spamwahrscheinlichkeit</a>';
+?>
       </td>
       <td class="config" width="10%">
           bearbeiten
       </td>
     </tr>
 <?php
-  require_once 'eval_spam.inc.php';
-
   while ($comment_arr = mysql_fetch_assoc($query))
   {
-    if ($comment_arr['comment_poster_id'] != 0)
-    {
-      $comment_arr['comment_poster'] = $comment_arr['real_name'];
-    }
     $comment_arr['comment_date'] = date('d.m.Y' , $comment_arr['comment_date'])
                                       ." um ".date('H:i' , $comment_arr['comment_date']);
     echo'<tr>
@@ -427,7 +524,7 @@
                '.$comment_arr['comment_title'].'
            </td>
            <td class="config">
-               '.$comment_arr['comment_poster'];
+               '.$comment_arr['real_name'];
     if ($comment_arr['comment_poster_id'] == 0)
     {
       echo '<br><small>(unregistriert)</small>';
@@ -437,9 +534,17 @@
                '.$comment_arr['comment_date'].'
            </td>
            <td class="config">
-               '.spamLevelToText(spamEvaluation($comment_arr['comment_title'],
-                 $comment_arr['comment_poster_id'], $comment_arr['comment_poster'],
-                 $comment_arr['comment_text'], true, $db)).'
+               ';
+    $prob = spamEvaluation($comment_arr['comment_title'],
+                 $comment_arr['comment_poster_id'], $comment_arr['real_name'],
+                 $comment_arr['comment_text'], true, $b8);
+    if (($comment_arr['needs_update']==1) && is_float($prob))
+    {
+      mysql_query('UPDATE `'.$global_config_arr['pref'].'news_comments` '
+                 .'SET needs_update=\'0\', spam_probability=\''.$prob.'\' '
+                 .'WHERE comment_id=\''.$comment_arr['comment_id'].'\' LIMIT 1', $db);
+    }
+    echo spamLevelToText($prob).'
            </td>
            <td class="config" rowspan="2">
              <form action="'.$PHP_SELF.'" method="post">

@@ -37,6 +37,9 @@ INSERT INTO `b8_wordlist` VALUES ('bayes*texts.spam', '0');
 
 ALTER TABLE `fs2_news_comments` ADD `comment_classification` TINYINT NOT NULL DEFAULT '0';
 
+ALTER TABLE `fs2_news_comments` ADD `spam_probability` FLOAT NOT NULL DEFAULT '0.5',
+ADD `needs_update` TINYINT NOT NULL DEFAULT '1';
+
 -- Zusatz für Tabelle `fs2_admin_cp`
 --
 -- einmalig nach Installation der Datei admin_news_comments_list.php auszuführen
