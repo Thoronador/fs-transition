@@ -42,12 +42,17 @@ Installation
 
    Die letzten drei Anweisungen erzeugen Tabelleneinträge, welche für die
    korrekte Funktionsweise des Filters notwendig sind.
-2. Weiterhin muss der Tabelle mit den Newskommentaren ein weiteres Feld hinzu-
-   gefügt werden, welches speichert, ob ein Kommentar schon als Spam klassifi-
-   ziert wurde:
+2. Weiterhin müssen der Tabelle mit den Newskommentaren drei weitere Felder hin-
+   zu gefügt werden, welche u.a. speichern, ob ein Kommentar schon als Spam
+   klassifiziert wurde:
 
      ALTER TABLE `fs_news_comments` ADD `comment_classification` TINYINT NOT NULL DEFAULT '0';
+     ALTER TABLE `fs_news_comments` ADD `spam_probability` FLOAT NOT NULL DEFAULT '0.5',
+       ADD `needs_update` TINYINT NOT NULL DEFAULT '1';
 
+   Falls schon eine frühere Version der Kommentarliste, welche schon den bayes-
+   schen Spamfilter nutzt, installiert ist, kann die erste der beiden Anwei-
+   sungen ausgelassen werden, da dieses Feld dann schon vorhanden ist.
 3. Die Dateien des Spamfilters ins Verzeichnis b8 unterhalb in der Serverkonfi-
    guration festgelegten "Document Root"-Verzeichnisses installieren. Meist ist
    dies auch das Verzeichnis, in dem sich das Frogsystem befindet (d.h. in der
@@ -68,6 +73,21 @@ Installation
    Die Kommentarliste steht dann beim nächsten Besuch des Admin-CP zu Verfügung.
 
 
+Hinweise
+--------
+
+Da die Wahrscheinlichkeitswerte in der Datenbank zur Vermeidung längerer Lade-
+zeiten nur immer stückweise für einige Kommentare aktualisiert werden, kann es
+bei der Sortierung der Kommentare nach Spamwahrscheinlichkeit (und nur dort)
+kurzzeitig zu inkorrekter Sortierung kommen, falls nicht alle Werte in der
+Datenbank aktuell sind. Dies kann im Besonderen bei einer nahezu leeren Wort-
+liste oder nach (Um-)Klassifizierung eines Kommentars in auffallendem Maße auf-
+treten.
+Die in der Liste angezeigten Wahrscheinlichkeitswerte sind dennoch aktuell, da
+diese unabhängig von den Wahrscheinlichkeitswerten in der Datenbank berechnet
+werden.
+
+
 Deinstallation
 --------------
 
@@ -80,9 +100,11 @@ beschriebenen Schritte.
 2. Die Dateien admin_commentlist.php und eval_spam.inc.php im admin-Unterordner
    des FrogSystem entfernen.
 3. Die b8-Dateien entfernen.
-4. Entfernen der hinzugefügten Spalte in der Kommentartabelle:
+4. Entfernen der hinzugefügten Spalten in der Kommentartabelle:
 
-      ALTER TABLE `fs_news_comments` DROP COLUMN `comment_classification`
+      ALTER TABLE `fs_news_comments` DROP COLUMN `comment_classification`;
+      ALTER TABLE `fs_news_comments` DROP COLUMN `spam_probability`;
+      ALTER TABLE `fs_news_comments` DROP COLUMN `needs_update`;
 
 5. Entferen der Tabelle mit der Wortliste für den Spamfilter:
 
