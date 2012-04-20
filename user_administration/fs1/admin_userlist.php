@@ -167,12 +167,10 @@
                                 </td>
                             </tr>
 <?php
-  require_once 'eval_spam.inc.php';
-
   while ($user_arr = mysql_fetch_assoc($query))
   {
     $user_arr['reg_date'] = date('d.m.Y' , $user_arr['reg_date'])
-                           ." um ".date('H:i' , $user_arr['reg_date']);
+                           .' um '.date('H:i' , $user_arr['reg_date']);
     settype($user_arr['user_id'], 'integer');
     //Artikelzahl bestimmen
     $sub_query = mysql_query('SELECT COUNT(artikel_url) AS ac FROM fs_artikel '
