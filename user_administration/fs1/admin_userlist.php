@@ -1,7 +1,7 @@
 <?php
 /*
     This file is part of the Frogsystem User Administration List.
-    Copyright (C) 2011  Thoronador
+    Copyright (C) 2011, 2012  Thoronador
 
     The Frogsystem User Administration List is free software: you can redistribute it
     and/or modify it under the terms of the GNU General Public License as
@@ -16,6 +16,64 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+  //Nutzer löschen?
+  if (isset($_POST['deluserid']))
+  {
+    $_POST['deluserid'] = intval($_POST['deluserid']);
+    //Nutzer auslesen
+    $query = mysql_query('SELECT user_id, user_name, is_admin FROM fs_user WHERE user_id=\''.$_POST['deluserid']."' LIMIT 1", $db);
+    if (mysql_num_rows($query)==0)
+    {
+      systext('Es existiert kein Nutzer mit der angegebenen ID!');
+    }
+    else
+    {
+      $user_arr = mysql_fetch_assoc($query);
+      // ---- zur Sicherheit Artikel, Downloads usw. abfragen
+      //Artikelzahl bestimmen
+      $sub_query = mysql_query('SELECT COUNT(artikel_url) AS ac FROM fs_artikel '
+                              .'WHERE artikel_user=\''.$user_arr['user_id'].'\'' , $db);
+      $sub_res = mysql_fetch_assoc($sub_query);
+      $user_arr['artikel'] = (int) $sub_res['ac'];
+      //Downloadzahl bestimmen
+      $sub_query = mysql_query('SELECT COUNT(dl_id) AS dc FROM fs_dl '
+                              .'WHERE user_id=\''.$user_arr['user_id'].'\'' , $db);
+      $sub_res = mysql_fetch_assoc($sub_query);
+      $user_arr['downloads'] = (int) $sub_res['dc'];
+      //Newsanzahl bestimmen
+      $sub_query = mysql_query('SELECT COUNT(news_id) AS nc FROM fs_news '
+                              .'WHERE user_id=\''.$user_arr['user_id'].'\'' , $db);
+      $sub_res = mysql_fetch_assoc($sub_query);
+      $user_arr['news'] = (int) $sub_res['nc'];
+      //Kommentaranzahl bestimmen
+      $sub_query = mysql_query('SELECT COUNT(comment_id) AS cc FROM fs_news_comments '
+                              .'WHERE comment_poster_id=\''.$user_arr['user_id'].'\'' , $db);
+      $sub_res = mysql_fetch_assoc($sub_query);
+      $user_arr['comments'] = (int) $sub_res['cc'];
+      //auf Avatar prüfen
+      $user_arr['avatar'] = file_exists('../images/avatare/'.$user_arr['user_id'].'.gif');
+
+      if ($user_arr['is_admin']==0 && $user_arr['news']==0
+        && $user_arr['artikel']==0 && $user_arr['downloads']==0
+        && $user_arr['comments']==0 && !$user_arr['avatar'])
+      {
+        //We can safely delete the user!
+        // -- delete permission entries
+        mysql_query('DELETE FROM fs_permissions WHERE user_id = '.$_POST['deluserid'], $db);
+        // -- delete user entry
+        mysql_query('DELETE FROM fs_user WHERE user_id = '.$_POST['deluserid'], $db);
+        //update counter
+        mysql_query('UPDATE fs_counter SET user=user-1', $db);
+        systext('User &quot;'.$user_arr['user_name'].'&quot; wurde gel&ouml;scht!');
+      }
+      else
+      {
+        systext('User &quot;'.$user_arr['user_name'].'&quot; kann nicht gel&ouml;scht'
+                .' werden, da Inhalte mit diesem User verbunden sind!');
+      }
+    }//else branch
+  }//if deletion requested
 
   if (!isset($_GET['start']) || $_GET['start']<0)
   {
@@ -219,6 +277,13 @@
                <input type="hidden" value="'.session_id().'" name="PHPSESSID">
                <input type="hidden" name="euuserid" value="'.$user_arr['user_id'].'">
                <input class="button" type="submit" value="Editieren">
+             </form><br>';
+      echo '             <form action="'.$PHP_SELF.'?go=userlist&amp;start='.$_GET['start']
+                .'&amp;sort='.$_GET['sort'].'&amp;order='.$_GET['order'].'" method="post">
+               <input type="hidden" value="userlist" name="go">
+               <input type="hidden" value="'.session_id().'" name="PHPSESSID">
+               <input type="hidden" name="deluserid" value="'.$user_arr['user_id'].'">
+               <input class="button" type="submit" value="L&ouml;schen">
              </form>';
     }//if
     else
