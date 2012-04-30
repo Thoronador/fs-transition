@@ -370,7 +370,7 @@
 
     echo '</table>
     <br>
-    <center><a href="'.$PHP_SELF.'?go=commentlist">Zur&uuml;ck zur Kommentarliste</a></center><br>';
+    <center><a href="'.$_SERVER['PHP_SELF'].'?go=commentlist">Zur&uuml;ck zur Kommentarliste</a></center><br>';
   }//if stats
   else
   {
@@ -466,13 +466,13 @@
     {
       $prev_start = 0;
     }
-    $prev_page = '<a href="'.$PHP_SELF.'?go=commentlist&amp;sort='.$_GET['sort']
+    $prev_page = '<a href="'.$_SERVER['PHP_SELF'].'?go=commentlist&amp;sort='.$_GET['sort']
         .'&amp;order='.$_GET['order'].'&amp;start='.$prev_start.'&amp;PHPSESSID='.session_id().'"><- zurück</a>';
   }//if nicht erste Seite
   //Ist dies nicht die letzte Seite?
   if ($_GET['start']+30<$cc)
   {
-    $next_page = '<a href="'.$PHP_SELF.'?go=commentlist&amp;sort='.$_GET['sort']
+    $next_page = '<a href="'.$_SERVER['PHP_SELF'].'?go=commentlist&amp;sort='.$_GET['sort']
         .'&amp;order='.$_GET['order'].'&amp;start='.($_GET['start']+30).'&amp;PHPSESSID='.session_id().'">weiter -></a>';
   }//if nicht die letzte Seite
 
@@ -488,22 +488,22 @@
                             <tr>
                                 <td class="config" width="30%">
 <?php
-  echo '<a href="'.$PHP_SELF.'?go=commentlist&amp;sort=title&amp;order='.$inverse_order.'&amp;start='.$_GET['start'].'">Titel</a>';
+  echo '<a href="'.$_SERVER['PHP_SELF'].'?go=commentlist&amp;sort=title&amp;order='.$inverse_order.'&amp;start='.$_GET['start'].'">Titel</a>';
 ?>
                                 </td>
                                 <td class="config" width="30%">
 <?php
-  echo '<a href="'.$PHP_SELF.'?go=commentlist&amp;sort=name&amp;order='.$inverse_order.'&amp;start='.$_GET['start'].'">Poster</a>';
+  echo '<a href="'.$_SERVER['PHP_SELF'].'?go=commentlist&amp;sort=name&amp;order='.$inverse_order.'&amp;start='.$_GET['start'].'">Poster</a>';
 ?>
                                 </td>
                                 <td class="config" width="20%">
 <?php
-  echo '<a href="'.$PHP_SELF.'?go=commentlist&amp;sort=date&amp;order='.$inverse_order.'&amp;start='.$_GET['start'].'">Datum</a>';
+  echo '<a href="'.$_SERVER['PHP_SELF'].'?go=commentlist&amp;sort=date&amp;order='.$inverse_order.'&amp;start='.$_GET['start'].'">Datum</a>';
 ?>
                                 </td>
                                 <td class="config" width="10%">
 <?php
-  echo '<a href="'.$PHP_SELF.'?go=commentlist&amp;sort=prob&amp;order='.$inverse_order.'&amp;start='.$_GET['start'].'">Spamwahrscheinlichkeit</a>';
+  echo '<a href="'.$_SERVER['PHP_SELF'].'?go=commentlist&amp;sort=prob&amp;order='.$inverse_order.'&amp;start='.$_GET['start'].'">Spamwahrscheinlichkeit</a>';
 ?>
                                 </td>
                                 <td class="config" width="10%">
@@ -545,7 +545,7 @@
     echo spamLevelToText($prob).'
            </td>
            <td class="configthin" rowspan="2">
-             <form action="'.$PHP_SELF.'" method="post">
+             <form action="'.$_SERVER['PHP_SELF'].'" method="post">
                <input type="hidden" value="commentedit" name="go">
                <input type="hidden" value="'.session_id().'" name="PHPSESSID">
                <input type="hidden" name="commentid" value="'.$comment_arr['comment_id'].'">
@@ -554,7 +554,7 @@
     if ($comment_arr['comment_classification']==0)
     {
       //unclassified comment
-echo '             <form action="'.$PHP_SELF.'" method="post">
+echo '             <form action="'.$_SERVER['PHP_SELF'].'" method="post">
                <input type="hidden" value="commentlist" name="go">
                <input type="hidden" value="'.session_id().'" name="PHPSESSID">
                <input type="hidden" value="'.$_GET['start'].'" name="start">
@@ -564,7 +564,7 @@ echo '             <form action="'.$PHP_SELF.'" method="post">
                <input type="hidden" name="b8_action" value="mark_as_ham">
                <input class="button" type="submit" value="Kein Spam :)">
              </form><br>
-             <form action="'.$PHP_SELF.'" method="post">
+             <form action="'.$_SERVER['PHP_SELF'].'" method="post">
                <input type="hidden" value="commentlist" name="go">
                <input type="hidden" value="'.session_id().'" name="PHPSESSID">
                <input type="hidden" value="'.$_GET['start'].'" name="start">
@@ -579,7 +579,7 @@ echo '             <form action="'.$PHP_SELF.'" method="post">
     {
       //comment classified as ham
       echo '<font color="#008000" size="1">Als spamfrei markiert</font> <a href="'
-          .$PHP_SELF.'?go=commentlist&amp;b8_action=unclassify&amp;commentid='
+          .$_SERVER['PHP_SELF'].'?go=commentlist&amp;b8_action=unclassify&amp;commentid='
           .$comment_arr['comment_id'].'&amp;start='.$_GET['start'].'&amp;sort='.$_GET['sort']
           .'&amp;order='.$_GET['order'].'"><font size="1">(r&uuml;ckg&auml;ngig machen)</font></a>';
     }
@@ -587,7 +587,7 @@ echo '             <form action="'.$PHP_SELF.'" method="post">
     {
       //comment classified as spam
       echo '<font color="#C00000" size="1">Als Spam markiert</font> <a href="'
-          .$PHP_SELF.'?go=commentlist&amp;b8_action=unclassify&amp;commentid='
+          .$_SERVER['PHP_SELF'].'?go=commentlist&amp;b8_action=unclassify&amp;commentid='
           .$comment_arr['comment_id'].'&amp;start='.$_GET['start'].'&amp;sort='.$_GET['sort']
           .'&amp;order='.$_GET['order'].'"><font size="1">(r&uuml;ckg&auml;ngig machen)</font></a>';
     }
@@ -640,7 +640,7 @@ echo '
                           </tr>
                           <tr>
                             <td colspan="3" style="text-align:center;">
-                              <a href="<?php echo $PHP_SELF; ?>?go=commentlist&amp;b8_stats=1">Statistik anzeigen</a>
+                              <a href="<?php echo $_SERVER['PHP_SELF']; ?>?go=commentlist&amp;b8_stats=1">Statistik anzeigen</a>
                             </td>
                           </tr>
                       </table>
