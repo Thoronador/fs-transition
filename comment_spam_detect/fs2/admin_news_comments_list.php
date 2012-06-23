@@ -215,7 +215,7 @@
   //statistics requested?
   if (isset($_REQUEST['b8_stats']))
   {
-    $query = mysql_query('SELECT * FROM b8_wordlist WHERE token LIKE \'bayes*%\'' , $db);
+    $query = mysql_query('SELECT * FROM b8_wordlist WHERE token LIKE \'bayes*%\' LIMIT 0, 3' , $db);
     $b8_info = array();
     while ($result = mysql_fetch_assoc($query))
     {
@@ -246,12 +246,12 @@
       </tr>
     </table>';
     //get number of comments that need a probability update
-    $query = mysql_query('SELECT COUNT(*) AS update_count '
+    $query = mysql_query('SELECT COUNT(comment_id) AS update_count '
                         .'FROM `'.$global_config_arr['pref'].'news_comments` WHERE needs_update=1', $db);
     $update_count = mysql_fetch_assoc($query);
     $update_count = $update_count['update_count'];
     //get total number of comments in DB
-    $query = mysql_query('SELECT COUNT(*) AS total_count '
+    $query = mysql_query('SELECT COUNT(comment_id) AS total_count '
                         .'FROM `'.$global_config_arr['pref'].'news_comments`', $db);
     $total_count = mysql_fetch_assoc($query);
     $total_count = $total_count['total_count'];
