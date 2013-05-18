@@ -29,6 +29,8 @@ alten System eine andere URL haben als im neuen System, auch weiterhin
     if (createAliasForOldURLs($new_link))
     {
       echo "Erfolg!<br>\n";
+      //We can proceed to the next step now, add link to go on.
+      echo '<p><a href="stepPersistentWorlds.php"><strong>N&auml;chster Schritt: Persistente Welten</strong></a></p>';
     }
     else
     {
