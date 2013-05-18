@@ -53,7 +53,7 @@
               {
                 echo "Kommentare zu Persistenten Welten wurden erfolgreich &uuml;bertragen!<br>\n";
                 //We can proceed to the next step now, add link to go on.
-                //echo '<p><a href="stepPlaceholder.php"><strong>N&auml;chster Schritt: Platzhalter</strong></a></p>';
+                echo '<p><a href="stepPartner.php"><strong>N&auml;chster Schritt: Partnerseiten</strong></a></p>';
               }
               else
               {
