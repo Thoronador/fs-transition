@@ -38,7 +38,7 @@ function checkOldTables($link)
   $result = mysql_query('SHOW TABLES FROM '.OldDBName." LIKE '".OldDBTablePrefix."%'", $link);
   if (!$result)
   {
-    return '<p>Eine SQL-Abfrage konnte nicht ausgef&uuml;hrt werden!'
+    return '<p class="error">Eine SQL-Abfrage konnte nicht ausgef&uuml;hrt werden!'
           .'<br>Folgender Fehler trat beim Versuch auf:<br>'.mysql_errno()
           .': '.htmlentities(mysql_error())."</p>\n";
   }
@@ -64,7 +64,7 @@ function checkOldTables($link)
   {
     if (!in_array($value, $tables_found))
     {
-      return '<p>Eine der Tabellen des alten FS konnte nicht gefunden werden!'
+      return '<p class="error">Eine der Tabellen des alten FS konnte nicht gefunden werden!'
           .'<br>Der Tabellenname lautet &quot;'.htmlentities($value)."&quot;.</p>\n";
     }
   }//foreach
@@ -91,7 +91,7 @@ function checkNewTables($link)
   $result = mysql_query('SHOW TABLES FROM '.NewDBName." LIKE '".NewDBTablePrefix."%'", $link);
   if (!$result)
   {
-    return '<p>Eine SQL-Abfrage konnte nicht ausgef&uuml;hrt werden!'
+    return '<p class="error">Eine SQL-Abfrage konnte nicht ausgef&uuml;hrt werden!'
           .'<br>Folgender Fehler trat beim Versuch auf:<br>'.mysql_errno()
           .': '.htmlentities(mysql_error())."</p>\n";
   }
@@ -119,8 +119,11 @@ function checkNewTables($link)
   {
     if (!in_array($value, $tables_found))
     {
-      return '<p>Eine der Tabellen des neuen FS konnte nicht gefunden werden!'
-          .'<br>Der Tabellenname lautet &quot;'.htmlentities($value)."&quot;.</p>\n";
+      return '<p class="error">Eine der Tabellen des neuen FS konnte nicht gefunden werden!'
+          .'<br>Der Tabellenname lautet &quot;'.htmlentities($value)."&quot;.</p><br>\n"
+          .'<div class="hint">M&ouml;gliche Gr&uuml;nde daf&uuml;r k&ouml;nnten sein:<br>'."\n"
+          ."<ul><li>Fehlende Frogsystem <b>2</b>-Installation (&quot;neues&quot; FS, alix5c)</li>"
+          ."<li>Falsche Einstellung in der Konfigurationsdatei <tt>includes/config_constants.inc.ph</tt></li></ul></div>\n";
     }
   }//foreach
   return true;

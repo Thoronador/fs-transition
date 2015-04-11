@@ -28,7 +28,7 @@ require_once 'connect.inc.php'; //required for selectOldDB() and selectNewDB()
 */
 function preparePressAdminNewPNW($new_link)
 {
-  if (!selectOldDB($new_link))
+  if (!selectNewDB($new_link))
   {
     echo '<p class="error">Die Datenbank des FS2 konnte nicht ausgew&auml;hlt '
         .'werden!<br>Folgender Fehler trat beim Versuch auf:<br>';
@@ -53,7 +53,7 @@ function preparePressAdminNewPNW($new_link)
          ."(3, 2, 'Preview'),"
          ."(4, 1, 'Neverwinter Nights')," //old game id: 1
          ."(5, 2, 'Review'),"
-         ."(6, 2, 'Interview')"
+         ."(6, 2, 'Interview'),"
          ."(7, 1, 'Schatten von Undernzit')," //old game id: 2
          ."(8, 1, 'Horden des Unterreichs')," //old game id: 3
          ."(9, 1, 'Neverwinter Nights 2')," //old game id: 4
@@ -145,7 +145,7 @@ function prereinterviewsTransition($old_link, $new_link)
     return false;
   }
   //get all stuff from old DB's pre-/re-/interview table
-  $result = mysql_query('SELECT * FROM `'.OldDBTablePrefix.'prereinterviews`', $old_link);
+  $result = mysql_query('SELECT * FROM `fsplus_prereinterviews`', $old_link);
   if ($result===false)
   {
     echo '<p class="error">Eine SQL-Abfrage f&uuml;r die alte Pre-/Re-/Interview-Tabelle '
@@ -235,9 +235,13 @@ function prereinterviewsTransition($old_link, $new_link)
        return false;
      }
 
+     //translate old IDs to new IDs
      $new_cat_id = $cat_ids[$row['prereinterviews_cat']];
      $new_game_id = $game_ids[$row['prereinterviews_spiel']];
      $new_lang_id = $lang_ids[$row['prereinterviews_lang']];
+
+     //fix for quirk of the old system: replace &#039; with apostrophe
+     $row['prereinterviews_text'] = str_replace('&#039;', "'", $row['prereinterviews_text']);
 
      $subquery = 'INSERT INTO `'.NewDBTablePrefix.'press` '
                 .'(press_title, press_url, press_date, press_intro, press_text, press_note, press_lang, press_game, press_cat) '
