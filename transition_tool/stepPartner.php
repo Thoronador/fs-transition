@@ -32,12 +32,12 @@
     {
       //do the partner transition stuff here
       require_once 'includes/partners.php';
-      // --- genres go first
+      // --- only one table + files
       if (partnerTransition($old_link, $new_link, OldFSRoot, NewFSRoot))
       {
         echo "Partnerseiten wurden erfolgreich &uuml;bertragen!<br>\n";
         //We can proceed to the next step now, add link to go on.
-        //echo '<p><a href="stepPlaceholder.php"><strong>N&auml;chster Schritt: Platzhalter</strong></a></p>';
+        echo '<p><a href="stepPreReInterviews.php"><strong>N&auml;chster Schritt: Pre-/Re-/Interviews</strong></a></p>';
       }
       else
       {
