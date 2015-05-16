@@ -61,8 +61,8 @@
       if (!$old_db)
       {
         echo '<p class="error">Die Datenbank des FS1 konnte nicht ausgew&auml;hlt werden!<br>'
-            .'Folgender Fehler trat beim Versuch auf:<br>'.mysql_errno().': '
-            .htmlentities(mysql_error())."</p>\n";
+            .'Folgender Fehler trat beim Versuch auf:<br>'.mysql_errno($old_link).': '
+            .htmlentities(mysql_error($old_link))."</p>\n";
       }
       else
       {
@@ -72,8 +72,8 @@
         if (!$new_db)
         {
           echo '<p class="error">Die Datenbank des FS2 konnte nicht ausgew&auml;hlt werden!'
-              .'<br>Folgender Fehler trat beim Versuch auf:<br>'.mysql_errno()
-              .': '.htmlentities(mysql_error())."</p>\n";
+              .'<br>Folgender Fehler trat beim Versuch auf:<br>'.mysql_errno($new_link)
+              .': '.htmlentities(mysql_error($new_link))."</p>\n";
         }
         else
         {
