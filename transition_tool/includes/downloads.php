@@ -1,7 +1,7 @@
 <?php
 /*
     This file is part of the Frogsystem Transition Tool.
-    Copyright (C) 2011  Thoronador
+    Copyright (C) 2011, 2015  Thoronador
 
     The Frogsystem Transition Tool is free software: you can redistribute it
     and/or modify it under the terms of the GNU General Public License as
@@ -467,4 +467,137 @@ function dl_mirrorsTransition($old_link, $new_link)
   return true;
 }//function dl_mirrorsTransition
 
+
+/* function dl_commentsTransition
+   transfers the download comments from the old fsplus_dl_comments table (only
+   in "FS plus", e.g. extended variant, or PNW) to the new generalized comments
+   table (that should later be able to hold all kinds of comments, not just
+   the download comments).
+
+   table structures (old and new):
+
+   fsplus_dl_comments
+     dl_comment_id     MEDIUMINT(8), auto_inc
+     dl_id             MEDIUMINT(8)
+     comment_poster    VARCHAR(32)
+     comment_poster_id MEDIUMINT(8)
+     comment_date      INT(11)
+     comment_title     VARCHAR(100)
+     comment_text      TEXT
+
+     PRIMARY INDEX(dl_comment_id)
+
+
+   fs2_comments
+     comment_id        MEDIUMINT(8), AUTO_INCREMENT
+     content_id        MEDIUMINT(8)
+     content_type      VARCHAR(32)
+     comment_poster    VARCHAR(32)
+     comment_poster_id MEDIUMINT(8)
+     comment_poster_ip VARCHAR(16)
+     comment_date      INT(11)
+     comment_title     VARCHAR(100)
+     comment_text      TEXT
+
+     PRIMARY KEY (comment_id),
+     FULLTEXT KEY comment_title_text (comment_text,comment_title)
+
+   The data of the old dl_comments table will be stored in the new
+   comments table. The fields of that table get their values as follows:
+
+   comment_id        -> dl_comment_id of the old table or via auto increment
+   content_id        -> dl_id of the old dl_comment table
+   content_type      -> always 'dl'
+   comment_poster    -> comment_poster of the old table
+   comment_poster_id -> comment_poster_id of the old table
+   comment_poster_ip -> no adequate value, so we set "0.0.0.0"
+   comment_date      -> comment_date of the old table
+   comment_title     -> comment_title of the old table
+   comment_text      -> comment_text of the old table
+
+
+   parameters:
+       old_link - the MySQL link identifier (resource type) for the connection
+                  to the old database
+       new_link - the MySQL link identifier (resource type) for the connection
+                  to the new database
+
+
+   return value:
+       true in case of success; false if failure
+*/
+function dl_commentsTransition($old_link, $new_link)
+{
+  if (!selectOldDB($old_link))
+  {
+    echo '<p class="error">Die Datenbank des FS1 konnte nicht ausgew&auml;hlt '
+        .'werden!<br>Folgender Fehler trat beim Versuch auf:<br>';
+    echo mysql_errno($old_link).': '.mysql_error($old_link)."</p>\n";
+    return false;
+  }
+  //get all stuff from old DB's dl_comments table
+  $result = mysql_query('SELECT * FROM `fsplus_dl_comments`', $old_link);
+  if ($result===false)
+  {
+    echo '<p class="error">Eine SQL-Abfrage f&uuml;r die alte Tabelle '
+        .'dl_comments konnte nicht ausgef&uuml;hrt werden!<br>Folgender Fehler'
+        .' trat beim Versuch auf:<br>';
+    echo mysql_errno($old_link).': '.mysql_error($old_link)."</p>\n";
+    return false;
+  }
+  $dl_comment_entries = mysql_num_rows($result);
+  if ($dl_comment_entries!=1)
+  {
+    echo '<p>'.$dl_comment_entries." Eintr&auml;ge in der Tabelle dl_comments gefunden.</p>\n";
+  }
+  else
+  {
+    '<p>Einen Eintrag in der Tabelle dl_comments gefunden.</p>'."\n";
+  }
+
+  //go on with new DB
+  if (!selectNewDB($new_link))
+  {
+    echo '<p class="error">Die Datenbank des FS2 konnte nicht ausgew&auml;hlt '
+        .'werden!<br>Folgender Fehler trat beim Versuch auf:<br>';
+    echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
+    return false;
+  }
+  //remove existing download comments from table, if any
+  $query_res = mysql_query('DELETE FROM `'.NewDBTablePrefix.'comments` '
+              ."WHERE content_type='dl' OR content_type='download'", $new_link);
+  if ($query_res===false)
+  {
+    echo '<p class="error">Eine SQL-Abfrage f&uuml;r die neue Tabelle '
+        .'comments konnte nicht ausgef&uuml;hrt werden!<br>Folgender Fehler'
+        .' trat beim Versuch auf:<br>';
+    echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
+    return false;
+  }
+  //put old stuff into new DB's table
+  while ($row = mysql_fetch_assoc($result))
+  {
+    //escape all text data
+    $row['comment_poster'] = mysql_real_escape_string($row['comment_poster'], $new_link);
+    $row['comment_title'] = mysql_real_escape_string($row['comment_title'], $new_link);
+    $row['comment_text'] = mysql_real_escape_string($row['comment_text'], $new_link);
+    //now put it into the new table
+    $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'comments` '
+                  .'(content_id, content_type, comment_poster, comment_poster_id, '
+                  .'comment_poster_ip, comment_date, comment_title, comment_text) '
+                  ."VALUES ('".$row['dl_id']."', 'dl', '".$row['comment_poster']
+                  ."', '".intval($row['comment_poster_id'])."', '0.0.0.0', '"
+                  .intval($row['comment_date'])."', '".$row['comment_title']
+                  ."', '".$row['comment_text']."')", $new_link);
+    if (!$query_res)
+    {
+      echo '<p class="error">Ein Wert konnte nicht in die neue comments-'
+          .'Tabelle eingef&uuml;gt werden.<br>Folgender Fehler trat auf:<br>';
+      echo mysql_errno($new_link).': '.mysql_error($new_link)."</p>\n";
+      return false;
+    }//if
+  }//while
+  echo '<span>Fertig.</span>'."\n";
+  return true;
+} //function dl_commentsTransition
 ?>

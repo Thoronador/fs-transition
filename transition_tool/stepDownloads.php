@@ -43,8 +43,16 @@
           if (dl_mirrorsTransition($old_link, $new_link))
           {
             echo "Downloadmirrors wurden erfolgreich kopiert!<br>\n";
-            //We can proceed to the next step now, add link to go on.
-            echo '<p><a href="stepVisitStats.php"><strong>N&auml;chster Schritt: Benutzerstatistik</strong></a></p>';
+            // ---- download comments (PNW only)
+            if (dl_commentsTransition($old_link, $new_link))
+            {
+              //We can proceed to the next step now, add link to go on.
+              echo '<p><a href="stepVisitStats.php"><strong>N&auml;chster Schritt: Benutzerstatistik</strong></a></p>';
+            }
+            else
+            {
+              echo "Downloadkommentare konnten nicht ins neue FS &uuml;bernommen werden!<br>\n";
+            }
           }
           else
           {
