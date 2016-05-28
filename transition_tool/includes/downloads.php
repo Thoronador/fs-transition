@@ -1,7 +1,7 @@
 <?php
 /*
     This file is part of the Frogsystem Transition Tool.
-    Copyright (C) 2011, 2015  Thoronador
+    Copyright (C) 2011, 2015, 2016  Thoronador
 
     The Frogsystem Transition Tool is free software: you can redistribute it
     and/or modify it under the terms of the GNU General Public License as
@@ -118,6 +118,16 @@ function dl_catTransition($old_link, $new_link)
   echo '<span>Verarbeitung l&auml;uft...</span>';
   while ($row = mysql_fetch_assoc($result))
   {
+    //escape string
+    $row['cat_name'] = mysql_real_escape_string($row['cat_name'], $new_link);
+    //check whether escaping failed
+    if (false === $row['cat_name'])
+    {
+      echo '<p class="error">Ein Kategoriename konnte nicht mittels mysql_real_escape_string()'
+          .'maskiert werden.<br>Betroffene Kategorie-ID:<br>'
+          .htmlentities($row['cat_id'])."</p>\n";
+      return false;
+    } //if escaping failed
     $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'dl_cat` '
                   .'(cat_id, subcat_id, cat_name) '
                   ."VALUES ('".$row['cat_id']."', '".$row['subcat_id']."', '"
@@ -303,6 +313,19 @@ function dlTransition($old_link, $new_link)
   echo '<span>Verarbeitung l&auml;uft...</span>';
   while ($row = mysql_fetch_assoc($result))
   {
+    //escape string
+    $row['dl_name'] = mysql_real_escape_string($row['dl_name'], $new_link);
+    $row['dl_text'] = mysql_real_escape_string($row['dl_text'], $new_link);
+    $row['dl_autor'] = mysql_real_escape_string($row['dl_autor'], $new_link);
+    $row['dl_autor_url'] = mysql_real_escape_string($row['dl_autor_url'], $new_link);
+    //check whether escaping failed
+    if ((false === $row['dl_name']) || (false === $row['dl_text'])
+       || (false === $row['dl_autor']) || (false === $row['dl_autor_url']))
+    {
+      echo '<p class="error">Ein Downloadwert konnte nicht mittels mysql_real_escape_string()'
+          .'maskiert werden.<br>Betroffene Download-ID: '.htmlentities($row['dl_id'])."</p>\n";
+      return false;
+    } //if escaping failed
     //the download itself
     $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'dl` '
                   .'(dl_id, cat_id, user_id, dl_date, dl_name, dl_text, '
@@ -449,6 +472,16 @@ function dl_mirrorsTransition($old_link, $new_link)
   //put stuff into new DB's table
   while ($row = mysql_fetch_assoc($result))
   {
+    //escape string
+    $row['mirror_name'] = mysql_real_escape_string($row['mirror_name'], $new_link);
+    $row['mirror_url'] = mysql_real_escape_string($row['mirror_url'], $new_link);
+    //check whether escaping failed
+    if ((false === $row['mirror_name']) || (false === $row['mirror_url']))
+    {
+      echo '<p class="error">Ein Mirror-Downloadwert konnte nicht mittels mysql_real_escape_string()'
+          .'maskiert werden.<br>Betroffene Download-ID: '.htmlentities($row['dl_id'])."</p>\n";
+      return false;
+    } //if escaping failed
     //the mirror download
     $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'dl_files` '
                   .'(dl_id, file_count, file_name, file_url, file_size, file_is_mirror) '

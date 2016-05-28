@@ -1,7 +1,7 @@
 <?php
 /*
     This file is part of the Frogsystem Transition Tool.
-    Copyright (C) 2011  Thoronador
+    Copyright (C) 2011, 2016  Thoronador
 
     The Frogsystem Transition Tool is free software: you can redistribute it
     and/or modify it under the terms of the GNU General Public License as
@@ -141,6 +141,19 @@ function userTransition($old_link, $new_link, $old_basedir, $new_basedir)
   echo '<span>Verarbeitung l&auml;uft...</span>';
   while ($row = mysql_fetch_assoc($result))
   {
+    //escape strings
+    $row['user_name'] = mysql_real_escape_string($row['user_name'], $new_link);
+    $row['user_mail'] = mysql_real_escape_string($row['user_mail'], $new_link);
+    //check whether escaping failed
+    if ((false === $row['user_name']) || (false === $row['user_mail']))
+    {
+      echo '<p class="error">Ein Userwert konnte nicht mittels mysql_real_escape_string()'
+          .'maskiert werden.<br>Betroffene User-ID:<br>'
+          .htmlentities($row['user_id'])."</p>\n";
+      return false;
+    } //if escaping failed
+    $row['user_id'] = intval($row['user_id']);
+    //run query
     $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'user` '
                   .'(user_id, user_name, user_password, user_salt, user_mail, '
                   .'user_is_staff, user_group, user_is_admin, user_reg_date, '
