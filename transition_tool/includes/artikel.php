@@ -1,7 +1,7 @@
 <?php
 /*
     This file is part of the Frogsystem Transition Tool.
-    Copyright (C) 2011  Thoronador
+    Copyright (C) 2011, 2016  Thoronador
 
     The Frogsystem Transition Tool is free software: you can redistribute it
     and/or modify it under the terms of the GNU General Public License as
@@ -153,12 +153,26 @@ function artikelTransition($old_link, $new_link)
   echo '<span>Verarbeitung l&auml;uft...</span>';
   while ($row = mysql_fetch_assoc($result))
   {
+    //escape strings
+    $row['artikel_url'] = mysql_real_escape_string($row['artikel_url'], $new_link);
+    $row['artikel_title'] = mysql_real_escape_string($row['artikel_title'], $new_link);
+    $row['artikel_text'] = mysql_real_escape_string($row['artikel_text'], $new_link);
+    //check whether escaping failed
+    if ((false === $row['artikel_url']) || (false === $row['artikel_url'])
+        || (false === $row['artikel_url']))
+    {
+      echo '<p class="error">Ein Artikelwert konnte nicht mittels mysql_real_escape_string()'
+          .'maskiert werden.<br>Betroffene Artikel-URL:<br>'
+          .htmlentities($row['artikel_url'])."</p>\n";
+      return false;
+    } //if escaping failed
+    //run the query
     $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'articles` '
                   .'(article_url, article_title, article_date, article_user, '
                   .'article_text, article_html, article_fscode, article_para, '
                   .'article_cat_id, article_search_update) '
                   ."VALUES ('".$row['artikel_url']."', '".$row['artikel_title']
-                  ."', '".$row['artikel_date']."', '".$row['artikel_user']
+                  ."', '".$row['artikel_date']."', '".intval($row['artikel_user'])
                   ."', '".$row['artikel_text']."', 1, '".$row['artikel_fscode']
                   ."', '".$row['artikel_fscode']."', 1, '".$row['artikel_index']."')", $new_link);
     if (!$query_res)

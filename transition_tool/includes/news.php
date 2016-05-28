@@ -1,7 +1,7 @@
 <?php
 /*
     This file is part of the Frogsystem Transition Tool.
-    Copyright (C) 2011  Thoronador
+    Copyright (C) 2011, 2016  Thoronador
 
     The Frogsystem Transition Tool is free software: you can redistribute it
     and/or modify it under the terms of the GNU General Public License as
@@ -126,6 +126,16 @@ function news_catTransition($old_link, $new_link, $old_basedir, $new_basedir)
   echo '<span>Verarbeitung l&auml;uft...</span>';
   while ($row = mysql_fetch_assoc($result))
   {
+    //escape string
+    $row['cat_name'] = mysql_real_escape_string($row['cat_name'], $new_link);
+    //check whether escaping failed
+    if (false === $row['cat_name'])
+    {
+      echo '<p class="error">Ein Kategoriename konnte nicht mittels mysql_real_escape_string()'
+          .'maskiert werden.<br>Betroffene Kategorie-ID:<br>'
+          .htmlentities($row['cat_id'])."</p>\n";
+      return false;
+    } //if escaping failed
     $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'news_cat` '
                   .'(cat_id, cat_name, cat_description, cat_date, cat_user) '
                   ."VALUES ('".$row['cat_id']."', '".$row['cat_name']."', '', "
@@ -298,6 +308,17 @@ function newsTransition($old_link, $new_link)
   echo '<span>Verarbeitung l&auml;uft...</span>';
   while ($row = mysql_fetch_assoc($result))
   {
+    //escape strings
+    $row['news_title'] = mysql_real_escape_string($row['news_title'], $new_link);
+    $row['news_text'] = mysql_real_escape_string($row['news_text'], $new_link);
+    //check whether escaping failed
+    if ((false === $row['news_title']) || (false === $row['news_text']))
+    {
+      echo '<p class="error">Ein Newstitel oder -text konnte nicht mittels mysql_real_escape_string()'
+          .'maskiert werden.<br>Betroffene News-ID:<br>'
+          .htmlentities($row['news_id'])."</p>\n";
+      return false;
+    } //if escaping failed
     $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'news` '
                   .'(news_id, cat_id, user_id, news_date, news_title, news_text, '
                   .' news_active, news_comments_allowed, news_search_update) '
@@ -418,6 +439,17 @@ function news_linksTransition($old_link, $new_link)
   echo '<span>Verarbeitung l&auml;uft...</span>';
   while ($row = mysql_fetch_assoc($result))
   {
+    //escape strings
+    $row['link_name'] = mysql_real_escape_string($row['link_name'], $new_link);
+    $row['link_url'] = mysql_real_escape_string($row['link_url'], $new_link);
+    //check whether escaping failed
+    if ((false === $row['link_name']) || (false === $row['link_url']))
+    {
+      echo '<p class="error">Ein Linktitel oder eine Link-URL konnte nicht mittels mysql_real_escape_string()'
+          .'maskiert werden.<br>Betroffene Link-ID: '.htmlentities($row['link_id'])
+          ."<br>Betroffene News-ID: ".htmlentities($row['news_id'])."</p>\n";
+      return false;
+    } //if escaping failed
     $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'news_links` '
                   .'(news_id, link_id, link_name, link_url, link_target) '
                   ."VALUES ('".$row['news_id']."', '".$row['link_id']."', '"
@@ -541,6 +573,19 @@ function news_commentsTransition($old_link, $new_link)
   echo '<span>Verarbeitung l&auml;uft...</span>';
   while ($row = mysql_fetch_assoc($result))
   {
+    //escape strings
+    $row['comment_poster'] = mysql_real_escape_string($row['comment_poster'], $new_link);
+    $row['comment_title'] = mysql_real_escape_string($row['comment_title'], $new_link);
+    $row['comment_text'] = mysql_real_escape_string($row['comment_text'], $new_link);
+    //check whether escaping failed
+    if ((false === $row['comment_poster']) || (false === $row['comment_title'])
+         || (false === $row['comment_text']))
+    {
+      echo '<p class="error">Ein Kommentartitel, -text oder -nutzer konnte nicht mittels mysql_real_escape_string()'
+          .'maskiert werden.<br>Betroffene News-ID: '.htmlentities($row['news_id'])
+          .", betroffene Kommentar-ID: ".htmlentities($row['comment_id'])."</p>\n";
+      return false;
+    } //if escaping failed
     $query_res = mysql_query('INSERT INTO `'.NewDBTablePrefix.'news_comments` '
                   .'(comment_id, news_id, comment_poster, comment_poster_id, '
                   .'comment_poster_ip, comment_date, comment_title, comment_text) '
