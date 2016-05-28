@@ -29,6 +29,8 @@
 
   require_once 'includes/config_constants.inc.php';
   require_once 'includes/connect.inc.php';
+  //define check mark entity for later use
+  define('Checkmark', '<span style="color: green;">&#x2714;</span> ');
 
   echo '&Uuml;berpr&uuml;fe Verbindungen zum MySQL-Server...<br>';
   //set up connection to old DB
@@ -41,7 +43,7 @@
   }
   else
   {
-    echo 'Verbindungsversuch zum MySQL-Server des alten FS erfolgreich!<br>';
+    echo Checkmark . 'Verbindungsversuch zum MySQL-Server des alten FS erfolgreich!<br>';
     //set up connection to new DB
     $new_link = connectNewDB();
     if (!$new_link)
@@ -53,7 +55,7 @@
     }
     else
     {
-      echo 'Verbindungsversuch zum MySQL-Server des neuen FS erfolgreich!<br>';
+      echo Checkmark . 'Verbindungsversuch zum MySQL-Server des neuen FS erfolgreich!<br>';
       //now check the existence of the databases
       echo 'Pr&uuml;fe Existenz der Datenbanken...<br>';
       // ---- old DB first
@@ -66,7 +68,7 @@
       }
       else
       {
-        echo 'Datenbank des alten FS vorhanden!<br>';
+        echo Checkmark . 'Datenbank des alten FS vorhanden!<br>';
         // ---- new DB is next
         $new_db = selectNewDB($new_link);
         if (!$new_db)
@@ -77,7 +79,7 @@
         }
         else
         {
-          echo 'Datenbank des neuen FS vorhanden!<br>';
+          echo Checkmark . 'Datenbank des neuen FS vorhanden!<br>';
           //check tables
           require_once 'includes/checkTables.php';
           $ret = checkOldTables($old_link);
@@ -88,7 +90,7 @@
           }
           else
           {
-            echo 'Tabellen des alten FS vorhanden!<br>';
+            echo Checkmark . 'Tabellen des alten FS vorhanden!<br>';
             //old tables are present, check new ones
             $ret = checkNewTables($new_link);
             if ($ret!==true)
@@ -99,7 +101,7 @@
             }
             else
             {
-              echo 'Tabellen des neuen FS vorhanden!<br>';
+              echo Checkmark . 'Tabellen des neuen FS vorhanden!<br>';
               //check paths
               require_once 'includes/checkRoots.php';
               $ret = checkOldFSRoot();
@@ -110,7 +112,7 @@
               }
               else
               {
-                echo 'Wurzelverzeichnis des alten FS ist vorhanden!<br>';
+                echo Checkmark . 'Wurzelverzeichnis des alten FS ist vorhanden!<br>';
                 echo 'Kanonischer Pfad: '.htmlentities(realpath(OldFSRoot)) ."<br>\n";
                 $ret = checkNewFSRoot();
                 if ($ret !== true)
@@ -120,7 +122,7 @@
                 }
                 else
                 {
-                  echo 'Wurzelverzeichnis des neuen FS ist vorhanden!<br>';
+                  echo Checkmark . 'Wurzelverzeichnis des neuen FS ist vorhanden!<br>';
                   echo 'Kanonischer Pfad: '.htmlentities(realpath(NewFSRoot)) ."<br>\n";
                   //all checks passed, go on
                   echo '<br><br><font color="#008000">Konfiguration ist in Ordnung.</font><br><br>';
