@@ -102,6 +102,14 @@
             else
             {
               echo Checkmark . 'Tabellen des neuen FS vorhanden!<br>';
+              //warn, if PHP's open_basedir setting is active
+              $obd = ini_get('open_basedir');
+              if (($obd !== FALSE) && ($obd !== "none"))
+              {
+                echo '<p class="hint">Achtung! Die PHP-Einstellung open_basedir ist aktiv.'
+                    .' Die kann u.U. dazu f&uuml;hren, dass Dateioperationen fehlschlagen.'
+                    .'<br>Folgender Wert ist im Moment gesetzt:<br>'.htmlentities($obd)."</p>\n";
+              } //if open_basedir
               //check paths
               require_once 'includes/checkRoots.php';
               $ret = checkOldFSRoot();
