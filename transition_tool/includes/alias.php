@@ -1,7 +1,7 @@
 <?php
 /*
     This file is part of the Frogsystem Transition Tool.
-    Copyright (C) 2011  Thoronador
+    Copyright (C) 2011, 2016  Thoronador
 
     The Frogsystem Transition Tool is free software: you can redistribute it
     and/or modify it under the terms of the GNU General Public License as
@@ -42,6 +42,7 @@ function createAliasForOldURLs($new_link)
   }
   //"list" of aliases
   $aliases = array('newsarchiv'  => 'news_search',
+                   'partner'     => 'affiliates',
                    'pollarchiv'  => 'polls',
                    'profil'      => 'user',
                    'screenshots' => 'gallery');
